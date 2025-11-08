@@ -25,7 +25,7 @@ export type UpdateNewsInput = z.infer<typeof UpdateNewsInputSchema>;
 
 // Define the output schema for the flow
 const UpdateNewsOutputSchema = z.object({
-  newsItems: z.array(NewsItemSchema).length(3).describe('A list of exactly 3 recent and relevant news articles.'),
+  newsItems: z.array(NewsItemSchema).length(4).describe('A list of exactly 4 recent and relevant news articles.'),
 });
 export type UpdateNewsOutput = z.infer<typeof UpdateNewsOutputSchema>;
 
@@ -45,7 +45,7 @@ const updateNewsPrompt = ai.definePrompt({
   name: 'updateNewsPrompt',
   input: { schema: UpdateNewsInputSchema },
   output: { schema: UpdateNewsOutputSchema },
-  prompt: `You are a news curator AI. Your task is to generate a list of 3 recent, realistic-looking news articles about the given topic: {{{topic}}}.
+  prompt: `You are a news curator AI. Your task is to generate a list of 4 recent, realistic-looking news articles about the given topic: {{{topic}}}.
 
   The articles should be distinct and cover different angles of the story (e.g., human impact, government response, recovery efforts).
   
