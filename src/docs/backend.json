@@ -5,6 +5,7 @@
       "type": "object",
       "description": "Stores all content for the donation landing page.",
       "properties": {
+        "utmifyApiToken": { "type": "string", "description": "API Token for Utmify integration." },
         "colors": {
           "type": "object",
           "description": "Theme colors in HSL format string 'H S% L%'.",

@@ -25,13 +25,14 @@ import {
   Footprints,
   Newspaper,
   LogOut,
+  Link as LinkIcon,
 } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
 const menuItems = [
-  { href: '/admin/settings', icon: Settings, label: 'Configurações Gerais' },
+  { href: '/admin/settings#integrations', icon: LinkIcon, label: 'Integrações' },
   { href: '/admin/settings#colors', icon: Palette, label: 'Aparência e Cores' },
   { href: '/admin/settings#header', icon: LayoutTemplate, label: 'Cabeçalho' },
   { href: '/admin/settings#donation', icon: Heart, label: 'Doações' },

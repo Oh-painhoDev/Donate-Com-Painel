@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper, Bot } from 'lucide-react';
+import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper, Bot, Link } from 'lucide-react';
 import { initialPageContent } from '@/lib/initial-data';
 import { updateNews } from '@/ai/flows/update-news-flow';
 
@@ -46,12 +46,13 @@ const faqSchema = z.object({
 const colorSchema = z.object({
   primary: z.string().regex(/^(\d{1,3})\s(\d{1,3}%)\s(\d{1,3}%)$/, { message: "Formato HSL inválido. Ex: 150 50% 25%" }),
   secondary: z.string().regex(/^(\d{1,3})\s(\d{1,3}%)\s(\d{1,3}%)$/, { message: "Formato HSL inválido. Ex: 150 45% 90%" }),
-  accent: z.string().regex(/^(\d{1,3})\s(\d{1_3}%)\s(\d{1_3}%)$/, { message: "Formato HSL inválido. Ex: 14 100% 55%" }),
+  accent: z.string().regex(/^(\d{1,3})\s(\d{1,3}%)\s(\d{1,3}%)$/, { message: "Formato HSL inválido. Ex: 14 100% 55%" }),
   background: z.string().regex(/^(\d{1,3})\s(\d{1,3}%)\s(\d{1,3}%)$/, { message: "Formato HSL inválido. Ex: 220 13% 98%" }),
 });
 
 
 const pageContentSchema = z.object({
+  utmifyApiToken: z.string().optional(),
   colors: colorSchema,
   pageTitle: z.string().min(1, { message: "O título da página é obrigatório." }),
   logoImageUrl: z.string().url({ message: "URL do logo inválida." }),
@@ -151,6 +152,16 @@ export default function AdminSettingsPage() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+
+        <Card id="integrations" className="scroll-mt-24 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3"><Link className="text-primary"/> Integrações</CardTitle>
+            <CardDescription>Configure tokens de API para serviços de terceiros.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+             <div><Label>Utmify API Token</Label><Input {...register('utmifyApiToken')} placeholder="Seu token aqui..." /><p className="text-sm text-muted-foreground mt-1">Insira seu token para rastrear as doações como vendas.</p></div>
+          </CardContent>
+        </Card>
         
         <Card id="colors" className="scroll-mt-24 shadow-sm">
           <CardHeader>

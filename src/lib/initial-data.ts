@@ -1,5 +1,6 @@
 
 export const initialPageContent = {
+  utmifyApiToken: "",
   colors: {
     primary: "150 50% 25%",
     secondary: "150 45% 90%",
