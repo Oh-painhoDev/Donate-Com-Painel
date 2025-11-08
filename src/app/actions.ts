@@ -1,6 +1,6 @@
 'use server';
 
-import { getAdminFirestore } from '@/firebase/admin';
+import { getAdminFirestore } from '@/firebase/admin-sdk';
 
 // Tipagem para os dados recebidos do frontend
 type PixRequestData = {

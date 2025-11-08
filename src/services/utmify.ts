@@ -18,7 +18,7 @@
  */
 'use server';
 
-import { getAdminFirestore } from '@/firebase/admin';
+import { getAdminFirestore } from '@/firebase/admin-sdk';
 
 // Helper to get a value from a URL query string
 const getQueryParam = (url: string, param: string): string | null => {
