@@ -6,14 +6,15 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { doc } from 'firebase/firestore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper } from 'lucide-react';
+import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper, Bot } from 'lucide-react';
 import { initialPageContent } from '@/lib/initial-data';
+import { updateNews } from '@/ai/flows/update-news-flow';
 
 
 const donationOptionSchema = z.object({
@@ -86,6 +87,7 @@ type PageContentForm = z.infer<typeof pageContentSchema>;
 export default function AdminSettingsPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
+  const [isUpdatingNews, setIsUpdatingNews] = useState(false);
 
   const contentRef = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -96,13 +98,13 @@ export default function AdminSettingsPage() {
   
   const defaultValues = pageContent ?? initialPageContent;
 
-  const { control, register, handleSubmit, reset, formState: { isDirty, errors } } = useForm<PageContentForm>({
+  const { control, register, handleSubmit, reset, getValues, formState: { isDirty, errors } } = useForm<PageContentForm>({
     resolver: zodResolver(pageContentSchema),
     defaultValues: defaultValues,
   });
 
   const { fields: donationOptionFields, append: appendDonationOption, remove: removeDonationOption } = useFieldArray({ control, name: "donationOptions" });
-  const { fields: newsItemFields, append: appendNewsItem, remove: removeNewsItem } = useFieldArray({ control, name: "newsItems" });
+  const { fields: newsItemFields, append: appendNewsItem, remove: removeNewsItem, replace: replaceNewsItems } = useFieldArray({ control, name: "newsItems" });
   const { fields: impactFields, append: appendImpact, remove: removeImpact } = useFieldArray({ control, name: "impacts" });
   const { fields: testimonialFields, append: appendTestimonial, remove: removeTestimonial } = useFieldArray({ control, name: "testimonials" });
   const { fields: faqFields, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
@@ -121,6 +123,33 @@ export default function AdminSettingsPage() {
     toast({ title: 'Sucesso!', description: 'Conteúdo da página salvo.' });
   };
   
+  const handleUpdateNews = async () => {
+    setIsUpdatingNews(true);
+    toast({ title: 'Aguarde...', description: 'Atualizando notícias com IA.' });
+    try {
+      const topic = "desastre do tornado em Rio Bonito do Iguaçu, Paraná";
+      const result = await updateNews({ topic });
+      if (result && result.newsItems) {
+        replaceNewsItems(result.newsItems); // Update the form state
+        // Manually trigger save because form state was updated programmatically
+        const currentData = getValues();
+        currentData.newsItems = result.newsItems;
+        if (contentRef) {
+          setDocumentNonBlocking(contentRef, currentData, { merge: true });
+        }
+        toast({ title: 'Sucesso!', description: 'Notícias foram atualizadas com IA.' });
+      } else {
+        throw new Error('A resposta da IA não continha notícias.');
+      }
+    } catch (error) {
+      console.error("Failed to update news with AI:", error);
+      toast({ variant: 'destructive', title: 'Erro!', description: 'Não foi possível atualizar as notícias.' });
+    } finally {
+      setIsUpdatingNews(false);
+    }
+  };
+
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         
@@ -172,7 +201,15 @@ export default function AdminSettingsPage() {
         </Card>
 
         <Card id="news" className="scroll-mt-20">
-          <CardHeader><CardTitle className="flex items-center gap-3"><Newspaper className="text-primary"/> Seção de Notícias</CardTitle></CardHeader>
+          <CardHeader>
+             <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-3"><Newspaper className="text-primary"/> Seção de Notícias</CardTitle>
+                <Button type="button" variant="outline" onClick={handleUpdateNews} disabled={isUpdatingNews}>
+                    <Bot className="mr-2 h-4 w-4" />
+                    {isUpdatingNews ? 'Atualizando...' : 'Atualizar Notícias com IA'}
+                </Button>
+             </div>
+          </CardHeader>
           <CardContent className="space-y-4">
             <div><Label>Título da Seção</Label><Input {...register('newsTitle')} /></div>
             <Label>Itens de Notícia</Label>
@@ -188,7 +225,7 @@ export default function AdminSettingsPage() {
                 </div>
               ))}
             </div>
-            <Button type="button" variant="outline" onClick={() => appendNewsItem({ title: '', source: '', url: '' })}>Adicionar Notícia</Button>
+            <Button type="button" variant="outline" onClick={() => appendNewsItem({ title: '', source: '', url: 'https://' })}>Adicionar Notícia Manualmente</Button>
           </CardContent>
         </Card>
 
@@ -277,7 +314,7 @@ export default function AdminSettingsPage() {
         </Card>
 
         <div className="flex justify-end sticky bottom-0 -mx-8 -mb-8 p-4 bg-background/80 backdrop-blur-sm border-t">
-          <Button type="submit" size="lg" disabled={!isDirty}>
+          <Button type="submit" size="lg" disabled={!isDirty && !isUpdatingNews}>
             {isDirty ? 'Salvar Alterações' : 'Salvo'}
           </Button>
         </div>

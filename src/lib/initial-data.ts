@@ -26,12 +26,22 @@ export const initialPageContent = {
     }
   ],
   customDonationText: "OUTRO VALOR",
-  newsTitle: "Notícias em Tempo Real",
+  newsTitle: "Últimas Notícias",
   newsItems: [
       {
         title: "Cidade do PR amanhece destruída após passagem de tornado; VEJA IMAGENS",
         source: "G1 Paraná",
         url: "https://g1.globo.com/pr/parana/noticia/2024/10/01/cidade-do-pr-amanhece-destruida-apos-passagem-de-tornado-veja-imagens.ghtml"
+      },
+      {
+        title: "Voluntários se unem para resgatar animais e distribuir doações",
+        source: "RPC TV",
+        url: "https://redeglobo.globo.com/rpc/noticia/voluntarios-se-unem-para-resgatar-animais-e-distribuir-doacoes-em-rio-bonito-do-iguacu.ghtml"
+      },
+       {
+        title: "Governo do Estado envia reforços para a região de Rio Bonito do Iguaçu",
+        source: "AEN",
+        url: "https://www.aen.pr.gov.br/Noticia/Governo-do-Estado-envia-reforcos-para-a-regiao-de-Rio-Bonito-do-Iguacu"
       }
   ],
   impactVisualizerTitle: "SITUAÇÃO CRÍTICA (Dados Oficiais)",
