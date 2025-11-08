@@ -186,14 +186,11 @@ function DonationForm() {
         </Button>
         <form onSubmit={handleSubmitFinalForm} className="space-y-4">
           <header className="mb-4">
-              <h4 className="text-lg font-bold">Só mais um passo!</h4>
-              <p className="text-sm text-gray-600">Obrigado por ajudar! Estamos finalizando sua doação com os dados abaixo.</p>
+              <h4 className="text-lg font-bold">Confirme sua doação</h4>
+              <p className="text-sm text-gray-600">Obrigado por ajudar! Clique abaixo para gerar o código PIX.</p>
           </header>
           <div className="space-y-3 rounded-lg border bg-gray-50 p-4">
-              <p className="text-sm"><strong>Nome:</strong> {nome}</p>
-              <p className="text-sm"><strong>E-mail:</strong> {email}</p>
-              <p className="text-sm"><strong>CPF:</strong> {cpf}</p>
-              <p className="text-sm"><strong>Valor:</strong> R$ {baseValue.toFixed(2).replace('.', ',')}</p>
+              <p className="text-base text-center"><strong>Valor da Doação:</strong> <span className="font-bold text-xl text-primary">R$ {baseValue.toFixed(2).replace('.', ',')}</span></p>
           </div>
           <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={isLoading}>
             {isLoading ? 'GERANDO PIX...' : 'FINALIZAR E GERAR PIX'}
