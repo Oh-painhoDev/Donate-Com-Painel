@@ -1,80 +1,11 @@
-/**
- * @file Firestore Security Rules for the Rio Bonito Relief donation page.
- *
- * Core Philosophy:
- * This ruleset prioritizes ease of content management and real-time updates to the donation page.
- * The security model is based on restricting all write access by default, allowing for future
- * integration with an admin role. Read access is public.
- *
- * Data Structure:
- * - /donationPageContent/{donationPageContentId}: Stores the main content and configuration for the donation page.
- * - /donationPageContent/{donationPageContentId}/newsArticles/{newsArticleId}: Stores news articles related to the donation page.
- * - /donationPageContent/{donationPageContentId}/partnerLogos/{partnerLogoId}: Stores partner logos.
- * - /donationPageContent/{donationPageContentId}/videoTestimonials/{videoTestimonialId}: Stores video testimonials.
- *
- * Key Security Decisions:
- * - All write operations (create, update, delete) are initially denied to prevent unauthorized modifications.
- * - Read operations (get, list) are allowed for all users, including unauthenticated users, to ensure
- *   broad accessibility of the donation page content.
- */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    /**
-     * @description Secures the main donation page content.  Allows public read access, but restricts all writes.
-     * @path /donationPageContent/{donationPageContentId}
-     * @allow (get, list): Any user can read the donation page content.
-     * @deny (create, update, delete): No user can modify the donation page content without authorization.
-     * @principle Public read access with restricted writes for content management via an admin panel.
-     */
-    match /donationPageContent/{donationPageContentId} {
+    match /pageContent/{pageId} {
+      // Allow public read access for the page content
       allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
-    }
-
-    /**
-     * @description Secures news articles related to the donation page. Allows public read access, but restricts all writes.
-     * @path /donationPageContent/{donationPageContentId}/newsArticles/{newsArticleId}
-     * @allow (get, list): Any user can read the news articles.
-     * @deny (create, update, delete): No user can modify news articles without authorization.
-     * @principle Public read access with restricted writes for content management via an admin panel.
-     */
-    match /donationPageContent/{donationPageContentId}/newsArticles/{newsArticleId} {
-      allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
-    }
-
-    /**
-     * @description Secures partner logos for the donation page. Allows public read access, but restricts all writes.
-     * @path /donationPageContent/{donationPageContentId}/partnerLogos/{partnerLogoId}
-     * @allow (get, list): Any user can read the partner logos.
-     * @deny (create, update, delete): No user can modify partner logos without authorization.
-     * @principle Public read access with restricted writes for content management via an admin panel.
-     */
-    match /donationPageContent/{donationPageContentId}/partnerLogos/{partnerLogoId} {
-      allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
-    }
-
-    /**
-     * @description Secures video testimonials for the donation page. Allows public read access, but restricts all writes.
-     * @path /donationPageContent/{donationPageContentId}/videoTestimonials/{videoTestimonialId}
-     * @allow (get, list): Any user can read the video testimonials.
-     * @deny (create, update, delete): No user can modify video testimonials without authorization.
-     * @principle Public read access with restricted writes for content management via an admin panel.
-     */
-    match /donationPageContent/{donationPageContentId}/videoTestimonials/{videoTestimonialId} {
-      allow get, list: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if false;
+      // Allow write access only for authenticated users (admins)
+      allow create, update, delete: if request.auth != null;
     }
   }
 }
