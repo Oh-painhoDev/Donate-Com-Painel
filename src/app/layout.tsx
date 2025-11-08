@@ -1,20 +1,53 @@
+/*
+ * 
+ *  ═══════════════════════════════════════════════════
+ *   [USUÁRIO]: Painho_Dev
+ *   [DISCORD]: painhodev
+ *   [CARGO]: Criador Profissional de Bugs
+ *   [HABILIDADES]: Criar bugs novos, Consertar bugs antigos
+ *   [STATUS]: Funcionou na minha máquina! 🤷
+ *  ═══════════════════════════════════════════════════
+ *            \
+ *             \     ^__^
+ *              \   (oo)\_______
+ *                 (__)\       )\/\\
+ *                     ||----Ō |
+ *                     ||     ||
+ * 
+ * 
+ */
+'use client'
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
+import { useEffect } from 'react';
 
-// This metadata will be dynamically overridden by the page content
-export const metadata: Metadata = {
-  title: 'Doe | Carregando...',
-  description:
-    'Faça parte do nosso movimento em defesa da conservação das aves e da biodiversidade brasileira.',
-};
+// Metadata has been removed from this client component to fix the build error.
+// Page titles and descriptions are now fully managed dynamically based on Firestore data in page.tsx.
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useEffect(() => {
+    console.log(`
+  ═══════════════════════════════════════════════════
+   [USUÁRIO]: Painho_Dev
+   [DISCORD]: painhodev
+   [CARGO]: Criador Profissional de Bugs
+   [HABILIDADES]: Criar bugs novos, Consertar bugs antigos
+   [STATUS]: Funcionou na minha máquina! 🤷
+  ═══════════════════════════════════════════════════
+            \\
+             \\     ^__^
+              \\   (oo)\\_______
+                 (__)\\       )\\/\\\\
+                     ||----Ō |
+                     ||     ||
+ `);
+  }, []);
   return (
     <html lang="pt-BR" className="scroll-smooth">
       <head>

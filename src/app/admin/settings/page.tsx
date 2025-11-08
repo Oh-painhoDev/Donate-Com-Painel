@@ -1,3 +1,21 @@
+/*
+ * 
+ *  ═══════════════════════════════════════════════════
+ *   [USUÁRIO]: Painho_Dev
+ *   [DISCORD]: painhodev
+ *   [CARGO]: Criador Profissional de Bugs
+ *   [HABILIDADES]: Criar bugs novos, Consertar bugs antigos
+ *   [STATUS]: Funcionou na minha máquina! 🤷
+ *  ═══════════════════════════════════════════════════
+ *            \
+ *             \     ^__^
+ *              \   (oo)\_______
+ *                 (__)\       )\/\\
+ *                     ||----Ō |
+ *                     ||     ||
+ * 
+ * 
+ */
 'use client';
 import { useAuth, useDoc, useMemoFirebase, setDocumentNonBlocking, useFirestore } from '@/firebase';
 import { Button } from '@/components/ui/button';

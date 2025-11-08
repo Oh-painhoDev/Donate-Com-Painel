@@ -1,3 +1,21 @@
+/*
+ * 
+ *  ═══════════════════════════════════════════════════
+ *   [USUÁRIO]: Painho_Dev
+ *   [DISCORD]: painhodev
+ *   [CARGO]: Criador Profissional de Bugs
+ *   [HABILIDADES]: Criar bugs novos, Consertar bugs antigos
+ *   [STATUS]: Funcionou na minha máquina! 🤷
+ *  ═══════════════════════════════════════════════════
+ *            \
+ *             \     ^__^
+ *              \   (oo)\_______
+ *                 (__)\       )\/\\
+ *                     ||----Ō |
+ *                     ||     ||
+ * 
+ * 
+ */
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
