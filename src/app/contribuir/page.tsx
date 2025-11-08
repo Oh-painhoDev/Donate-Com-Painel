@@ -24,10 +24,21 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { createPixAction, trackSale } from '@/app/actions';
 import { ArrowLeft } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-// --- Component para o formulário ---
+// Schema para validação do formulário
+const donationFormSchema = z.object({
+  nome: z.string().min(3, { message: 'Nome completo é obrigatório.' }),
+  email: z.string().email({ message: 'E-mail inválido.' }),
+  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, { message: 'CPF inválido. Use o formato 000.000.000-00' }),
+});
+
+type DonationFormData = z.infer<typeof donationFormSchema>;
+
+// Componente principal do formulário
 function DonationForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -35,29 +46,17 @@ function DonationForm() {
 
   const [step, setStep] = useState(1);
   const [baseValue, setBaseValue] = useState(75.00);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // Dados gerados automaticamente
-  const [nome] = useState('Carlos Eduardo Lima');
-  const [email] = useState(`carlos+${Date.now()}@empresa.com`);
-  const [cpf] = useState('456.789.123-00'); // CPF Fictício
-  const [telefone] = useState('11977776666');
-  
-  const [urlParams, setUrlParams] = useState<{[key: string]: string}>({});
+  const { register, handleSubmit, formState: { errors } } = useForm<DonationFormData>({
+    resolver: zodResolver(donationFormSchema),
+  });
 
-  // Seta o valor inicial do input e captura os parâmetros da URL
+  // Seta o valor inicial do input
   useEffect(() => {
     const initialValue = searchParams.get('valor');
     if (initialValue && !isNaN(parseFloat(initialValue))) {
       setBaseValue(parseFloat(initialValue));
     }
-    
-    const params: {[key: string]: string} = {};
-    searchParams.forEach((value, key) => {
-        params[key] = value;
-    });
-    setUrlParams(params);
-
   }, [searchParams]);
 
   const handleGoToStep2 = () => setStep(2);
@@ -72,64 +71,30 @@ function DonationForm() {
     setBaseValue(value);
   };
   
-  const handleSubmitFinalForm = async (event: React.FormEvent) => {
-      event.preventDefault();
-      setIsLoading(true);
-      toast({ title: 'Processando...', description: 'Aguarde enquanto geramos o PIX.' });
+  // Função final que salva os dados e redireciona
+  const submitFinalForm = (data: DonationFormData) => {
+      toast({ title: 'Redirecionando...', description: 'Aguarde enquanto preparamos a sua doação.' });
 
       try {
-          const pixData: any = {
-              ...urlParams, // Adiciona todos os parâmetros da URL
+          const donationData = {
+              ...data, // nome, email, cpf
               valor: baseValue.toFixed(2),
-              nome,
-              email,
-              cpf,
-              telefone,
-              produto: `Doação SOS Paraná - R$${baseValue.toFixed(2)}`,
-              // Adiciona UTMs e outros dados de rastreamento automaticamente
-              src: "instagram",
-              sck: "ads_instagram",
-              utm_source: "instagram",
-              utm_campaign: "black_friday",
-              utm_medium: "social",
-              utm_content: "story",
-              utm_term: "smartphone"
           };
 
-          // Rastreia a "venda" antes de gerar o PIX, passando os parâmetros da URL
-          trackSale({
-            amountInCents: baseValue * 100,
-            productName: `Doação de R$${baseValue.toFixed(2)}`,
-            checkoutUrl: window.location.href, // Passa a URL completa para o serviço
-          });
+          // Salva os dados no localStorage para serem lidos pela página /pix
+          localStorage.setItem('donationData', JSON.stringify(donationData));
 
-          const result = await createPixAction(pixData);
-
-          if (!result.success) {
-              throw new Error(result.error || 'Erro desconhecido na API');
-          }
-
-          if (result.pixCopyPaste && result.qrCodeUrl) {
-              localStorage.setItem('pixData', JSON.stringify({
-                  qrCode: result.pixCopyPaste, 
-                  qrCodeUrl: result.qrCodeUrl,
-                  amount: baseValue,
-                  transactionId: result.id || 'N/A',
-              }));
-              router.push('/pix');
-          } else {
-              throw new Error('QR Code PIX não foi retornado pela API.');
-          }
+          // Redireciona para a página /pix, mantendo os parâmetros UTM da URL original
+          const currentParams = new URLSearchParams(window.location.search);
+          router.push(`/pix?${currentParams.toString()}`);
 
       } catch (error: any) {
-          console.error('Erro ao criar PIX:', error);
+          console.error('Erro ao salvar dados da doação:', error);
           toast({
               variant: 'destructive',
-              title: 'Erro ao gerar PIX',
-              description: error.message || 'Não foi possível se conectar ao serviço de pagamento. Tente novamente.',
+              title: 'Erro Inesperado',
+              description: 'Não foi possível processar sua doação. Tente novamente.',
           });
-      } finally {
-          setIsLoading(false);
       }
   };
 
@@ -176,22 +141,38 @@ function DonationForm() {
         </div>
       </div>
 
-      {/* ETAPA 2: DADOS DO DOADOR (AGORA AUTOMÁTICO) */}
+      {/* ETAPA 2: DADOS DO DOADOR */}
        <div style={{ display: step === 2 ? 'block' : 'none' }}>
         <Button variant="link" onClick={handleGoToStep1} className="p-0 mb-4 text-primary">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar para alterar o valor
         </Button>
-        <form onSubmit={handleSubmitFinalForm} className="space-y-4">
+        <form onSubmit={handleSubmit(submitFinalForm)} className="space-y-4">
           <header className="mb-4">
-              <h4 className="text-lg font-bold">Confirme sua doação</h4>
-              <p className="text-sm text-gray-600">Obrigado por ajudar! Clique abaixo para gerar o código PIX.</p>
+              <h4 className="text-lg font-bold">Só mais um passo!</h4>
+              <p className="text-sm text-gray-600">Seus dados são protegidos e essenciais para o registro da doação.</p>
           </header>
-          <div className="space-y-3 rounded-lg border bg-gray-50 p-4">
-               <p className="text-base text-center"><strong>Valor da Doação:</strong> <span className="font-bold text-xl text-primary">R$ {baseValue.toFixed(2).replace('.', ',')}</span></p>
+
+          <div className="space-y-3">
+             <div className="space-y-1">
+                <Label htmlFor="nome">Nome Completo</Label>
+                <Input id="nome" {...register('nome')} placeholder="Seu nome completo"/>
+                {errors.nome && <p className="text-sm text-destructive">{errors.nome.message}</p>}
+             </div>
+             <div className="space-y-1">
+                <Label htmlFor="email">E-mail</Label>
+                <Input id="email" type="email" {...register('email')} placeholder="seu.email@exemplo.com"/>
+                {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+             </div>
+             <div className="space-y-1">
+                <Label htmlFor="cpf">CPF</Label>
+                <Input id="cpf" {...register('cpf')} placeholder="000.000.000-00"/>
+                {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
+             </div>
           </div>
-          <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={isLoading}>
-            {isLoading ? 'GERANDO PIX...' : 'FINALIZAR E GERAR PIX'}
+          
+          <Button type="submit" size="lg" className="w-full h-14 text-lg">
+            FINALIZAR E GERAR PIX
           </Button>
         </form>
       </div>
