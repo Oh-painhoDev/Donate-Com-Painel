@@ -52,7 +52,7 @@ export default function Home() {
   const logoImage = PlaceHolderImages.find(p => p.id === 'logo');
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background">
-      <nav className="fixed top-0 left-0 right-0 bg-primary/90 backdrop-blur-lg border-b border-primary-foreground/10 p-4 z-50 shadow-md">
+      <nav className="fixed top-0 left-0 right-0 bg-primary/90 backdrop-blur-lg border-b border-primary-foreground/10 p-2 z-50 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           {logoImage && (
               <Image
