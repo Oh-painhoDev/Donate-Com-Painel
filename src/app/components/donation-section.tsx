@@ -35,26 +35,24 @@ export function DonationSection({ content }: { content: any }) {
           <div className="absolute inset-2 rounded-full border-2 border-dashed border-accent"></div>
           <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
             {isCustom ? (
-              <>
-                <div className='flex items-baseline text-primary'>
-                  <span className="text-2xl font-bold">R$</span>
-                  <Input
-                      id="custom-amount"
-                      type="number"
-                      placeholder="0,00"
-                      className="text-3xl md:text-4xl font-bold w-32 border-0 bg-transparent text-center shadow-none focus-visible:ring-0 p-0 text-gray-800"
-                      value={customAmount}
-                      onChange={(e) => setCustomAmount(e.target.value)}
-                    />
-                </div>
-              </>
+              <div className="flex items-baseline text-primary">
+                <span className="text-3xl font-bold">R$</span>
+                <Input
+                  id="custom-amount"
+                  type="number"
+                  placeholder="0,00"
+                  className="w-32 border-0 bg-transparent p-0 text-center text-4xl font-bold text-gray-800 shadow-none ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 md:text-5xl"
+                  value={customAmount}
+                  onChange={(e) => setCustomAmount(e.target.value)}
+                />
+              </div>
             ) : (
-              <span className="text-5xl md:text-6xl font-bold text-accent">R${amount}</span>
+              <span className="text-5xl font-bold text-accent md:text-6xl">R${amount}</span>
             )}
-             <p className="text-sm text-gray-600 mt-2 font-medium">{description}</p>
+             <p className="mt-2 text-sm font-medium text-gray-600">{description}</p>
           </div>
         </div>
-        <Button size="lg" className="w-40 h-12 text-lg font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg" asChild>
+        <Button size="lg" className="h-12 w-40 bg-accent text-lg font-bold text-accent-foreground shadow-lg hover:bg-accent/90" asChild>
           <Link href={`/contribuir?valor=${finalAmount || ''}`}>DOAR</Link>
         </Button>
       </div>
