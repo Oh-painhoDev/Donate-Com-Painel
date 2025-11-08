@@ -17,7 +17,6 @@
  * 
  */
 import * as admin from 'firebase-admin';
-import 'dotenv/config';
 
 /**
  * Initializes the Firebase Admin SDK if not already initialized,
