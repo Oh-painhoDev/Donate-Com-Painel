@@ -1,10 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useState } from 'react';
-
-const suggestedAmounts = [120, 240, 500];
 
 export function DonationSection() {
   const [customAmount, setCustomAmount] = useState('');
@@ -18,12 +15,12 @@ export function DonationSection() {
           {isCustom ? (
             <>
               <div className='flex items-baseline'>
-                <span className="text-2xl text-primary font-bold">R$</span>
+                <span className="text-xl md:text-2xl text-primary font-bold">R$</span>
                 <Input
                     id="custom-amount"
                     type="number"
                     placeholder="10,00"
-                    className="text-3xl font-bold w-32 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
+                    className="text-2xl md:text-3xl font-bold w-28 md:w-32 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
                   />
@@ -31,19 +28,19 @@ export function DonationSection() {
               
             </>
           ) : (
-            <span className="text-5xl font-bold text-accent">R${amount}</span>
+            <span className="text-4xl md:text-5xl font-bold text-accent">R${amount}</span>
           )}
-           <p className="text-sm text-foreground/80 mt-2">{description}</p>
+           <p className="text-xs md:text-sm text-foreground/80 mt-2">{description}</p>
         </div>
       </div>
-      <Button className="w-40 h-12 text-lg font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80">DOAR</Button>
+      <Button className="w-36 md:w-40 h-10 md:h-12 text-base md:text-lg font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80">DOAR</Button>
     </div>
   );
 
   return (
     <section id="doar" className="py-16 md:py-24 bg-primary">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 justify-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 justify-items-center">
           <DonationCircle amount={120} description="Seu engajamento fomenta a produção científica." />
           <DonationCircle amount={240} description="Você se torna um Amigo da SAVE!" />
           <DonationCircle amount={500} description="Sua colaboração fortalece nossos projetos." />

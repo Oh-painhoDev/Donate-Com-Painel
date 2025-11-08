@@ -19,9 +19,9 @@ export function PageHeader() {
           priority
         />
       )}
-      <div className="absolute inset-0 bg-black/30" />
-      <div className="container relative z-10 mx-auto px-4 mt-32">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-shadow-lg leading-tight">
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="container relative z-10 mx-auto px-4 mt-16 md:mt-32">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter text-shadow-lg leading-tight">
           Preservar é preciso.
         </h1>
         <p className="mt-6 max-w-3xl mx-auto text-lg md:text-2xl text-shadow">
