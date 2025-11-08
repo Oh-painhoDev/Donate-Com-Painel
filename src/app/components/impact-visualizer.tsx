@@ -21,13 +21,13 @@ const impacts = [
 
 export function ImpactVisualizer() {
   return (
-    <section id="impacto" className="py-16 md:py-24 bg-primary text-primary-foreground">
+    <section id="impacto" className="py-16 md:py-28 bg-background text-foreground">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-5xl font-bold font-headline text-accent">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold font-headline text-primary">
             Impacto na Prática
           </h2>
-          <p className="mt-4 max-w-3xl mx-auto text-base md:text-xl text-blue-200">
+          <p className="mt-4 max-w-3xl mx-auto text-base md:text-xl text-foreground/70">
             Com quase 20 anos de atuação no Brasil, estes são alguns dos números que traduzem o nosso trabalho:
           </p>
         </div>
@@ -35,12 +35,14 @@ export function ImpactVisualizer() {
           {impacts.map((impact) => (
             <Card
               key={impact.amount}
-              className="text-center bg-primary/50 border-accent/30 rounded-2xl p-6 shadow-lg"
+              className="text-center bg-card border-border/50 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300"
             >
               <CardContent className="flex flex-col items-center gap-4">
-                <impact.icon className="w-12 h-12 md:w-16 md:h-16 text-accent" />
-                <p className="text-4xl md:text-5xl font-bold text-white">{impact.amount}</p>
-                <p className="mt-2 text-base md:text-lg text-blue-200">
+                <div className="p-4 bg-secondary rounded-full">
+                  <impact.icon className="w-10 h-10 md:w-12 md:h-12 text-primary" />
+                </div>
+                <p className="text-5xl md:text-6xl font-bold text-primary">{impact.amount}</p>
+                <p className="mt-2 text-base md:text-lg text-foreground/80 leading-relaxed">
                   {impact.description}
                 </p>
               </CardContent>

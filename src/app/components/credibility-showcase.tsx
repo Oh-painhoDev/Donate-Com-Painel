@@ -2,7 +2,7 @@ import {
   Card,
   CardContent,
 } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 const testimonials = [
@@ -23,11 +23,11 @@ const testimonials = [
 export function CredibilityShowcase() {
 
   return (
-    <section id="depoimentos" className="py-16 md:py-24 bg-secondary">
+    <section id="depoimentos" className="py-16 md:py-28 bg-secondary">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold font-headline text-primary">
-            Depoimentos
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold font-headline text-primary">
+            Depoimentos de Amigos da SAVE
           </h2>
         </div>
 
@@ -47,17 +47,17 @@ export function CredibilityShowcase() {
 
 function TestimonialCard({ name, text }: { name: string; text: string;}) {
   return (
-    <Card className="bg-background overflow-hidden group shadow-lg rounded-2xl">
+    <Card className="bg-background overflow-hidden group shadow-lg rounded-2xl hover:shadow-xl transition-shadow duration-300">
       <CardContent className="p-8">
-        <div className="flex items-center mb-4">
-          <Avatar className="h-14 w-14 mr-4">
-            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+        <div className="flex items-center mb-6">
+          <Avatar className="h-16 w-16 mr-5 border-2 border-primary/20">
+            <AvatarFallback className='text-xl bg-primary/90 text-primary-foreground'>{name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
           </Avatar>
           <div>
             <p className="font-bold text-xl text-primary">{name}</p>
           </div>
         </div>
-        <p className="text-base text-foreground/80">{`"${text}"`}</p>
+        <p className="text-base text-foreground/80 leading-relaxed">{`“${text}”`}</p>
       </CardContent>
     </Card>
   );

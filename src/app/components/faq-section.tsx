@@ -34,21 +34,21 @@ const faqs = [
 
 export function FaqSection() {
   return (
-    <section id="faq" className="py-16 md:py-24 bg-background">
+    <section id="faq" className="py-16 md:py-28 bg-background">
       <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold font-headline text-primary">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold font-headline text-primary">
             Perguntas Frequentes
           </h2>
         </div>
         <Accordion type="single" collapsible className="w-full space-y-4">
           {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
-              <AccordionTrigger className="text-left text-lg md:text-xl font-semibold p-6 bg-accent/80 text-primary rounded-lg hover:no-underline">
+            <AccordionItem key={index} value={`item-${index}`} className="border-b-0 rounded-lg shadow-md bg-secondary transition-all hover:bg-secondary/80">
+              <AccordionTrigger className="text-left text-lg md:text-xl font-semibold p-6 text-secondary-foreground rounded-lg hover:no-underline">
                 {faq.q}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground p-6 text-base bg-accent/20 rounded-b-lg">
-                {faq.a}
+              <AccordionContent className="text-muted-foreground p-6 pt-0 text-base bg-secondary rounded-b-lg">
+                <p className="text-secondary-foreground/80">{faq.a}</p>
               </AccordionContent>
             </AccordionItem>
           ))}
