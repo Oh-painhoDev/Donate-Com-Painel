@@ -20,10 +20,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/firebase/hooks';
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -33,7 +30,6 @@ import { useToast } from '@/hooks/use-toast';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
   const auth = useAuth();
   const { toast } = useToast();
 
@@ -42,24 +38,18 @@ export default function LoginPage() {
     if (!auth) {
       toast({
         variant: 'destructive',
-        title: 'Authentication Error',
-        description: 'Firebase not initialized. Please try again later.',
+        title: 'Erro de Autenticação',
+        description: 'O Firebase não foi inicializado. Tente novamente mais tarde.',
       });
       return;
     }
     try {
-      if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        toast({ title: 'Success', description: 'Account created successfully. Please log in.' });
-        setIsSignUp(false);
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Authentication Error',
-        description: error.message,
+        title: 'Erro de Autenticação',
+        description: 'Credenciais inválidas. Verifique seu e-mail e senha.',
       });
     }
   };
@@ -69,7 +59,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            {isSignUp ? 'Admin Sign Up' : 'Admin Login'}
+            Admin Login
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -86,7 +76,7 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Senha</Label>
               <Input
                 id="password"
                 type="password"
@@ -97,16 +87,9 @@ export default function LoginPage() {
               />
             </div>
             <Button type="submit" className="w-full">
-              {isSignUp ? 'Sign Up' : 'Login'}
+              Login
             </Button>
           </form>
-          <div className="mt-4 text-center">
-            <Button variant="link" onClick={() => setIsSignUp(!isSignUp)}>
-              {isSignUp
-                ? 'Already have an account? Login'
-                : "Don't have an account? Sign Up"}
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
