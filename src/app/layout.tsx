@@ -43,25 +43,40 @@ export default function RootLayout({
       "Código limpo é aquele que o cliente nunca vê.",
       "Quando o erro é misterioso, a culpa é do cache. Sempre."
     ];
-    
+
+    // largura fixa (em caracteres)
+    const largura = 56;
+    const cor = "#00ff88";
+
+    // Função para ajustar texto dentro das bordas
+    function linha(texto = "") {
+      if (texto.length > largura - 4) texto = texto.slice(0, largura - 7) + "...";
+      const espacos = largura - 4 - texto.length;
+      return `║ ${texto}${" ".repeat(espacos)}║`;
+    }
+
+    // Mostra o bloco
     function mostrarResenha() {
       const piada = piadas[Math.floor(Math.random() * piadas.length)];
-      const jokeLine = `  Piada: "${piada}"`.padEnd(49, ' ');
       console.clear();
-      console.log("%c╔══════════════════════════════════════════════════╗", "color:#00ff88");
-      console.log("%c║                💻 PAINHO DEV CONSOLE 💻           ║", "color:#00ff88; font-weight:bold;");
-      console.log("%c║   [USUÁRIO]: Painho_Dev                         ║", "color:#00ff88");
-      console.log("%c║   [DISCORD]: painhodev                          ║", "color:#00ff88");
-      console.log("%c║   [CARGO]: Criador Profissional de Bugs          ║", "color:#00ff88");
-      console.log(`%c║${jokeLine}║`, "color:#00ff88");
-      console.log("%c║   [STATUS]: Funcionou na minha máquina! 🤷        ║", "color:#00ff88");
-      console.log("%c╚══════════════════════════════════════════════════╝", "color:#00ff88");
-      console.log("%c            \\     ^__^\n             \\   (oo)\\_______\n                 (__)\\       )\\/\\\\\n                     ||----Ō |\n                     ||     ||", "color:#00ff88");
+
+      console.log(`%c╔${"═".repeat(largura - 2)}╗`, `color:${cor}`);
+      console.log(`%c║${" ".repeat(Math.floor((largura - 2 - 24) / 2))}💻 PAINHO DEV CONSOLE 💻${" ".repeat(Math.ceil((largura - 2 - 24) / 2))}║`, `color:${cor}; font-weight:bold;`);
+      console.log(`%c${linha("[USUÁRIO]: Painho_Dev")}`, `color:${cor}`);
+      console.log(`%c${linha("[DISCORD]: painhodev")}`, `color:${cor}`);
+      console.log(`%c${linha("Piada do momento:")}`, `color:${cor}`);
+      console.log(`%c${linha(`"${piada}"`)}`, `color:${cor}`);
+      console.log(`%c${linha("Status: Funcionou na minha máquina! 🤷")}`, `color:${cor}`);
+      console.log(`%c╚${"═".repeat(largura - 2)}╝`, `color:${cor}`);
+      console.log(`%c            \\     ^__^\n             \\   (oo)\\_______\n                 (__)\\       )\\/\\\\\n                     ||----Ō |\n                     ||     ||`, `color:${cor}`);
     }
-    
+
+    // Mostra imediatamente
     mostrarResenha();
+
+    // Atualiza a cada 5 segundos
     const intervalId = setInterval(mostrarResenha, 5000);
-    
+
     return () => clearInterval(intervalId);
   }, []);
   return (
