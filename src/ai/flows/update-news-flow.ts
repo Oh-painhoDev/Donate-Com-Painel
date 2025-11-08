@@ -18,13 +18,13 @@ const NewsItemSchema = z.object({
 });
 
 // Define the input schema for the flow
-export const UpdateNewsInputSchema = z.object({
+const UpdateNewsInputSchema = z.object({
   topic: z.string().describe('The central topic for which to generate news articles.'),
 });
 export type UpdateNewsInput = z.infer<typeof UpdateNewsInputSchema>;
 
 // Define the output schema for the flow
-export const UpdateNewsOutputSchema = z.object({
+const UpdateNewsOutputSchema = z.object({
   newsItems: z.array(NewsItemSchema).length(3).describe('A list of exactly 3 recent and relevant news articles.'),
 });
 export type UpdateNewsOutput = z.infer<typeof UpdateNewsOutputSchema>;
