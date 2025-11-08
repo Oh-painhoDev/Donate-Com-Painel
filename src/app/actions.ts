@@ -16,7 +16,7 @@ type PixRequestData = {
   [key: string]: any; // Permite outros campos como UTMs
 };
 
-// Função auxiliar para buscar campos recursivamente em um objeto
+// Função auxiliar para buscar campos recursivamente em um objeto, inspirada no script PHP.
 function findFieldInResponse(data: any, possibleNames: string[]): string | null {
     if (typeof data !== 'object' || data === null) {
         return null;
@@ -79,21 +79,26 @@ export async function createPixAction(data: PixRequestData) {
         return { success: false, error: "Valor inválido (deve ser um número maior que zero)" };
     }
 
-    const payload = { ...data };
+    const payload: PixRequestData = {
+        // Defaults first
+        src: "organic",
+        sck: "",
+        utm_source: "organic",
+        utm_campaign: "default",
+        utm_medium: "web",
+        utm_content: "",
+        utm_term: "",
+        // Spread incoming data to override defaults
+        ...data
+    };
     payload.cpf = cleanCpf;
     payload.telefone = cleanTel;
-    payload.src = payload.src || "organic";
-    payload.sck = payload.sck || "";
-    payload.utm_source = payload.utm_source || "organic";
-    payload.utm_campaign = payload.utm_campaign || "default";
-    payload.utm_medium = payload.utm_medium || "web";
-    payload.utm_content = payload.utm_content || "";
-    payload.utm_term = payload.utm_term || "";
 
     const response = await fetch(pixApiEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload),
+      cache: 'no-store',
     });
     
     const responseBodyText = await response.text();
@@ -108,9 +113,9 @@ export async function createPixAction(data: PixRequestData) {
     const normalizedResponse: any = { ...responseData };
     normalizedResponse.success = response.ok;
     
+    // Lista de chaves possíveis para o código PIX, baseada no script PHP.
     const pixCodeKeys = [
-        'pixCopyPaste', 'pix_copy_paste', 'pixCode', 'pix_code', 
-        'codigo_pix', 'copy_paste', 'emv', 'chave_pix', 'qrcode', 'qrcode_text'
+        "qrcode", "qrcode_text", "pixCopyPaste", "pix_code", "emv", "copy_paste", 'pixCopyPaste', 'pix_copy_paste', 'pixCode', 'pix_code', 'codigo_pix'
     ];
     
     const pixCode = findFieldInResponse(responseData, pixCodeKeys);
