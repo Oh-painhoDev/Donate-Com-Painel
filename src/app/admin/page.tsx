@@ -77,7 +77,7 @@ export default function AdminPage() {
   
   const defaultValues = pageContent ?? initialPageContent;
 
-  const { control, register, handleSubmit, reset, formState: { isDirty } } = useForm<PageContentForm>({
+  const { control, register, handleSubmit, reset, formState: { isDirty, errors } } = useForm<PageContentForm>({
     resolver: zodResolver(pageContentSchema),
     defaultValues: defaultValues,
   });
@@ -111,7 +111,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50/50">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold">Painel de Administração</h1>
         <Button onClick={handleSignOut} variant="outline">Sair</Button>
@@ -120,8 +120,8 @@ export default function AdminPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
         {/* Header Section */}
-        <Card>
-          <CardHeader><CardTitle>Cabeçalho</CardTitle></CardHeader>
+        <Card className="overflow-hidden">
+          <CardHeader><CardTitle>Seção do Cabeçalho</CardTitle></CardHeader>
           <CardContent className="space-y-4 pt-4">
             <div><Label>Título da Página (Aba do Navegador)</Label><Input {...register('pageTitle')} /></div>
             <div><Label>Texto Principal</Label><Input {...register('headerText')} /></div>
@@ -131,44 +131,48 @@ export default function AdminPage() {
         </Card>
 
         {/* Donation Section */}
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader><CardTitle>Opções de Doação</CardTitle></CardHeader>
           <CardContent className="space-y-4 pt-4">
-            {donationOptionFields.map((field, index) => (
-              <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg">
-                <div className="grid-cols-2 gap-4 grid flex-grow">
-                  <div><Label>Valor (número)</Label><Input type="number" {...register(`donationOptions.${index}.amount`, { valueAsNumber: true })} /></div>
-                  <div><Label>Descrição</Label><Input {...register(`donationOptions.${index}.description`)} /></div>
+            <div className="space-y-4">
+              {donationOptionFields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
+                  <div className="grid-cols-2 gap-4 grid flex-grow">
+                    <div><Label>Valor (número)</Label><Input type="number" {...register(`donationOptions.${index}.amount`, { valueAsNumber: true })} /></div>
+                    <div><Label>Descrição</Label><Input {...register(`donationOptions.${index}.description`)} /></div>
+                  </div>
+                  <Button type="button" variant="destructive" size="icon" onClick={() => removeDonationOption(index)}><Trash className="h-4 w-4"/></Button>
                 </div>
-                <Button type="button" variant="destructive" size="icon" onClick={() => removeDonationOption(index)}><Trash/></Button>
-              </div>
-            ))}
+              ))}
+            </div>
             <Button type="button" variant="outline" onClick={() => appendDonationOption({ amount: 0, description: '' })}>Adicionar Opção</Button>
             <div><Label>Texto para Doação Customizada</Label><Input {...register('customDonationText')} /></div>
           </CardContent>
         </Card>
 
         {/* Impact Section */}
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader><CardTitle>Visualizador de Impacto</CardTitle></CardHeader>
           <CardContent className="space-y-4 pt-4">
             <div><Label>Título</Label><Input {...register('impactVisualizerTitle')} /></div>
             <div><Label>Subtexto</Label><Textarea {...register('impactVisualizerSubText')} /></div>
-             {impactFields.map((field, index) => (
-              <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg">
-                <div className="grid-cols-2 gap-4 grid flex-grow">
-                  <div><Label>Número/Quantidade</Label><Input {...register(`impacts.${index}.amount`)} /></div>
-                  <div><Label>Descrição</Label><Input {...register(`impacts.${index}.description`)} /></div>
+             <div className="space-y-4">
+               {impactFields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
+                  <div className="grid-cols-2 gap-4 grid flex-grow">
+                    <div><Label>Número/Quantidade</Label><Input {...register(`impacts.${index}.amount`)} /></div>
+                    <div><Label>Descrição</Label><Input {...register(`impacts.${index}.description`)} /></div>
+                  </div>
+                  <Button type="button" variant="destructive" size="icon" onClick={() => removeImpact(index)}><Trash className="h-4 w-4"/></Button>
                 </div>
-                <Button type="button" variant="destructive" size="icon" onClick={() => removeImpact(index)}><Trash/></Button>
-              </div>
-            ))}
+              ))}
+            </div>
             <Button type="button" variant="outline" onClick={() => appendImpact({ amount: '', description: '' })}>Adicionar Impacto</Button>
           </CardContent>
         </Card>
 
         {/* About Section */}
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader><CardTitle>Seção "Sobre"</CardTitle></CardHeader>
           <CardContent className="space-y-4 pt-4">
             <div><Label>Título</Label><Input {...register('aboutTitle')} /></div>
@@ -179,49 +183,53 @@ export default function AdminPage() {
         </Card>
 
          {/* Credibility Section */}
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader><CardTitle>Seção de Depoimentos</CardTitle></CardHeader>
           <CardContent className="space-y-4 pt-4">
             <div><Label>Título</Label><Input {...register('credibilityTitle')} /></div>
-             {testimonialFields.map((field, index) => (
-              <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg">
-                <div className="grid-cols-2 gap-4 grid flex-grow">
-                  <div><Label>Nome</Label><Input {...register(`testimonials.${index}.name`)} /></div>
-                  <div><Label>Texto do Depoimento</Label><Textarea {...register(`testimonials.${index}.text`)} /></div>
+            <div className="space-y-4">
+               {testimonialFields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
+                  <div className="grid-cols-2 gap-4 grid flex-grow">
+                    <div><Label>Nome</Label><Input {...register(`testimonials.${index}.name`)} /></div>
+                    <div><Label>Texto do Depoimento</Label><Textarea {...register(`testimonials.${index}.text`)} /></div>
+                  </div>
+                  <Button type="button" variant="destructive" size="icon" onClick={() => removeTestimonial(index)}><Trash className="h-4 w-4"/></Button>
                 </div>
-                <Button type="button" variant="destructive" size="icon" onClick={() => removeTestimonial(index)}><Trash/></Button>
-              </div>
-            ))}
+              ))}
+            </div>
             <Button type="button" variant="outline" onClick={() => appendTestimonial({ name: '', text: '' })}>Adicionar Depoimento</Button>
           </CardContent>
         </Card>
 
         {/* FAQ Section */}
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader><CardTitle>Seção de Perguntas Frequentes (FAQ)</CardTitle></CardHeader>
           <CardContent className="space-y-4 pt-4">
             <div><Label>Título</Label><Input {...register('faqTitle')} /></div>
-             {faqFields.map((field, index) => (
-              <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg">
-                 <div className="grid-cols-2 gap-4 grid flex-grow">
-                  <div><Label>Pergunta</Label><Input {...register(`faqs.${index}.q`)} /></div>
-                  <div><Label>Resposta</Label><Textarea {...register(`faqs.${index}.a`)} /></div>
+             <div className="space-y-4">
+               {faqFields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
+                   <div className="grid-cols-2 gap-4 grid flex-grow">
+                    <div><Label>Pergunta</Label><Input {...register(`faqs.${index}.q`)} /></div>
+                    <div><Label>Resposta</Label><Textarea {...register(`faqs.${index}.a`)} /></div>
+                  </div>
+                  <Button type="button" variant="destructive" size="icon" onClick={() => removeFaq(index)}><Trash className="h-4 w-4"/></Button>
                 </div>
-                <Button type="button" variant="destructive" size="icon" onClick={() => removeFaq(index)}><Trash/></Button>
-              </div>
-            ))}
+              ))}
+            </div>
             <Button type="button" variant="outline" onClick={() => appendFaq({ q: '', a: '' })}>Adicionar Pergunta</Button>
           </CardContent>
         </Card>
 
         {/* Footer Section */}
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader><CardTitle>Rodapé</CardTitle></CardHeader>
           <CardContent className="space-y-4 pt-4">
             <div><Label>Título Links</Label><Input {...register('footerLinksTitle')} /></div>
             <div><Label>Título Contato</Label><Input {...register('footerContactTitle')} /></div>
             <div><Label>Email de Contato</Label><Input type="email" {...register('footerContactEmail')} /></div>
-            <div><Label>Endereço</Label><Input {...register('footerContactAddress')} /></div>
+            <div><Label>Endereço / Contato Secundário</Label><Input {...register('footerContactAddress')} /></div>
           </CardContent>
         </Card>
 
