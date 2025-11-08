@@ -18,21 +18,20 @@
  */
 import * as admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
-import { firebaseConfig } from './config';
 
 // Ensure the app is initialized only once
 if (!admin.apps.length) {
   try {
-    // Attempt to initialize with Application Default Credentials
+    // Attempt to initialize with Application Default Credentials in a server environment
     admin.initializeApp({
         credential: admin.credential.applicationDefault(),
-        projectId: firebaseConfig.projectId
+        projectId: process.env.GCLOUD_PROJECT, // Use environment variable for server-side
     });
   } catch (e) {
     console.error("Firebase Admin initialization with Application Default Credentials failed, falling back.", e);
-    // Fallback for local development or environments without ADC
+    // Fallback for local development or environments without ADC or env var
     admin.initializeApp({
-      projectId: firebaseConfig.projectId,
+      projectId: process.env.GCLOUD_PROJECT,
     });
   }
 }
