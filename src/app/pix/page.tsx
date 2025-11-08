@@ -24,21 +24,12 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Copy, Check } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-
-// Uma versão simples de um gerador de QR Code em SVG para não depender de libs externas no client-side
-const QRCodeSVG = ({ text }: { text: string }) => {
-  // Esta é uma implementação placeholder. Uma lib real como 'qrcode.react' seria melhor.
-  // Para este exemplo, usaremos uma API externa para gerar a imagem.
-  if (!text) return null;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(text)}`;
-  return <img src={qrUrl} alt="QR Code PIX" width={256} height={256} className="rounded-lg" />;
-};
-
+import Image from 'next/image';
 
 export default function PixPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [pixData, setPixData] = useState<{ qrCode: string; amount: number; transactionId: string } | null>(null);
+  const [pixData, setPixData] = useState<{ qrCode: string; qrCodeUrl: string; amount: number; transactionId: string } | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
@@ -46,7 +37,6 @@ export default function PixPage() {
     if (data) {
       try {
         setPixData(JSON.parse(data));
-        // localStorage.removeItem('pixData'); // Opcional: remover após o uso
       } catch (e) {
         console.error('Failed to parse pixData from localStorage', e);
         toast({
@@ -54,13 +44,13 @@ export default function PixPage() {
             title: 'Erro',
             description: 'Não foi possível carregar os dados do PIX.',
         });
-        router.push('/');
+        router.push('/contribuir');
       }
     } else {
       toast({
             variant: 'destructive',
             title: 'Dados não encontrados',
-            description: 'Nenhuma informação de PIX para exibir.',
+            description: 'Nenhuma informação de PIX para exibir. Redirecionando...',
       });
       router.push('/contribuir');
     }
@@ -92,7 +82,16 @@ export default function PixPage() {
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-6">
             <div className="p-4 bg-white rounded-lg border">
-                <QRCodeSVG text={pixData.qrCode} />
+                {pixData.qrCodeUrl && (
+                  <Image 
+                    src={pixData.qrCodeUrl} 
+                    alt="QR Code PIX" 
+                    width={256} 
+                    height={256} 
+                    className="rounded-lg" 
+                    unoptimized // Necessário para fontes externas de QR Code como qrserver.com
+                  />
+                )}
             </div>
 
             <div className="text-left w-full bg-gray-50 p-4 rounded-lg">

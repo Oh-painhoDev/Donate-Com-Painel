@@ -26,6 +26,8 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { createPix } from '@/services/pix';
 import { ArrowLeft } from 'lucide-react';
+import { trackSale } from '@/services/utmify';
+
 
 // --- Component para o formulário ---
 function DonationForm() {
@@ -68,33 +70,39 @@ function DonationForm() {
 
       try {
           const urlParams = new URLSearchParams(window.location.search);
-          const pixData = {
+          const pixData: any = {
               valor: baseValue.toFixed(2),
               nome,
               email,
               cpf: cpf.replace(/\D/g, ''),
-              produto: 'Doação SOS Paraná',
-              src: urlParams.get('src'),
-              sck: urlParams.get('sck'),
-              utm_source: urlParams.get('utm_source'),
-              utm_campaign: urlParams.get('utm_campaign'),
-              utm_medium: urlParams.get('utm_medium'),
-              utm_content: urlParams.get('utm_content'),
-              utm_term: urlParams.get('utm_term'),
+              produto: 'Doação SOS Paraná', // ou outro nome de produto relevante
           };
+
+          // Adiciona todos os parâmetros da URL ao payload
+          urlParams.forEach((value, key) => {
+              pixData[key] = value;
+          });
+
+          // Rastreia a "venda" antes de gerar o PIX
+          trackSale({
+            amountInCents: baseValue * 100,
+            productName: `Doação de R$${baseValue.toFixed(2)}`,
+          });
+
 
           const result = await createPix(pixData);
 
-          if (result.error) {
-              throw new Error(result.error);
+          if (!result.success) {
+              throw new Error(result.error || 'Erro desconhecido na API');
           }
 
-          if (result.pix && result.pix.qrcode) {
-              // Armazena os dados no localStorage para a página PIX
+          // A nova API normalizada retorna pixCopyPaste e qrCodeUrl
+          if (result.pixCopyPaste && result.qrCodeUrl) {
               localStorage.setItem('pixData', JSON.stringify({
-                  qrCode: result.pix.qrcode,
+                  qrCode: result.pixCopyPaste, // O código para o QR Code
+                  qrCodeUrl: result.qrCodeUrl, // A URL da imagem do QR Code
                   amount: baseValue,
-                  transactionId: result.id,
+                  transactionId: result.id || 'N/A',
               }));
               router.push('/pix');
           } else {
