@@ -7,27 +7,27 @@ export const initialPageContent = {
     accent: "14 100% 55%",
     background: "220 13% 98%",
   },
-  pageTitle: "Doe | SOS Paraná",
+  pageTitle: "SOS Paraná | Ajude Rio Bonito do Iguaçu",
   logoImageUrl: "https://static.tildacdn.com/tild3363-3038-4833-b638-353032356634/noroot.png",
-  headerText: "AJUDA HUMANITÁRIA URGENTE: PARANÁ PRECISA DE VOCÊ!",
-  headerSubText: "Cidade 90% Destruída • 6 Vidas Perdidas • 750 Feridos • Famílias Desabrigadas",
+  headerText: "SOS PARANÁ: AJUDE A RECONSTRUIR RIO BONITO DO IGUAÇU",
+  headerSubText: "Um tornado devastou 90% da cidade, deixando um rastro de destruição. Vidas foram perdidas, centenas de famílias estão desabrigadas e precisam da sua ajuda urgente.",
   headerImageUrl: "https://static.tildacdn.com/tild3666-3234-4637-b530-333931383636/banner_principal.png",
   donationOptions: [
     {
       amount: 60,
-      description: "Cesta Básica Completa para 1 família por 1 semana"
+      description: "Cesta básica para uma família desabrigada"
     },
     {
       amount: 120,
-      description: "Kit Emergencial para 2 famílias"
+      description: "Kit de higiene e limpeza para duas famílias"
     },
     {
       amount: 250,
-      description: "Abrigo Temporário para 5 pessoas"
+      description: "Material para reparo emergencial de um telhado"
     }
   ],
-  customDonationText: "OUTRO VALOR",
-  newsTitle: "Últimas Notícias",
+  customDonationText: "DOAR OUTRO VALOR",
+  newsTitle: "A Tragédia no Paraná: Últimas Notícias",
   newsItems: [
       {
         title: "Cidade do PR amanhece destruída após passagem de tornado; VEJA IMAGENS",
@@ -35,13 +35,13 @@ export const initialPageContent = {
         url: "https://g1.globo.com/pr/parana/noticia/2024/10/01/cidade-do-pr-amanhece-destruida-apos-passagem-de-tornado-veja-imagens.ghtml"
       },
       {
-        title: "Voluntários se unem para resgatar animais e distribuir doações",
+        title: "Voluntários se unem para resgatar animais e distribuir doações em Rio Bonito",
         source: "RPC TV",
         url: "https://redeglobo.globo.com/rpc/noticia/voluntarios-se-unem-para-resgatar-animais-e-distribuir-doacoes-em-rio-bonito-do-iguacu.ghtml"
       },
        {
-        title: "Governo do Estado envia reforços para a região de Rio Bonito do Iguaçu",
-        source: "AEN",
+        title: "Governo do Paraná envia reforços para a região de Rio Bonito do Iguaçu",
+        source: "Agência Estadual de Notícias",
         url: "https://www.aen.pr.gov.br/Noticia/Governo-do-Estado-envia-reforcos-para-a-regiao-de-Rio-Bonito-do-Iguacu"
       },
       {
@@ -50,12 +50,12 @@ export const initialPageContent = {
         url: "https://www.gazetadopovo.com.br/parana/comocao-e-solidariedade-marcam-os-esforcos-de-reconstrucao-em-rio-bonito/"
       }
   ],
-  impactVisualizerTitle: "SITUAÇÃO CRÍTICA (Dados Oficiais)",
-  impactVisualizerSubText: "Nossa resposta no local: distribuição de água, alimentos, abrigos emergenciais e suporte médico.",
+  impactVisualizerTitle: "O Impacto do Tornado em Rio Bonito do Iguaçu",
+  impactVisualizerSubText: "Dados oficiais da Defesa Civil do Paraná. Nossa resposta no local: distribuição de água, alimentos, abrigos emergenciais e suporte médico.",
   impacts: [
     {
       amount: "90%",
-      description: "dos prédios destruídos"
+      description: "da cidade destruída"
     },
     {
       amount: "6",
@@ -63,44 +63,44 @@ export const initialPageContent = {
     },
     {
       amount: "750+",
-      description: "pessoas feridas"
+      description: "feridos e desabrigados"
     }
   ],
-  aboutTitle: "NOSSA RESPOSTA NO LOCAL",
-  aboutSubTitle: "Ações imediatas para salvar vidas",
-  aboutText: "Com a sua ajuda, estamos na linha de frente distribuindo imediatamente água e alimentos, montando abrigos emergenciais, fornecendo atendimento médico móvel e dando suporte psicológico para as vítimas do trauma. Cada doação é crucial.",
+  aboutTitle: "Nossa Resposta à Emergência no Paraná",
+  aboutSubTitle: "Ações imediatas para salvar vidas em Rio Bonito do Iguaçu",
+  aboutText: "Com a sua ajuda, estamos na linha de frente em Rio Bonito do Iguaçu, distribuindo imediatamente água, alimentos, e kits de higiene. Estamos montando abrigos emergenciais, fornecendo atendimento médico móvel e dando suporte psicológico para as vítimas do trauma. Cada doação é crucial para a reconstrução da cidade.",
   aboutImageUrl: "https://static.tildacdn.com/tild3639-3363-4530-a235-316634316237/ATUAO__SAVE_Brasil.png",
-  credibilityTitle: "DEPOIMENTOS REAIS",
+  credibilityTitle: "Vozes da Tragédia no Paraná",
   testimonials: [
     {
-      name: "Maria Santos, 58 anos",
-      text: "Perdi tudo em 5 minutos. A ajuda chegou quando já não tinha esperança."
+      name: "Maria Santos, moradora de Rio Bonito",
+      text: "Perdi minha casa em minutos. A ajuda que chegou me deu esperança para recomeçar."
     },
     {
-      name: "João Silva, pai de 3",
-      text: "Meus filhos estavam com fome. Graças aos doadores, temos comida hoje."
+      name: "João Silva, voluntário local",
+      text: "Ver a união das pessoas e as doações chegando faz toda a diferença. Estamos reconstruindo tijolo por tijolo."
     }
   ],
-  faqTitle: "PERGUNTAS FREQUENTES",
+  faqTitle: "Dúvidas Sobre a Ajuda ao Paraná",
   faqs: [
     {
-      q: "Como a doação chega às vítimas?",
-      a: "Trabalhamos em parceria com a Defesa Civil e temos uma logística própria para entregar diretamente às famílias afetadas."
+      q: "Como minha doação chega às vítimas de Rio Bonito do Iguaçu?",
+      a: "Trabalhamos em parceria com a Defesa Civil do Paraná e equipes locais para entregar a ajuda diretamente às famílias afetadas, garantindo que o recurso chegue a quem mais precisa."
     },
     {
-      q: "Posso doar itens físicos?",
-      a: "Sim! Temos pontos de coleta em Curitiba (Rua XV de Novembro, 100), São Paulo (Av. Paulista, 500) e Porto Alegre (Praça da Matriz, 25)."
+      q: "Posso doar itens físicos em vez de dinheiro?",
+      a: "Sim! A Defesa Civil organizou pontos de coleta em todo o Paraná. Verifique o local mais próximo na sua cidade."
     },
     {
-      q: "Há transparência?",
-      a: "Total. Publicamos relatórios diários em nosso site, com fotos e vídeos das entregas, além da prestação de contas pública."
+      q: "Como posso ter certeza de que meu dinheiro será bem usado?",
+      a: "Temos um compromisso com a transparência total. Publicamos relatórios diários de nossas operações e despesas em nosso site e redes sociais."
     }
   ],
   footerLinksTitle: "CANAIS DE ATENDIMENTO 24h",
-  footerContactTitle: "CONTATO",
-  footerContactEmail: "emergencia@savebrasil.org.br",
-  footerContactAddress: "WhatsApp: (41) 99876-5432",
-  footerRightsText: "Todos os direitos reservados 2023",
-  footerMadeByText: "Feito com ϟ por",
+  footerContactTitle: "CONTATO DE EMERGÊNCIA (PARANÁ)",
+  footerContactEmail: "emergencia.pr@doare.org",
+  footerContactAddress: "WhatsApp (Emergência): (41) 99876-5432",
+  footerRightsText: "SOS Paraná | Todos os direitos reservados 2024",
+  footerMadeByText: "Tecnologia para o bem, por",
   footerMadeByLink: "http://doare.org/"
 };
