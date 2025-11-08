@@ -52,15 +52,15 @@ export default function Home() {
   const logoImage = PlaceHolderImages.find(p => p.id === 'logo');
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background">
-      <nav className="fixed top-0 left-0 right-0 bg-primary/90 backdrop-blur-lg border-b border-primary-foreground/10 p-2 z-50 shadow-md">
+      <nav className="fixed top-0 left-0 right-0 bg-primary/90 backdrop-blur-lg border-b border-primary-foreground/10 py-1 px-2 z-50 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           {logoImage && (
               <Image
                 src={logoImage.imageUrl}
                 alt={logoImage.description}
                 data-ai-hint={logoImage.imageHint}
-                width={130}
-                height={50}
+                width={100}
+                height={40}
                 className="object-contain"
               />
             )}
