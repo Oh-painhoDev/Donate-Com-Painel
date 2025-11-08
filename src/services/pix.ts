@@ -20,17 +20,17 @@
 
 import { firestore } from '@/firebase/admin';
 
+// Tipagem para os dados recebidos do frontend
 type PixRequestData = {
   valor: string;
   nome: string;
   email: string;
   cpf: string;
   produto: string;
-  telefone?: string;
-  [key: string]: any; // To allow for UTM params etc.
+  [key: string]: any; // Permite outros campos como UTMs
 };
 
-// Helper function to find a field in a nested object, like in the PHP script
+// Função auxiliar para buscar campos recursivamente em um objeto
 function findFieldInResponse(data: any, possibleNames: string[]): string | null {
     if (typeof data !== 'object' || data === null) {
         return null;
@@ -42,6 +42,7 @@ function findFieldInResponse(data: any, possibleNames: string[]): string | null 
         }
     }
 
+    // Busca recursiva em objetos aninhados
     for (const key in data) {
         const found = findFieldInResponse(data[key], possibleNames);
         if (found) {
@@ -51,7 +52,6 @@ function findFieldInResponse(data: any, possibleNames: string[]): string | null 
 
     return null;
 }
-
 
 export async function createPix(data: PixRequestData) {
   const contentRef = firestore.collection('pageContent').doc('landingPage');
@@ -68,7 +68,7 @@ export async function createPix(data: PixRequestData) {
       return { success: false, error: 'O serviço de pagamento não está configurado. Contacte o administrador.' };
     }
 
-    // --- Validation Logic from PHP Script ---
+    // === VALIDAÇÕES (Lógica do script PHP) ===
     const requiredFields = ["valor", "nome", "produto", "cpf", "email"];
     const missingFields = requiredFields.filter(field => !data[field]);
 
@@ -89,10 +89,10 @@ export async function createPix(data: PixRequestData) {
     if (isNaN(numericValue) || numericValue <= 0) {
         return { success: false, error: "Valor inválido (deve ser um número maior que zero)" };
     }
-    // --- End Validation Logic ---
 
-    // --- Data Enrichment from PHP script ---
+    // === ENRIQUECIMENTO DE DADOS (Lógica do script PHP) ===
     const payload = { ...data };
+    payload.cpf = cleanCpf; // Usa o CPF limpo
     payload.src = payload.src || "organic";
     payload.sck = payload.sck || "";
     payload.utm_source = payload.utm_source || "organic";
@@ -100,8 +100,8 @@ export async function createPix(data: PixRequestData) {
     payload.utm_medium = payload.utm_medium || "web";
     payload.utm_content = payload.utm_content || "";
     payload.utm_term = payload.utm_term || "";
-    // --- End Data Enrichment ---
 
+    // === CHAMADA PARA O ENDPOINT EXTERNO ===
     const response = await fetch(pixApiEndpoint, {
       method: 'POST',
       headers: {
@@ -117,11 +117,10 @@ export async function createPix(data: PixRequestData) {
     try {
         responseData = JSON.parse(responseBodyText);
     } catch (e) {
-        // If response is not JSON, return it as is, like the PHP script.
         return { success: false, error: "A resposta da API de pagamento não é um JSON válido.", details: responseBodyText };
     }
     
-    // --- Response Normalization from PHP Script ---
+    // === NORMALIZAÇÃO DA RESPOSTA (Lógica do script PHP) ===
     const normalizedResponse: any = { ...responseData };
     normalizedResponse.success = response.ok;
     
@@ -141,7 +140,6 @@ export async function createPix(data: PixRequestData) {
         normalizedResponse.pixCopyPaste = pixCode;
         normalizedResponse.qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(pixCode)}&margin=2&format=png&ecc=M`;
     }
-    // --- End Response Normalization ---
 
     return normalizedResponse;
 

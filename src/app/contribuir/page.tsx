@@ -42,13 +42,22 @@ function DonationForm() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
+  
+  const [urlParams, setUrlParams] = useState<{[key: string]: string}>({});
 
-  // Seta o valor inicial do input baseado no parâmetro da URL
+  // Seta o valor inicial do input e captura os parâmetros da URL
   useEffect(() => {
     const initialValue = searchParams.get('valor');
     if (initialValue && !isNaN(parseFloat(initialValue))) {
       setBaseValue(parseFloat(initialValue));
     }
+    
+    const params: {[key: string]: string} = {};
+    searchParams.forEach((value, key) => {
+        params[key] = value;
+    });
+    setUrlParams(params);
+
   }, [searchParams]);
 
   const handleGoToStep2 = () => setStep(2);
@@ -69,26 +78,21 @@ function DonationForm() {
       toast({ title: 'Processando...', description: 'Aguarde enquanto geramos o PIX.' });
 
       try {
-          const urlParams = new URLSearchParams(window.location.search);
           const pixData: any = {
+              ...urlParams, // Adiciona todos os parâmetros da URL
               valor: baseValue.toFixed(2),
               nome,
               email,
-              cpf: cpf.replace(/\D/g, ''),
-              produto: 'Doação SOS Paraná', // ou outro nome de produto relevante
+              cpf, // Envia com máscara, o backend limpa
+              produto: `Doação SOS Paraná - R$${baseValue.toFixed(2)}`,
           };
 
-          // Adiciona todos os parâmetros da URL ao payload
-          urlParams.forEach((value, key) => {
-              pixData[key] = value;
-          });
-
-          // Rastreia a "venda" antes de gerar o PIX
+          // Rastreia a "venda" antes de gerar o PIX, passando os parâmetros da URL
           trackSale({
             amountInCents: baseValue * 100,
             productName: `Doação de R$${baseValue.toFixed(2)}`,
+            checkoutUrl: window.location.href, // Passa a URL completa para o serviço
           });
-
 
           const result = await createPix(pixData);
 
@@ -96,11 +100,10 @@ function DonationForm() {
               throw new Error(result.error || 'Erro desconhecido na API');
           }
 
-          // A nova API normalizada retorna pixCopyPaste e qrCodeUrl
           if (result.pixCopyPaste && result.qrCodeUrl) {
               localStorage.setItem('pixData', JSON.stringify({
-                  qrCode: result.pixCopyPaste, // O código para o QR Code
-                  qrCodeUrl: result.qrCodeUrl, // A URL da imagem do QR Code
+                  qrCode: result.pixCopyPaste, 
+                  qrCodeUrl: result.qrCodeUrl,
                   amount: baseValue,
                   transactionId: result.id || 'N/A',
               }));
