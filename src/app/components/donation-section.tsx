@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { trackSale } from '@/services/utmify';
+import Link from 'next/link';
 
 export function DonationSection({ content }: { content: any }) {
   const [customAmount, setCustomAmount] = useState('');
@@ -36,18 +37,8 @@ export function DonationSection({ content }: { content: any }) {
   };
 
   const DonationCircle = ({ amount, description, isCustom = false }: { amount?: number; description: string; isCustom?: boolean }) => {
-    const handleClick = () => {
-      const finalAmount = isCustom ? parseFloat(customAmount) : amount;
-      if (finalAmount && finalAmount > 0) {
-        handleDonationClick(finalAmount, description);
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Valor inválido',
-          description: 'Por favor, insira um valor de doação válido.',
-        });
-      }
-    };
+    const finalAmount = isCustom ? parseFloat(customAmount) : amount;
+    const isValidAmount = finalAmount && finalAmount > 0;
     
     return (
       <div className="flex flex-col items-center gap-6 text-center">
@@ -75,7 +66,9 @@ export function DonationSection({ content }: { content: any }) {
              <p className="text-sm text-foreground/80 mt-2 font-medium">{description}</p>
           </div>
         </div>
-        <Button size="lg" className="w-40 h-12 text-lg font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg" onClick={handleClick}>DOAR</Button>
+        <Button size="lg" className="w-40 h-12 text-lg font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg" asChild>
+          <Link href={`/contribuir?valor=${finalAmount || ''}`}>DOAR</Link>
+        </Button>
       </div>
     );
   }

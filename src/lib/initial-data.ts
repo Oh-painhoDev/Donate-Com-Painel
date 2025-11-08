@@ -1,17 +1,18 @@
 
 export const initialPageContent = {
   utmifyApiToken: "",
+  pixApiEndpoint: "",
   colors: {
-    primary: "150 50% 25%",
-    secondary: "150 45% 90%",
-    accent: "14 100% 55%",
-    background: "220 13% 98%",
+    primary: "205 90% 27%",
+    secondary: "210 40% 96%",
+    accent: "30 100% 50%",
+    background: "0 0% 100%",
   },
   pageTitle: "SOS Paraná | Ajude Rio Bonito do Iguaçu",
   logoImageUrl: "https://static.tildacdn.com/tild3363-3038-4833-b638-353032356634/noroot.png",
   headerText: "SOS PARANÁ: AJUDE A RECONSTRUIR RIO BONITO DO IGUAÇU",
   headerSubText: "Um tornado devastou 90% da cidade, deixando um rastro de destruição. Vidas foram perdidas, centenas de famílias estão desabrigadas e precisam da sua ajuda urgente.",
-  headerImageUrl: "https://images.unsplash.com/photo-1543369249-3993c833c2f6?q=80&w=2070&auto=format&fit=crop",
+  headerImageUrl: "https://images.unsplash.com/photo-1620776230043-c7943c72ef63?q=80&w=2070&auto=format&fit=crop",
   donationOptions: [
     {
       amount: 60,

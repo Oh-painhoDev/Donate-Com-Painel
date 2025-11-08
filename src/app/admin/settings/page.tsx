@@ -53,6 +53,7 @@ const colorSchema = z.object({
 
 const pageContentSchema = z.object({
   utmifyApiToken: z.string().optional(),
+  pixApiEndpoint: z.string().url({ message: "URL do endpoint PIX inválida." }).optional().or(z.literal('')),
   colors: colorSchema,
   pageTitle: z.string().min(1, { message: "O título da página é obrigatório." }),
   logoImageUrl: z.string().url({ message: "URL do logo inválida." }),
@@ -156,10 +157,11 @@ export default function AdminSettingsPage() {
         <Card id="integrations" className="scroll-mt-24 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-3"><Link className="text-primary"/> Integrações</CardTitle>
-            <CardDescription>Configure tokens de API para serviços de terceiros.</CardDescription>
+            <CardDescription>Configure tokens de API e endpoints para serviços de terceiros.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
              <div><Label>Utmify API Token</Label><Input {...register('utmifyApiToken')} placeholder="Seu token aqui..." /><p className="text-sm text-muted-foreground mt-1">Insira seu token para rastrear as doações como vendas.</p></div>
+             <div><Label>Endpoint da API PIX</Label><Input {...register('pixApiEndpoint')} placeholder="https://sua-api.com/gerar-pix" /><p className="text-sm text-muted-foreground mt-1">URL para onde os dados do formulário de doação serão enviados.</p><p className="text-destructive text-sm mt-1">{errors.pixApiEndpoint?.message}</p></div>
           </CardContent>
         </Card>
         
