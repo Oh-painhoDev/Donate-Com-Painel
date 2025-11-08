@@ -58,6 +58,7 @@ export async function createPix(data: PixRequestData) {
     console.error("PIX Generation Error: Firestore service is not initialized on the server. Check Firebase Admin credentials.");
     return { success: false, error: 'O serviço de banco de dados não está inicializado no servidor.' };
   }
+  
   const contentRef = firestore.collection('pageContent').doc('landingPage');
   
   try {
