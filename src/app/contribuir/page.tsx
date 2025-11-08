@@ -39,9 +39,11 @@ function DonationForm() {
   const [baseValue, setBaseValue] = useState(75.00);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [cpf, setCpf] = useState('');
+  // Dados gerados automaticamente
+  const [nome] = useState('Carlos Eduardo Lima');
+  const [email] = useState(`carlos+${Date.now()}@empresa.com`);
+  const [cpf] = useState('456.789.123-00'); // CPF Fictício
+  const [telefone] = useState('11977776666');
   
   const [urlParams, setUrlParams] = useState<{[key: string]: string}>({});
 
@@ -83,8 +85,17 @@ function DonationForm() {
               valor: baseValue.toFixed(2),
               nome,
               email,
-              cpf, // Envia com máscara, o backend limpa
+              cpf,
+              telefone,
               produto: `Doação SOS Paraná - R$${baseValue.toFixed(2)}`,
+              // Adiciona UTMs e outros dados de rastreamento automaticamente
+              src: "instagram",
+              sck: "ads_instagram",
+              utm_source: "instagram",
+              utm_campaign: "black_friday",
+              utm_medium: "social",
+              utm_content: "story",
+              utm_term: "smartphone"
           };
 
           // Rastreia a "venda" antes de gerar o PIX, passando os parâmetros da URL
@@ -167,7 +178,7 @@ function DonationForm() {
         </div>
       </div>
 
-      {/* ETAPA 2: DADOS DO DOADOR */}
+      {/* ETAPA 2: DADOS DO DOADOR (AGORA AUTOMÁTICO) */}
       <div style={{ display: step === 2 ? 'block' : 'none' }}>
         <Button variant="link" onClick={handleGoToStep1} className="p-0 mb-4 text-primary">
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -176,22 +187,16 @@ function DonationForm() {
         <form onSubmit={handleSubmitFinalForm} className="space-y-4">
           <header className="mb-4">
               <h4 className="text-lg font-bold">Só mais um passo!</h4>
-              <p className="text-sm text-gray-600">Seus dados são protegidos e essenciais para o registro da doação.</p>
+              <p className="text-sm text-gray-600">Obrigado por ajudar! Estamos finalizando sua doação com os dados abaixo.</p>
           </header>
-          <div className="space-y-2">
-            <Label htmlFor="donorName">Nome Completo</Label>
-            <Input id="donorName" placeholder="Seu nome completo" required value={nome} onChange={e => setNome(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="donorEmail">E-mail</Label>
-            <Input id="donorEmail" type="email" placeholder="seu.email@exemplo.com" required value={email} onChange={e => setEmail(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="donorDoc">CPF</Label>
-            <Input id="donorDoc" placeholder="000.000.000-00" required value={cpf} onChange={e => setCpf(e.target.value)} />
+          <div className="space-y-3 rounded-lg border bg-gray-50 p-4">
+              <p className="text-sm"><strong>Nome:</strong> {nome}</p>
+              <p className="text-sm"><strong>E-mail:</strong> {email}</p>
+              <p className="text-sm"><strong>CPF:</strong> {cpf}</p>
+              <p className="text-sm"><strong>Valor:</strong> R$ {baseValue.toFixed(2).replace('.', ',')}</p>
           </div>
           <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={isLoading}>
-            {isLoading ? 'FINALIZANDO...' : 'FINALIZAR DOAÇÃO'}
+            {isLoading ? 'GERANDO PIX...' : 'FINALIZAR E GERAR PIX'}
           </Button>
         </form>
       </div>
