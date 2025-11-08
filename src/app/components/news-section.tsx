@@ -16,7 +16,7 @@ export function NewsSection({ content }: { content: any }) {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {content.newsItems.map((newsItem: any, index: number) => (
+          {content.newsItems.slice(0, 4).map((newsItem: any, index: number) => (
             <NewsCard
               key={index}
               title={newsItem.title}
