@@ -167,16 +167,16 @@ function PixGeneration() {
                 )}
             </div>
 
-            <div className="text-left w-full bg-gray-50 p-4 rounded-lg">
+            <div className="text-left w-full bg-muted/30 p-4 rounded-lg">
                 <p className="font-semibold">Valor: <span className="font-bold text-lg text-primary">R$ {pixData.amount.toFixed(2).replace('.', ',')}</span></p>
-                <p className="text-xs text-gray-500 mt-1">ID: {pixData.transactionId}</p>
+                <p className="text-xs text-muted-foreground mt-1">ID: {pixData.transactionId}</p>
             </div>
 
             <Button onClick={handleCopy} className="w-full" size="lg">
                 {isCopied ? <Check className="mr-2 h-5 w-5" /> : <Copy className="mr-2 h-5 w-5" />}
                 {isCopied ? 'Copiado!' : 'Copiar Código PIX'}
             </Button>
-             <p className="text-xs text-gray-500">
+             <p className="text-xs text-muted-foreground">
                 Abra o app do seu banco e escolha a opção PIX Copia e Cola.
             </p>
         </CardContent>
@@ -187,7 +187,7 @@ function PixGeneration() {
 
 export default function PixPage() {
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-muted/30 flex items-center justify-center p-4">
             <Suspense fallback={<p>Carregando...</p>}>
                 <PixGeneration />
             </Suspense>

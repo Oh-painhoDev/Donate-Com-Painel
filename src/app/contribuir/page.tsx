@@ -28,6 +28,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 
 // Schema para validação do formulário
 const donationFormSchema = z.object({
@@ -100,89 +101,90 @@ function DonationForm() {
 
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-lg">
-      <header className="text-center mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">SOS PARANÁ</h2>
-        <h4 className="text-sm text-gray-500">Ajude as vítimas do tornado</h4>
-      </header>
-
-      {/* ETAPA 1: SELEÇÃO DE VALOR */}
-      <div style={{ display: step === 1 ? 'block' : 'none' }}>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="mainAmountInput" className="sr-only">Valor da Doação</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-semibold text-gray-500">R$</span>
-              <Input
-                id="mainAmountInput"
-                type="text"
-                className="w-full pl-12 pr-4 py-6 text-2xl font-bold border-2 border-gray-200 focus:border-primary"
-                value={baseValue.toFixed(2).replace('.', ',')}
-                onChange={handleMainInputChange}
-              />
+    <Card className="w-full max-w-lg mx-auto">
+        <CardHeader className="text-center">
+            <CardTitle className="text-xl sm:text-2xl">SOS PARANÁ</CardTitle>
+            <CardDescription>Ajude as vítimas do tornado</CardDescription>
+        </CardHeader>
+        <CardContent>
+            {/* ETAPA 1: SELEÇÃO DE VALOR */}
+            <div style={{ display: step === 1 ? 'block' : 'none' }}>
+                <div className="space-y-4">
+                <div>
+                    <Label htmlFor="mainAmountInput" className="sr-only">Valor da Doação</Label>
+                    <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-semibold text-muted-foreground">R$</span>
+                    <Input
+                        id="mainAmountInput"
+                        type="text"
+                        className="w-full pl-12 pr-4 py-6 text-2xl font-bold border-2 border-border focus:border-primary"
+                        value={baseValue.toFixed(2).replace('.', ',')}
+                        onChange={handleMainInputChange}
+                    />
+                    </div>
+                </div>
+                <p className="text-sm text-muted-foreground">Sugestão: valores mais doados</p>
+                <div className="grid grid-cols-3 gap-2">
+                    {[25, 50, 75, 100, 300, 500].map((value) => (
+                    <Button
+                        key={value}
+                        variant={baseValue === value ? 'default' : 'outline'}
+                        className="rounded-full h-12"
+                        onClick={() => selectSuggestion(value)}
+                    >
+                        R$ {value.toFixed(2).replace('.', ',')}
+                    </Button>
+                    ))}
+                </div>
+                <Button variant="default" size="lg" className="w-full h-14 text-lg" onClick={handleGoToStep2}>
+                    CONTINUAR
+                </Button>
+                </div>
             </div>
-          </div>
-          <p className="text-sm text-gray-600">Sugestão: valores mais doados</p>
-          <div className="grid grid-cols-3 gap-2">
-            {[25, 50, 75, 100, 300, 500].map((value) => (
-              <Button
-                key={value}
-                variant={baseValue === value ? 'default' : 'outline'}
-                className="rounded-full h-12"
-                onClick={() => selectSuggestion(value)}
-              >
-                R$ {value.toFixed(2).replace('.', ',')}
-              </Button>
-            ))}
-          </div>
-          <Button variant="default" size="lg" className="w-full h-14 text-lg" onClick={handleGoToStep2}>
-            CONTINUAR
-          </Button>
-        </div>
-      </div>
 
-      {/* ETAPA 2: DADOS DO DOADOR */}
-       <div style={{ display: step === 2 ? 'block' : 'none' }}>
-        <Button variant="link" onClick={handleGoToStep1} className="p-0 mb-4 text-primary">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Voltar para alterar o valor
-        </Button>
-        <form onSubmit={handleSubmit(submitFinalForm)} className="space-y-4">
-          <header className="mb-4">
-              <h4 className="text-lg font-bold">Só mais um passo!</h4>
-              <p className="text-sm text-gray-600">Seus dados são protegidos e essenciais para o registro da doação.</p>
-          </header>
+            {/* ETAPA 2: DADOS DO DOADOR */}
+            <div style={{ display: step === 2 ? 'block' : 'none' }}>
+                <Button variant="link" onClick={handleGoToStep1} className="p-0 mb-4 text-primary">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Voltar para alterar o valor
+                </Button>
+                <form onSubmit={handleSubmit(submitFinalForm)} className="space-y-4">
+                <header className="mb-4">
+                    <h4 className="text-lg font-bold">Só mais um passo!</h4>
+                    <p className="text-sm text-muted-foreground">Seus dados são protegidos e essenciais para o registro da doação.</p>
+                </header>
 
-          <div className="space-y-3">
-             <div className="space-y-1">
-                <Label htmlFor="nome">Nome Completo</Label>
-                <Input id="nome" {...register('nome')} placeholder="Seu nome completo"/>
-                {errors.nome && <p className="text-sm text-destructive">{errors.nome.message}</p>}
-             </div>
-             <div className="space-y-1">
-                <Label htmlFor="email">E-mail</Label>
-                <Input id="email" type="email" {...register('email')} placeholder="seu.email@exemplo.com"/>
-                {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-             </div>
-             <div className="space-y-1">
-                <Label htmlFor="cpf">CPF (somente números)</Label>
-                <Input id="cpf" {...register('cpf')} placeholder="11122233344"/>
-                {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
-             </div>
-          </div>
-          
-          <Button type="submit" size="lg" className="w-full h-14 text-lg">
-            FINALIZAR E GERAR PIX
-          </Button>
-        </form>
-      </div>
-    </div>
+                <div className="space-y-3">
+                    <div className="space-y-1">
+                        <Label htmlFor="nome">Nome Completo</Label>
+                        <Input id="nome" {...register('nome')} placeholder="Seu nome completo"/>
+                        {errors.nome && <p className="text-sm text-destructive">{errors.nome.message}</p>}
+                    </div>
+                    <div className="space-y-1">
+                        <Label htmlFor="email">E-mail</Label>
+                        <Input id="email" type="email" {...register('email')} placeholder="seu.email@exemplo.com"/>
+                        {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+                    </div>
+                    <div className="space-y-1">
+                        <Label htmlFor="cpf">CPF (somente números)</Label>
+                        <Input id="cpf" {...register('cpf')} placeholder="11122233344"/>
+                        {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
+                    </div>
+                </div>
+                
+                <Button type="submit" size="lg" className="w-full h-14 text-lg">
+                    FINALIZAR E GERAR PIX
+                </Button>
+                </form>
+            </div>
+        </CardContent>
+    </Card>
   );
 }
 
 export default function ContribuirPage() {
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-muted/30 flex items-center justify-center p-4">
             <Suspense fallback={<div>Carregando...</div>}>
                 <DonationForm />
             </Suspense>

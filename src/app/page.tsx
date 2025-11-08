@@ -52,7 +52,7 @@ function AboutSection({ content }: { content: any }) {
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary font-headline">{content.aboutTitle}</h2>
             <h3 className="text-xl md:text-2xl font-semibold mb-6 text-primary/80">{content.aboutSubTitle}</h3>
-            <div className="space-y-4 text-lg text-foreground/90">
+            <div className="space-y-4 text-lg text-secondary-foreground/90">
               <p>{content.aboutText}</p>
             </div>
             <Button asChild size="lg" className="mt-8 text-lg px-10 py-7 font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg">
@@ -84,7 +84,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background">
       <ThemeInjector colors={content.colors} />
-       <nav className="fixed top-0 left-0 right-0 bg-primary/90 backdrop-blur-lg border-b border-primary-foreground/10 py-1 px-2 z-50 shadow-md">
+       <nav className="fixed top-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-b border-border/50 py-1 px-2 z-50 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           {content.logoImageUrl && (
               <Image

@@ -31,7 +31,7 @@ export function DonationSection({ content }: { content: any }) {
     return (
       <div className="flex flex-col items-center gap-6 text-center">
         <div className="relative w-48 h-48 md:w-56 md:h-56 transform hover:scale-105 transition-transform duration-300">
-          <div className="absolute inset-0 rounded-full bg-white shadow-2xl"></div>
+          <div className="absolute inset-0 rounded-full bg-card shadow-2xl"></div>
           <div className="absolute inset-2 rounded-full border-2 border-dashed border-accent"></div>
           <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
             {isCustom ? (
@@ -42,7 +42,7 @@ export function DonationSection({ content }: { content: any }) {
                       id="custom-amount"
                       type="number"
                       placeholder="0,00"
-                      className="text-3xl md:text-4xl font-bold w-32 border-0 bg-transparent text-center shadow-none focus-visible:ring-0 p-0"
+                      className="text-3xl md:text-4xl font-bold w-32 border-0 bg-transparent text-center shadow-none focus-visible:ring-0 p-0 text-foreground"
                       value={customAmount}
                       onChange={(e) => setCustomAmount(e.target.value)}
                     />
