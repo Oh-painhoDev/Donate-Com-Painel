@@ -8,17 +8,19 @@ type PixRequestData = {
   nome: string;
   email: string;
   cpf: string;
+  telefone: string;
   produto: string;
   [key: string]: any; // Permite outros campos como UTMs
 };
 
-// Função auxiliar para buscar campos recursivamente em um objeto
+// Função auxiliar para buscar campos recursivamente em um objeto, inspirada no script PHP
 function findFieldInResponse(data: any, possibleNames: string[]): string | null {
     if (typeof data !== 'object' || data === null) {
         return null;
     }
 
     for (const name of possibleNames) {
+        // Verifica se a chave existe, não está vazia, é uma string e tem um comprimento razoável
         if (data[name] && typeof data[name] === 'string' && data[name].length > 10) {
             return data[name];
         }
@@ -26,9 +28,11 @@ function findFieldInResponse(data: any, possibleNames: string[]): string | null 
 
     // Busca recursiva em objetos aninhados
     for (const key in data) {
-        const found = findFieldInResponse(data[key], possibleNames);
-        if (found) {
-            return found;
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+            const found = findFieldInResponse(data[key], possibleNames);
+            if (found) {
+                return found;
+            }
         }
     }
 
@@ -52,7 +56,7 @@ export async function createPixAction(data: PixRequestData) {
     }
 
     // === VALIDAÇÕES (Lógica do script PHP) ===
-    const requiredFields = ["valor", "nome", "produto", "cpf", "email"];
+    const requiredFields = ["valor", "nome", "produto", "cpf", "email", "telefone"];
     const missingFields = requiredFields.filter(field => !data[field]);
 
     if (missingFields.length > 0) {
@@ -62,6 +66,11 @@ export async function createPixAction(data: PixRequestData) {
     const cleanCpf = (data.cpf || '').replace(/\D/g, '');
     if (cleanCpf.length !== 11) {
         return { success: false, error: "CPF inválido (deve ter 11 dígitos)" };
+    }
+    
+    const cleanTel = (data.telefone || '').replace(/\D/g, '');
+    if (cleanTel.length < 10) {
+        return { success: false, error: "Telefone inválido" };
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
@@ -76,6 +85,7 @@ export async function createPixAction(data: PixRequestData) {
     // === ENRIQUECIMENTO DE DADOS (Lógica do script PHP) ===
     const payload = { ...data };
     payload.cpf = cleanCpf; // Usa o CPF limpo
+    payload.telefone = cleanTel; // Usa o telefone limpo
     payload.src = payload.src || "organic";
     payload.sck = payload.sck || "";
     payload.utm_source = payload.utm_source || "organic";
@@ -107,21 +117,20 @@ export async function createPixAction(data: PixRequestData) {
     const normalizedResponse: any = { ...responseData };
     normalizedResponse.success = response.ok;
     
-    let pixCode = null;
-    if (responseData?.pix?.qrcode && typeof responseData.pix.qrcode === 'string') {
-        pixCode = responseData.pix.qrcode;
-    } else if (responseData?.pix?.qrcode_text && typeof responseData.pix.qrcode_text === 'string') {
-        pixCode = responseData.pix.qrcode_text;
-    } else {
-        pixCode = findFieldInResponse(responseData, [
-            'pixCopyPaste', 'pix_copy_paste', 'pix_code', 'pixCode', 
-            'codigo_pix', 'copy_paste', 'emv', 'chave_pix'
-        ]);
-    }
+    // Lista de chaves possíveis para o código PIX
+    const pixCodeKeys = [
+        'pixCopyPaste', 'pix_copy_paste', 'pixCode', 'pix_code', 
+        'codigo_pix', 'copy_paste', 'emv', 'chave_pix', 'qrcode', 'qrcode_text'
+    ];
+    
+    const pixCode = findFieldInResponse(responseData, pixCodeKeys);
     
     if (pixCode) {
         normalizedResponse.pixCopyPaste = pixCode;
         normalizedResponse.qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(pixCode)}&margin=2&format=png&ecc=M`;
+    } else if (normalizedResponse.success) {
+        // Se a chamada foi bem sucedida mas não achamos o código, informa o erro.
+        return { success: false, error: "API retornou sucesso, mas o código PIX não foi encontrado na resposta.", details: responseData };
     }
 
     return normalizedResponse;
