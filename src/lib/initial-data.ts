@@ -11,7 +11,7 @@ export const initialPageContent = {
   logoImageUrl: "https://static.tildacdn.com/tild3363-3038-4833-b638-353032356634/noroot.png",
   headerText: "SOS PARANÁ: AJUDE A RECONSTRUIR RIO BONITO DO IGUAÇU",
   headerSubText: "Um tornado devastou 90% da cidade, deixando um rastro de destruição. Vidas foram perdidas, centenas de famílias estão desabrigadas e precisam da sua ajuda urgente.",
-  headerImageUrl: "https://static.tildacdn.com/tild3666-3234-4637-b530-333931383636/banner_principal.png",
+  headerImageUrl: "https://images.unsplash.com/photo-1543369249-3993c833c2f6?q=80&w=2070&auto=format&fit=crop",
   donationOptions: [
     {
       amount: 60,
@@ -69,7 +69,7 @@ export const initialPageContent = {
   aboutTitle: "Nossa Resposta à Emergência no Paraná",
   aboutSubTitle: "Ações imediatas para salvar vidas em Rio Bonito do Iguaçu",
   aboutText: "Com a sua ajuda, estamos na linha de frente em Rio Bonito do Iguaçu, distribuindo imediatamente água, alimentos, e kits de higiene. Estamos montando abrigos emergenciais, fornecendo atendimento médico móvel e dando suporte psicológico para as vítimas do trauma. Cada doação é crucial para a reconstrução da cidade.",
-  aboutImageUrl: "https://static.tildacdn.com/tild3639-3363-4530-a235-316634316237/ATUAO__SAVE_Brasil.png",
+  aboutImageUrl: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop",
   credibilityTitle: "Vozes da Tragédia no Paraná",
   testimonials: [
     {
