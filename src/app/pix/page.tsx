@@ -22,7 +22,6 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { createPixAction } from '@/app/actions';
 import { Copy, Check, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Image from 'next/image';
@@ -55,19 +54,27 @@ function PixGeneration() {
         searchParams.forEach((value, key) => {
             urlParams[key] = value;
         });
-
+        
+        // Payload para a nossa API Route, que por sua vez chamará a API externa.
         const pixPayload = {
             ...urlParams, // Adiciona todos os parâmetros da URL (UTMs, etc)
             valor: donationData.valor,
             nome: donationData.nome,
             email: donationData.email,
             cpf: donationData.cpf,
-            telefone: '11999999999', // Telefone fixo por enquanto
+            telefone: '11999999999', // Telefone fixo por enquanto, conforme solicitado anteriormente.
             produto: `Doação SOS Paraná - R$${donationData.valor}`,
-            checkoutUrl: window.location.href, // Passa a URL completa para o serviço de rastreamento
         };
 
-        const result = await createPixAction(pixPayload);
+        const response = await fetch('/api/create-vision', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pixPayload),
+        });
+
+        const result = await response.json();
 
         if (!result.success) {
             throw new Error(result.error || 'Erro desconhecido ao gerar PIX.');
@@ -92,8 +99,6 @@ function PixGeneration() {
           title: 'Erro ao Gerar PIX',
           description: error.message || 'Não foi possível se conectar ao serviço de pagamento. Tente novamente.',
         });
-        // Opcional: redirecionar de volta se falhar
-        // router.push('/contribuir');
       } finally {
         setIsLoading(false);
       }
