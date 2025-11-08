@@ -33,7 +33,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 const donationFormSchema = z.object({
   nome: z.string().min(3, { message: 'Nome completo é obrigatório.' }),
   email: z.string().email({ message: 'E-mail inválido.' }),
-  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, { message: 'CPF inválido. Use o formato 000.000.000-00' }),
+  cpf: z.string().length(11, { message: 'CPF deve conter 11 dígitos.' }),
 });
 
 type DonationFormData = z.infer<typeof donationFormSchema>;
@@ -165,8 +165,8 @@ function DonationForm() {
                 {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
              </div>
              <div className="space-y-1">
-                <Label htmlFor="cpf">CPF</Label>
-                <Input id="cpf" {...register('cpf')} placeholder="000.000.000-00"/>
+                <Label htmlFor="cpf">CPF (somente números)</Label>
+                <Input id="cpf" {...register('cpf')} placeholder="11122233344"/>
                 {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
              </div>
           </div>

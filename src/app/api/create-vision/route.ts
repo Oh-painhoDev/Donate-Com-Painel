@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     const required = ['valor', 'nome', 'produto', 'cpf', 'email', 'telefone'];
     const missing = [];
     for (const field of required) {
+        // Use a more robust check for empty/null/undefined values
       if (!data[field] || String(data[field]).trim() === '') {
         missing.push(field);
       }
@@ -30,6 +31,8 @@ export async function POST(req: Request) {
     // 4. Sanitize and validate data types and formats.
     const cleanCpf = String(data.cpf).replace(/\D/g, '');
     const cleanTel = String(data.telefone).replace(/\D/g, '');
+    const numericValue = parseFloat(String(data.valor).replace(',', '.'));
+
 
     if (cleanCpf.length !== 11) {
         return NextResponse.json({ success: false, error: 'CPF inválido (deve ter 11 dígitos)' }, { status: 400 });
@@ -40,7 +43,6 @@ export async function POST(req: Request) {
     if (cleanTel.length < 10) {
         return NextResponse.json({ success: false, error: 'Telefone inválido' }, { status: 400 });
     }
-    const numericValue = parseFloat(String(data.valor).replace(',', '.'));
     if (isNaN(numericValue) || numericValue <= 0) {
         return NextResponse.json({ success: false, error: 'Valor inválido' }, { status: 400 });
     }
