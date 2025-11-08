@@ -54,17 +54,10 @@ function findFieldInResponse(data: any, possibleNames: string[]): string | null 
 }
 
 export async function createPix(data: PixRequestData) {
-  let firestore;
   try {
-    firestore = getAdminFirestore();
-  } catch (error: any) {
-    console.error("PIX Generation Error:", error.message);
-    return { success: false, error: 'O serviço de banco de dados não está inicializado no servidor.' };
-  }
-  
-  const contentRef = firestore.collection('pageContent').doc('landingPage');
-  
-  try {
+    const firestore = getAdminFirestore();
+    const contentRef = firestore.collection('pageContent').doc('landingPage');
+    
     const contentSnap = await contentRef.get();
     if (!contentSnap.exists) {
       return { success: false, error: 'Configuração da página não encontrada.' };
