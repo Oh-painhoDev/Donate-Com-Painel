@@ -45,7 +45,7 @@ export default function AdminLayout({
   // While loading, or if trying to access a protected route without being logged in, show a loader.
   if (isUserLoading || (!user && pathname !== '/admin/login')) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <p>Carregando...</p>
       </div>
     );

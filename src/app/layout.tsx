@@ -21,8 +21,6 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
 import { useEffect } from 'react';
-import { ThemeProvider } from '@/app/components/theme-provider';
-
 
 // Metadata has been removed from this client component to fix the build error.
 // Page titles and descriptions are now fully managed dynamically based on Firestore data in page.tsx.
@@ -59,8 +57,9 @@ export default function RootLayout({
 
     // Mostra o bloco
     function mostrarResenha() {
-      const piada = piadas[Math.floor(Math.random() * piadas.length)];
       console.clear();
+
+      const piada = piadas[Math.floor(Math.random() * piadas.length)];
 
       console.log(`%c╔${"═".repeat(largura - 2)}╗`, `color:${cor}`);
       console.log(`%c║${" ".repeat(Math.floor((largura - 2 - 24) / 2))}💻 PAINHO DEV CONSOLE 💻${" ".repeat(Math.ceil((largura - 2 - 24) / 2))}║`, `color:${cor}; font-weight:bold;`);
@@ -96,17 +95,10 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
           <FirebaseClientProvider>
             {children}
           </FirebaseClientProvider>
           <Toaster />
-        </ThemeProvider>
       </body>
     </html>
   );

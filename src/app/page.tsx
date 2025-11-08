@@ -75,16 +75,16 @@ export default function Home() {
   
   if (isLoading) {
     return (
-       <div className="flex items-center justify-center min-h-screen bg-background">
+       <div className="flex items-center justify-center min-h-screen bg-white">
         <p>Carregando...</p>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-background">
+    <div className="flex flex-col min-h-[100dvh] bg-white">
       <ThemeInjector colors={content.colors} />
-       <nav className="fixed top-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-b border-border/50 py-1 px-2 z-50 shadow-md">
+       <nav className="fixed top-0 left-0 right-0 bg-black/60 backdrop-blur-sm py-1 px-2 z-50 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           {content.logoImageUrl && (
               <Image

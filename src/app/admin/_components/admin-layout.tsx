@@ -48,7 +48,6 @@ import {
 import { useAuth } from '@/firebase/hooks';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/app/components/theme-toggle';
 
 const menuItems = [
   { href: '/admin/settings#integrations', icon: LinkIcon, label: 'Integrações' },
@@ -131,14 +130,13 @@ export function AdminPageLayout({ children }: { children: React.ReactNode }) {
                 <h1 className="text-xl font-semibold text-foreground">Gerenciar Conteúdo do Site</h1>
             </div>
             <div className='hidden md:flex items-center gap-2'>
-                <ThemeToggle />
                 <Button onClick={handleSignOut} variant="outline" size="sm">
                   <LogOut className="mr-2 h-4 w-4" />
                   Sair
                 </Button>
             </div>
         </header>
-        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 bg-muted/30 dark:bg-muted/10">
+        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 bg-muted/30">
             {children}
         </main>
       </SidebarInset>
