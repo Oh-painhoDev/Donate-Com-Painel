@@ -33,6 +33,10 @@ const getQueryParam = (url: string, param: string): string | null => {
 
 // Main function to track a sale/donation
 export async function trackSale(saleData: { amountInCents: number; productName: string; checkoutUrl: string; }) {
+  if (!firestore) {
+    console.warn("Firestore not initialized on the server. Skipping Utmify tracking.");
+    return;
+  }
   const contentRef = firestore.collection('pageContent').doc('landingPage');
   
   try {

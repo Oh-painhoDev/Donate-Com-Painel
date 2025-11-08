@@ -54,6 +54,9 @@ function findFieldInResponse(data: any, possibleNames: string[]): string | null 
 }
 
 export async function createPix(data: PixRequestData) {
+  if (!firestore) {
+    return { success: false, error: 'O serviço de banco de dados não está inicializado no servidor.' };
+  }
   const contentRef = firestore.collection('pageContent').doc('landingPage');
   
   try {
