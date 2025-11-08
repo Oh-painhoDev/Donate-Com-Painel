@@ -25,7 +25,7 @@ import * as admin from 'firebase-admin';
  * @throws {Error} If Firebase Admin credentials are not set in environment variables.
  */
 export function getAdminFirestore(): admin.firestore.Firestore {
-  // Check if the app is already initialized
+  // Check if the app is already initialized to prevent re-initialization.
   if (admin.apps.length > 0 && admin.apps[0]) {
     return admin.firestore();
   }
@@ -34,29 +34,23 @@ export function getAdminFirestore(): admin.firestore.Firestore {
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
 
-  if (privateKey && projectId && clientEmail) {
-    try {
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId,
-          clientEmail,
-          privateKey: privateKey.replace(/\\n/g, '\n'),
-        }),
-      });
-    } catch (e: any) {
-      // This might happen in some environments, but we can often ignore it
-      // if an app already exists.
-      if (e.code !== 'app/duplicate-app') {
-        console.error("Firebase Admin initialization failed:", e);
-        throw e; // Re-throw critical errors
-      }
-    }
-  } else {
-    // This is a critical failure. The server cannot function without credentials.
-    const errorMessage = "Firebase Admin credentials (FIREBASE_PRIVATE_KEY, FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL) are not set in environment variables. Server-side features will not work.";
+  // The credentials MUST be available in the environment.
+  if (!privateKey || !projectId || !clientEmail) {
+    const errorMessage = "Firebase Admin credentials (FIREBASE_PRIVATE_KEY, FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL) are not set in environment variables. Server-side features cannot work.";
     console.error(errorMessage);
+    // Throw a specific, clear error. This is a critical failure.
     throw new Error(errorMessage);
   }
+
+  // Initialize the app with the explicit credentials.
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId,
+      clientEmail,
+      // Ensure newline characters are correctly interpreted.
+      privateKey: privateKey.replace(/\\n/g, '\n'),
+    }),
+  });
 
   // Return the Firestore instance from the now-initialized app.
   return admin.firestore();
