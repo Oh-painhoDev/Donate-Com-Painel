@@ -51,13 +51,12 @@ export default function RootLayout({
       console.log("%c╔══════════════════════════════════════════════════╗", "color:#00ff88");
       console.log("%c║                💻 PAINHO DEV CONSOLE 💻           ║", "color:#00ff88; font-weight:bold;");
       console.log("%c║  Criador Profissional de Bugs                    ║", "color:#00ff88");
-      console.log(`%c║  Piada do momento:                               ║`, "color:#00ff88");
       // Making sure the joke fits in the box
-      const jokeLine = `  "${piada}"`.padEnd(49, ' ');
+      const jokeLine = `  Piada: "${piada}"`.padEnd(49, ' ');
       console.log(`%c║${jokeLine}║`, "color:#00ff88");
       console.log("%c║  Status: Funcionou na minha máquina! 🤷          ║", "color:#00ff88");
       console.log("%c╚══════════════════════════════════════════════════╝", "color:#00ff88");
-      console.log("%c            \\     ^__^\\n             \\   (oo)\\_______\\n                 (__)\\       )\\/\\\\\\n                     ||----Ō |\\n                     ||     ||", "color:#00ff88");
+      console.log("%c            \\     ^__^\n             \\   (oo)\\_______\n                 (__)\\       )\\/\\\\\n                     ||----Ō |\n                     ||     ||", "color:#00ff88");
     }
     
     mostrarResenha();
