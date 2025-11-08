@@ -21,7 +21,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
@@ -29,6 +28,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
+  SidebarFooter
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import {
@@ -67,7 +67,9 @@ export function AdminPageLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    await auth.signOut();
+    if (auth) {
+      await auth.signOut();
+    }
     router.push('/admin/login');
   };
 

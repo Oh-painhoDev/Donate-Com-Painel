@@ -17,7 +17,6 @@
  * 
  */
 'use client'
-import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
@@ -47,14 +46,15 @@ export default function RootLayout({
     
     function mostrarResenha() {
       const piada = piadas[Math.floor(Math.random() * piadas.length)];
+      const jokeLine = `  Piada: "${piada}"`.padEnd(49, ' ');
       console.clear();
       console.log("%c╔══════════════════════════════════════════════════╗", "color:#00ff88");
       console.log("%c║                💻 PAINHO DEV CONSOLE 💻           ║", "color:#00ff88; font-weight:bold;");
-      console.log("%c║  Criador Profissional de Bugs                    ║", "color:#00ff88");
-      // Making sure the joke fits in the box
-      const jokeLine = `  Piada: "${piada}"`.padEnd(49, ' ');
+      console.log("%c║   [USUÁRIO]: Painho_Dev                         ║", "color:#00ff88");
+      console.log("%c║   [DISCORD]: painhodev                          ║", "color:#00ff88");
+      console.log("%c║   [CARGO]: Criador Profissional de Bugs          ║", "color:#00ff88");
       console.log(`%c║${jokeLine}║`, "color:#00ff88");
-      console.log("%c║  Status: Funcionou na minha máquina! 🤷          ║", "color:#00ff88");
+      console.log("%c║   [STATUS]: Funcionou na minha máquina! 🤷        ║", "color:#00ff88");
       console.log("%c╚══════════════════════════════════════════════════╝", "color:#00ff88");
       console.log("%c            \\     ^__^\n             \\   (oo)\\_______\n                 (__)\\       )\\/\\\\\n                     ||----Ō |\n                     ||     ||", "color:#00ff88");
     }

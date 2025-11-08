@@ -39,6 +39,14 @@ export default function LoginPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auth) {
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Error',
+        description: 'Firebase not initialized. Please try again later.',
+      });
+      return;
+    }
     try {
       if (isSignUp) {
         await createUserWithEmailAndPassword(auth, email, password);

@@ -23,6 +23,7 @@ import { getSdks } from '@/firebase/index';
 
 // Helper to get a value from a URL query string
 const getQueryParam = (url: string, param: string): string | null => {
+    if (typeof window === 'undefined') return null;
   const params = new URLSearchParams(new URL(url).search);
   return params.get(param);
 };
@@ -45,7 +46,7 @@ export async function trackSale(saleData: { amountInCents: number; productName: 
     return; // Don't throw an error, just skip if token is not set
   }
 
-  const checkoutUrl = window.location.href;
+  const checkoutUrl = typeof window !== 'undefined' ? window.location.href : '';
   const now = new Date();
   const utcNow = now.toISOString().slice(0, 19).replace('T', ' ');
 
