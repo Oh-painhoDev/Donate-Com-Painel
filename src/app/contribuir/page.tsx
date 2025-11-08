@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { createPix } from '@/services/pix';
+import { createPixAction } from '@/app/actions';
 import { ArrowLeft } from 'lucide-react';
 import { trackSale } from '@/services/utmify';
 
@@ -105,7 +105,7 @@ function DonationForm() {
             checkoutUrl: window.location.href, // Passa a URL completa para o serviço
           });
 
-          const result = await createPix(pixData);
+          const result = await createPixAction(pixData);
 
           if (!result.success) {
               throw new Error(result.error || 'Erro desconhecido na API');
@@ -179,7 +179,7 @@ function DonationForm() {
       </div>
 
       {/* ETAPA 2: DADOS DO DOADOR (AGORA AUTOMÁTICO) */}
-      <div style={{ display: step === 2 ? 'block' : 'none' }}>
+       <div style={{ display: step === 2 ? 'block' : 'none' }}>
         <Button variant="link" onClick={handleGoToStep1} className="p-0 mb-4 text-primary">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar para alterar o valor
@@ -190,7 +190,7 @@ function DonationForm() {
               <p className="text-sm text-gray-600">Obrigado por ajudar! Clique abaixo para gerar o código PIX.</p>
           </header>
           <div className="space-y-3 rounded-lg border bg-gray-50 p-4">
-              <p className="text-base text-center"><strong>Valor da Doação:</strong> <span className="font-bold text-xl text-primary">R$ {baseValue.toFixed(2).replace('.', ',')}</span></p>
+               <p className="text-base text-center"><strong>Valor da Doação:</strong> <span className="font-bold text-xl text-primary">R$ {baseValue.toFixed(2).replace('.', ',')}</span></p>
           </div>
           <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={isLoading}>
             {isLoading ? 'GERANDO PIX...' : 'FINALIZAR E GERAR PIX'}
