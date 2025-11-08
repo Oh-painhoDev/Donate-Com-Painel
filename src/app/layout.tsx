@@ -3,9 +3,9 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'SOS Rio Bonito - Ajude Agora',
+  title: 'Doe | SAVE Brasil',
   description:
-    'Página de doações para ajudar as vítimas do tornado em Rio Bonito do Iguaçu, PR.',
+    'Página de doações para ajudar a SAVE Brasil na conservação das aves e da biodiversidade brasileira.',
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>

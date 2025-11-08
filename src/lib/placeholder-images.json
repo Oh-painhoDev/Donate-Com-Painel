@@ -17,6 +17,24 @@
       "description": "Video testimonial from a volunteer",
       "imageUrl": "https://images.unsplash.com/photo-1754507128300-5d2023d3958c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwb3J0cmFpdCUyMHZvbHVudGVlcnxlbnwwfHx8fDE3NjI2MjI1OTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "portrait volunteer"
+    },
+    {
+      "id": "hero-banner",
+      "description": "Main banner image for SAVE Brasil",
+      "imageUrl": "https://static.tildacdn.com/tild3666-3234-4637-b530-333931383636/banner_principal.png",
+      "imageHint": "bird nature"
+    },
+    {
+      "id": "atuacao-save-brasil",
+      "description": "Image for the 'Atuação SAVE Brasil' section",
+      "imageUrl": "https://static.tildacdn.com/tild3639-3363-4530-a235-316634316237/ATUAO__SAVE_Brasil.png",
+      "imageHint": "bird watching"
+    },
+    {
+      "id": "logo",
+      "description": "SAVE Brasil logo",
+      "imageUrl": "https://static.tildacdn.com/tild3363-3038-4833-b638-353032356634/noroot.png",
+      "imageHint": "logo bird"
     }
   ]
 }
