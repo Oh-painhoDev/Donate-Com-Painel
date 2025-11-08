@@ -23,6 +23,7 @@ import {
   HelpCircle,
   Footprints,
   Newspaper,
+  LogOut,
 } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
@@ -52,13 +53,18 @@ export function AdminPageLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider>
-      <Sidebar>
+      <Sidebar side="left" variant="sidebar" collapsible="icon">
         <SidebarHeader>
-          <div className="flex items-center gap-2">
-             <div className="p-1.5 rounded-lg bg-primary text-primary-foreground">
-                <LayoutTemplate className="h-6 w-6" />
+          <div className="flex items-center gap-2 p-2">
+             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                <Sparkles className="h-6 w-6" />
              </div>
-             <h2 className="text-lg font-semibold text-primary">Painel</h2>
+             <div className="flex flex-col">
+                <h2 className="text-lg font-semibold text-primary group-data-[collapsible=icon]:hidden">
+                  SOS Paraná
+                </h2>
+                <p className="text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">Painel Admin</p>
+             </div>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -67,7 +73,7 @@ export function AdminPageLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem key={item.href}>
                 <Link href={item.href} className="w-full">
                   <SidebarMenuButton
-                    tooltip={item.label}
+                    tooltip={{children: item.label, side: 'right'}}
                     className="group-data-[collapsible=icon]:justify-center"
                   >
                     <item.icon className="h-5 w-5" />
@@ -80,18 +86,36 @@ export function AdminPageLayout({ children }: { children: React.ReactNode }) {
             ))}
           </SidebarMenu>
         </SidebarContent>
+         <SidebarFooter>
+            <SidebarMenu>
+                 <SidebarMenuItem>
+                    <button onClick={handleSignOut} className='w-full'>
+                         <SidebarMenuButton
+                            tooltip={{children: 'Sair', side: 'right'}}
+                            className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:text-red-500 hover:bg-destructive/10 hover:text-destructive"
+                        >
+                            <LogOut className="h-5 w-5" />
+                            <span className="group-data-[collapsible=icon]:hidden">Sair</span>
+                        </SidebarMenuButton>
+                    </button>
+                </SidebarMenuItem>
+            </SidebarMenu>
+        </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-14 items-center justify-between border-b bg-background px-4">
+        <header className="flex h-16 items-center justify-between border-b bg-background/50 backdrop-blur-sm px-6 sticky top-0 z-40">
             <div className="flex items-center gap-2">
                 <SidebarTrigger className="md:hidden" />
-                <h1 className="text-lg font-semibold text-foreground">Gerenciar Conteúdo</h1>
+                <h1 className="text-xl font-semibold text-foreground">Gerenciar Conteúdo do Site</h1>
             </div>
-            <Button onClick={handleSignOut} variant="outline" size="sm">
-              Sair
-            </Button>
+            <div className='hidden md:block'>
+                <Button onClick={handleSignOut} variant="outline" size="sm">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sair
+                </Button>
+            </div>
         </header>
-        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8 bg-gray-50/50">
             {children}
         </main>
       </SidebarInset>
