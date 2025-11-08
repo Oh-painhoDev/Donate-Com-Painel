@@ -20,43 +20,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { trackSale } from '@/services/utmify';
 import Link from 'next/link';
 
 export function DonationSection({ content }: { content: any }) {
   const [customAmount, setCustomAmount] = useState('');
-  const { toast } = useToast();
-
-  const handleDonationClick = async (amount: number, description: string) => {
-    toast({
-      title: 'Rastreando doação...',
-      description: `Sua doação de R$${amount} está sendo processada.`,
-    });
-    try {
-      await trackSale({
-        amountInCents: amount * 100,
-        productName: description,
-      });
-      toast({
-        title: 'Doação rastreada com sucesso!',
-        description: 'Obrigado pela sua contribuição.',
-      });
-      // Here you would typically redirect to a payment gateway
-      // For now, we'll just show a success message.
-    } catch (error) {
-      console.error('Donation tracking failed', error);
-      toast({
-        variant: 'destructive',
-        title: 'Erro no rastreamento',
-        description: 'Não foi possível rastrear sua doação. Tente novamente.',
-      });
-    }
-  };
 
   const DonationCircle = ({ amount, description, isCustom = false }: { amount?: number; description: string; isCustom?: boolean }) => {
     const finalAmount = isCustom ? parseFloat(customAmount) : amount;
-    const isValidAmount = finalAmount && finalAmount > 0;
     
     return (
       <div className="flex flex-col items-center gap-6 text-center">

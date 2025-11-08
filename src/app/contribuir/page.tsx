@@ -24,10 +24,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { createPixAction } from '@/app/actions';
+import { createPixAction, trackSale } from '@/app/actions';
 import { ArrowLeft } from 'lucide-react';
-import { trackSale } from '@/services/utmify';
-
 
 // --- Component para o formulário ---
 function DonationForm() {
