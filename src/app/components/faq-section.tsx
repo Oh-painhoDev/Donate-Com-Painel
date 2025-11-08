@@ -7,24 +7,28 @@ import {
 
 const faqs = [
   {
-    q: 'Como posso ter certeza de que minha doação chegará às vítimas?',
-    a: 'Trabalhamos em parceria com defesas civis e organizações locais de confiança no Paraná para garantir que todas as doações sejam distribuídas de forma transparente e eficiente para as famílias mais necessitadas.',
+    q: 'Como se tornar um Amigo SAVE?',
+    a: 'Para se tornar um Amigo SAVE, você deve clicar em “doar” para efetuar sua contribuição. Através da sua participação, poderemos desenvolver nossos projetos e continuar ajudando na preservação de diversas espécies de aves, seus habitats e biomas brasileiros.',
   },
   {
-    q: 'Quais itens são mais necessários neste momento?',
-    a: 'As maiores necessidades são alimentos não perecíveis, água potável, produtos de higiene pessoal, roupas, cobertores e materiais de limpeza. Sua doação em dinheiro nos permite comprar esses itens em grande quantidade e de acordo com a demanda.',
+    q: 'A partir de quantos reais mensais viro um Amigo SAVE?',
+    a: 'A partir de R$240,00 ao ano e o mesmo que R$20,00 ao mês.',
   },
   {
-    q: 'Posso doar itens físicos em vez de dinheiro?',
-    a: 'No momento, estamos focados na arrecadação financeira para otimizar a logística e comprar os itens mais urgentes diretamente nas regiões afetadas. Para doações de itens, por favor, procure os pontos de coleta oficiais da Defesa Civil em sua cidade.',
+    q: 'Qual o valor mínimo de doação?',
+    a: 'A partir de R$80,00 você já estará auxiliando em nossa missão de preservação ambiental.',
   },
   {
-    q: 'Como posso me voluntariar para ajudar?',
-    a: 'Agradecemos imensamente seu interesse! O trabalho voluntário está sendo coordenado pelas autoridades locais. Por favor, entre em contato com a Defesa Civil do seu município para se cadastrar e saber como ajudar presencialmente.',
+    q: 'Sou ex-doador ou ex-Amigo SAVE, posso voltar a doar?',
+    a: 'Sim! Nós, da SAVE Brasil ficamos contentes com seu retorno, mas para isso, é importante que você refaça o seu cadastro de doação, escolhendo se será um doador pontual ou um Amigo Save, para usufruir de todos os benefícios.',
+  },
+   {
+    q: 'Como saber se minha doação está ativa?',
+    a: 'Entre em contato conosco através do e-mail amigos@savebrasil.org.br, que verificaremos em nosso sistema o status da sua doação.',
   },
   {
-    q: 'Minha empresa gostaria de fazer uma grande doação. Como proceder?',
-    a: 'Para doações corporativas ou parcerias, por favor, entre em contato através do e-mail sosparana@email.com para que nossa equipe possa dar o suporte necessário e alinhar os detalhes da colaboração.',
+    q: 'Sou empresa e quero contribuir, posso ser um parceiro?',
+    a: 'Para que você e sua empresa possam apoiar nossos projetos, envie um e-mail para comunicacao@savebrasil.org.br, informando seu interesse e descrevendo brevemente sobre os serviços prestados pelo seu negócio e sua ideia de projeto e ou parceria.',
   },
 ];
 
@@ -40,10 +44,10 @@ export function FaqSection() {
         <Accordion type="single" collapsible className="w-full space-y-4">
           {faqs.map((faq, index) => (
             <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
-              <AccordionTrigger className="text-left text-lg md:text-xl font-semibold p-6 bg-secondary text-primary rounded-lg hover:no-underline">
+              <AccordionTrigger className="text-left text-lg md:text-xl font-semibold p-6 bg-accent/80 text-primary rounded-lg hover:no-underline">
                 {faq.q}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground p-6 text-base bg-secondary/50 rounded-b-lg">
+              <AccordionContent className="text-muted-foreground p-6 text-base bg-accent/20 rounded-b-lg">
                 {faq.a}
               </AccordionContent>
             </AccordionItem>

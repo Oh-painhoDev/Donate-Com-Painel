@@ -1,21 +1,21 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Home, Droplets, Users } from 'lucide-react';
+import { LandPlot, Bird, Users } from 'lucide-react';
 
 const impacts = [
   {
-    amount: '+5.000',
-    description: 'Famílias que receberão kits de emergência e alimentos.',
-    icon: Home,
+    amount: '208.823',
+    description: 'Hectares protegidos pelas ações da SAVE Brasil.',
+    icon: LandPlot,
   },
   {
-    amount: '+10.000L',
-    description: 'De água potável distribuída para as comunidades afetadas.',
-    icon: Droplets,
-  },
-  {
-    amount: '+500',
-    description: 'Voluntários mobilizados para ajudar na linha de frente.',
+    amount: '9.273',
+    description: 'Visitantes que vieram conhecer nossas reservas, nos últimos anos.',
     icon: Users,
+  },
+  {
+    amount: '64',
+    description: 'Espécies de aves ameaçadas que foram beneficiadas pela SAVE Brasil.',
+    icon: Bird,
   },
 ];
 
@@ -25,10 +25,10 @@ export function ImpactVisualizer() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold font-headline text-accent">
-            O Impacto da Sua Ajuda
+            Impacto na Prática
           </h2>
           <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-blue-200">
-            Cada doação se transforma em ajuda real e imediata. Veja como sua contribuição faz a diferença:
+            Com quase 20 anos de atuação no Brasil, estes são alguns dos números que traduzem o nosso trabalho:
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -6,7 +6,6 @@ import { FaqSection } from '@/app/components/faq-section';
 import { SiteFooter } from '@/app/components/site-footer';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Heart } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -16,7 +15,7 @@ function AboutSection() {
     <section className="bg-background text-foreground py-12 md:py-20">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="relative w-full aspect-video max-w-lg mx-auto">
+          <div className="relative w-full aspect-square max-w-lg mx-auto">
             {aboutImage && (
               <Image
                 src={aboutImage.imageUrl}
@@ -28,16 +27,16 @@ function AboutSection() {
             )}
           </div>
           <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">NOSSA MISSÃO</h2>
-            <h3 className="text-xl md:text-2xl font-semibold mb-4 text-muted-foreground">AJUDANDO O PARANÁ</h3>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">A SAVE BRASIL</h2>
+            <h3 className="text-xl md:text-2xl font-semibold mb-4 text-muted-foreground">ATUAÇÃO</h3>
             <p className="text-lg mb-4">
-              As recentes enchentes no Paraná deixaram milhares de famílias desabrigadas e em situação de vulnerabilidade. A sua doação é crucial para fornecer itens essenciais como alimentos, água potável, kits de higiene e abrigo.
+              A SAVE Brasil desenvolve ações para a conservação em áreas prioritárias, capacitação de comunidades locais, além de monitoramento da fauna, flora e atividades educacionais.
             </p>
             <p className="text-lg">
-              Junte-se a nós neste movimento de solidariedade. Cada contribuição, não importa o valor, faz uma enorme diferença na vida de quem perdeu tudo.
+              Nosso foco é conservar as aves do Brasil. Somos uma rede de pessoas engajadas que entenderam a necessidade de agir para salvar a Natureza - e a nós mesmos.
             </p>
             <Button asChild className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 text-lg px-8 py-6">
-              <Link href="#doar">Quero Ajudar</Link>
+              <Link href="#doar">Colabore</Link>
             </Button>
           </div>
         </div>
@@ -58,16 +57,11 @@ export default function Home() {
                 src={logoImage.imageUrl}
                 alt={logoImage.description}
                 data-ai-hint={logoImage.imageHint}
-                width={150}
+                width={130}
                 height={50}
                 className="object-contain"
               />
             )}
-            <Button asChild variant="ghost" className="text-primary-foreground hover:bg-white/20">
-              <Link href="#doar">
-                Doar Agora
-              </Link>
-            </Button>
         </div>
       </nav>
       <PageHeader />
@@ -79,18 +73,6 @@ export default function Home() {
         <FaqSection />
       </main>
       <SiteFooter />
-      <div className="md:hidden fixed bottom-4 right-4 z-50">
-        <Button
-          asChild
-          size="lg"
-          className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg rounded-full h-20 w-20 p-0 flex flex-col items-center justify-center leading-none"
-        >
-          <Link href="#doar">
-            <Heart className="h-8 w-8 mb-1" />
-            <span className="text-sm font-bold">DOAR</span>
-          </Link>
-        </Button>
-      </div>
     </div>
   );
 }

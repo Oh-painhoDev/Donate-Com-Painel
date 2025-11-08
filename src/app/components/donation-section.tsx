@@ -4,51 +4,50 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 
-const suggestedAmounts = [50, 100, 250];
+const suggestedAmounts = [120, 240, 500];
 
 export function DonationSection() {
   const [customAmount, setCustomAmount] = useState('');
 
-  return (
-    <section id="doar" className="py-16 md:py-24 bg-secondary">
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Faça sua Doação</h2>
-          <p className="text-lg md:text-xl text-muted-foreground">
-            Sua contribuição ajudará a fornecer suprimentos essenciais para as famílias impactadas pelas enchentes no Paraná.
-          </p>
-        </div>
-        <div className="bg-background rounded-2xl p-8 md:p-12 shadow-xl max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-            {suggestedAmounts.map((amount) => (
-              <Button
-                key={amount}
-                variant="outline"
-                className="h-24 text-2xl font-bold transition-all hover:bg-accent hover:text-accent-foreground hover:scale-105"
-              >
-                R$ {amount}
-              </Button>
-            ))}
-            <div className="md:col-span-1 p-6 bg-secondary rounded-lg">
-              <Label htmlFor="custom-amount" className="text-lg font-semibold text-primary">Outro Valor</Label>
-              <div className="mt-2 flex items-center gap-2">
-                <span className="text-xl text-muted-foreground">R$</span>
+  const DonationCircle = ({ amount, description, isCustom = false }: { amount?: number; description: string; isCustom?: boolean }) => (
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative w-48 h-48 md:w-56 md:h-56">
+        <div className="absolute inset-0 rounded-full bg-white shadow-lg"></div>
+        <div className="absolute inset-1.5 rounded-full border-2 border-dashed border-primary"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+          {isCustom ? (
+            <>
+              <div className='flex items-baseline'>
+                <span className="text-2xl text-primary font-bold">R$</span>
                 <Input
-                  id="custom-amount"
-                  type="number"
-                  placeholder="10,00"
-                  className="text-lg font-bold"
-                  value={customAmount}
-                  onChange={(e) => setCustomAmount(e.target.value)}
-                />
+                    id="custom-amount"
+                    type="number"
+                    placeholder="10,00"
+                    className="text-3xl font-bold w-32 border-0 bg-transparent text-center shadow-none focus-visible:ring-0"
+                    value={customAmount}
+                    onChange={(e) => setCustomAmount(e.target.value)}
+                  />
               </div>
-            </div>
-          </div>
-          <div className="mt-8 text-center">
-            <Button size="lg" className="w-full md:w-auto h-14 text-xl font-bold bg-accent text-accent-foreground hover:bg-accent/90">
-              DOAR AGORA
-            </Button>
-          </div>
+              
+            </>
+          ) : (
+            <span className="text-5xl font-bold text-accent">R${amount}</span>
+          )}
+           <p className="text-sm text-foreground/80 mt-2">{description}</p>
+        </div>
+      </div>
+      <Button className="w-40 h-12 text-lg font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80">DOAR</Button>
+    </div>
+  );
+
+  return (
+    <section id="doar" className="py-16 md:py-24 bg-primary">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 justify-items-center">
+          <DonationCircle amount={120} description="Seu engajamento fomenta a produção científica." />
+          <DonationCircle amount={240} description="Você se torna um Amigo da SAVE!" />
+          <DonationCircle amount={500} description="Sua colaboração fortalece nossos projetos." />
+          <DonationCircle isCustom description="Independente da quantia, o importante é participar!" />
         </div>
       </div>
     </section>

@@ -3,9 +3,9 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'SOS Paraná | Ajude as vítimas das enchentes',
+  title: 'Doe | SAVE Brasil',
   description:
-    'Página de doações para ajudar as vítimas das enchentes no Paraná.',
+    'Faça parte do nosso movimento em defesa da conservação das aves e da biodiversidade brasileira.',
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
       </head>
