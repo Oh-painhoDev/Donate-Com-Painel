@@ -3,8 +3,9 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
 
+// This metadata will be dynamically overridden by the page content
 export const metadata: Metadata = {
-  title: 'Doe | SAVE Brasil',
+  title: 'Doe | Carregando...',
   description:
     'Faça parte do nosso movimento em defesa da conservação das aves e da biodiversidade brasileira.',
 };

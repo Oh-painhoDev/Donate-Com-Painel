@@ -1,9 +1,6 @@
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export function PageHeader({ content }: { content: any }) {
-  const heroImage = PlaceHolderImages.find(p => p.id === 'hero-banner');
-
   if (!content) return null;
 
   return (
@@ -11,13 +8,12 @@ export function PageHeader({ content }: { content: any }) {
       id="inicio"
       className="relative h-[85vh] w-full flex items-center justify-center text-center text-white"
     >
-      {heroImage && (
+      {content.headerImageUrl && (
         <Image
-          src={content.headerImageUrl || heroImage.imageUrl}
-          alt={heroImage.description}
+          src={content.headerImageUrl}
+          alt={content.headerText}
           fill
           className="object-cover"
-          data-ai-hint={heroImage.imageHint}
           priority
         />
       )}

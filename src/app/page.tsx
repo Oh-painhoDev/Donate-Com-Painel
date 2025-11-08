@@ -8,25 +8,22 @@ import { SiteFooter } from '@/app/components/site-footer';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useDoc, useMemoFirebase, useFirestore } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { initialPageContent } from '@/lib/initial-data';
-
+import { ThemeInjector } from '@/app/components/theme-injector';
 
 function AboutSection({ content }: { content: any }) {
-  const aboutImage = PlaceHolderImages.find(p => p.id === 'about-parana');
   if (!content) return null;
   return (
     <section id="sobre" className="bg-secondary text-foreground py-16 md:py-28">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="relative w-full aspect-square max-w-lg mx-auto rounded-xl overflow-hidden shadow-2xl">
-            {aboutImage && (
+            {content.aboutImageUrl && (
               <Image
-                src={content.aboutImageUrl || aboutImage.imageUrl}
-                alt={aboutImage.description}
-                data-ai-hint={aboutImage.imageHint}
+                src={content.aboutImageUrl}
+                alt={content.aboutTitle}
                 fill
                 className="object-cover"
               />
@@ -50,7 +47,6 @@ function AboutSection({ content }: { content: any }) {
 
 
 export default function Home() {
-  const logoImage = PlaceHolderImages.find(p => p.id === 'logo');
   const firestore = useFirestore();
   const contentRef = useMemoFirebase(() => firestore ? doc(firestore, 'pageContent', 'landingPage') : null, [firestore]);
   const { data, isLoading } = useDoc(contentRef);
@@ -67,13 +63,13 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background">
+      <ThemeInjector colors={content.colors} />
        <nav className="fixed top-0 left-0 right-0 bg-primary/90 backdrop-blur-lg border-b border-primary-foreground/10 py-1 px-2 z-50 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          {logoImage && (
+          {content.logoImageUrl && (
               <Image
-                src={logoImage.imageUrl}
-                alt={logoImage.description}
-                data-ai-hint={logoImage.imageHint}
+                src={content.logoImageUrl}
+                alt="Logo"
                 width={100}
                 height={40}
                 className="object-contain"

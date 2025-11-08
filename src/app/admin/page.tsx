@@ -11,8 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Trash, Palette } from 'lucide-react';
 import { initialPageContent } from '@/lib/initial-data';
 
 
@@ -36,8 +36,18 @@ const faqSchema = z.object({
   a: z.string(),
 });
 
+const colorSchema = z.object({
+  primary: z.string().regex(/^(\d{1,3})\s(\d{1,3}%)\s(\d{1,3}%)$/, { message: "Formato HSL inválido. Ex: 150 50% 25%" }),
+  secondary: z.string().regex(/^(\d{1,3})\s(\d{1,3}%)\s(\d{1,3}%)$/, { message: "Formato HSL inválido. Ex: 150 45% 90%" }),
+  accent: z.string().regex(/^(\d{1,3})\s(\d{1,3}%)\s(\d{1,3}%)$/, { message: "Formato HSL inválido. Ex: 14 100% 55%" }),
+  background: z.string().regex(/^(\d{1,3})\s(\d{1,3}%)\s(\d{1,3}%)$/, { message: "Formato HSL inválido. Ex: 220 13% 98%" }),
+});
+
+
 const pageContentSchema = z.object({
+  colors: colorSchema,
   pageTitle: z.string(),
+  logoImageUrl: z.string().url(),
   headerText: z.string(),
   headerSubText: z.string(),
   headerImageUrl: z.string().url(),
@@ -58,6 +68,9 @@ const pageContentSchema = z.object({
   footerContactTitle: z.string(),
   footerContactEmail: z.string().email(),
   footerContactAddress: z.string(),
+  footerRightsText: z.string(),
+  footerMadeByText: z.string(),
+  footerMadeByLink: z.string().url(),
 });
 
 type PageContentForm = z.infer<typeof pageContentSchema>;
@@ -109,7 +122,7 @@ export default function AdminPage() {
   if (isLoading) {
     return <div className="container mx-auto p-4">Carregando conteúdo...</div>;
   }
-
+  
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50/50">
       <div className="flex justify-between items-center mb-6">
@@ -117,13 +130,30 @@ export default function AdminPage() {
         <Button onClick={handleSignOut} variant="outline">Sair</Button>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={handleSubmit(onSubmit, (formErrors) => console.log(formErrors))} className="space-y-8">
+        
+        {/* Colors Section */}
+        <Card className="overflow-hidden">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Palette/> Aparência e Cores</CardTitle>
+            <CardDescription>Edite as cores principais do site. Use o formato HSL (ex: "150 50% 25%").</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div><Label>Primária</Label><Input {...register('colors.primary')} /><p className="text-destructive text-sm mt-1">{errors.colors?.primary?.message}</p></div>
+              <div><Label>Secundária</Label><Input {...register('colors.secondary')} /><p className="text-destructive text-sm mt-1">{errors.colors?.secondary?.message}</p></div>
+              <div><Label>Destaque (Accent)</Label><Input {...register('colors.accent')} /><p className="text-destructive text-sm mt-1">{errors.colors?.accent?.message}</p></div>
+              <div><Label>Fundo (Background)</Label><Input {...register('colors.background')} /><p className="text-destructive text-sm mt-1">{errors.colors?.background?.message}</p></div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Header Section */}
         <Card className="overflow-hidden">
           <CardHeader><CardTitle>Seção do Cabeçalho</CardTitle></CardHeader>
           <CardContent className="space-y-4 pt-4">
             <div><Label>Título da Página (Aba do Navegador)</Label><Input {...register('pageTitle')} /></div>
+            <div><Label>URL da Imagem do Logo</Label><Input type="url" {...register('logoImageUrl')} /></div>
             <div><Label>Texto Principal</Label><Input {...register('headerText')} /></div>
             <div><Label>Subtexto</Label><Textarea {...register('headerSubText')} /></div>
             <div><Label>URL da Imagem de Fundo</Label><Input type="url" {...register('headerImageUrl')} /></div>
@@ -230,6 +260,9 @@ export default function AdminPage() {
             <div><Label>Título Contato</Label><Input {...register('footerContactTitle')} /></div>
             <div><Label>Email de Contato</Label><Input type="email" {...register('footerContactEmail')} /></div>
             <div><Label>Endereço / Contato Secundário</Label><Input {...register('footerContactAddress')} /></div>
+            <div><Label>Texto de Direitos Autorais</Label><Input {...register('footerRightsText')} /></div>
+            <div><Label>Texto "Feito por"</Label><Input {...register('footerMadeByText')} /></div>
+            <div><Label>Link "Feito por"</Label><Input type="url" {...register('footerMadeByLink')} /></div>
           </CardContent>
         </Card>
 

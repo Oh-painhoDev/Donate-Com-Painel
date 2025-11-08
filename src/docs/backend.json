@@ -1,0 +1,109 @@
+{
+  "entities": {
+    "DonationPageContent": {
+      "title": "Donation Page Content",
+      "type": "object",
+      "description": "Stores all content for the donation landing page.",
+      "properties": {
+        "colors": {
+          "type": "object",
+          "description": "Theme colors in HSL format string 'H S% L%'.",
+          "properties": {
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" },
+            "accent": { "type": "string" },
+            "background": { "type": "string" }
+          }
+        },
+        "pageTitle": { "type": "string", "description": "The main title of the page (browser tab)." },
+        "logoImageUrl": { "type": "string", "description": "URL for the site logo." },
+        "headerText": { "type": "string", "description": "Text for the header section." },
+        "headerSubText": { "type": "string", "description": "Sub-text for the header section." },
+        "headerImageUrl": { "type": "string", "description": "URL for the header background image." },
+        "donationOptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "amount": { "type": "number" },
+              "description": { "type": "string" }
+            },
+            "required": ["amount", "description"]
+          }
+        },
+        "customDonationText": { "type": "string", "description": "Text for the custom donation option." },
+        "impactVisualizerTitle": { "type": "string", "description": "Title for the impact visualizer section." },
+        "impactVisualizerSubText": { "type": "string", "description": "Sub-text for the impact visualizer section." },
+        "impacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "amount": { "type": "string" },
+              "description": { "type": "string" }
+            },
+            "required": ["amount", "description"]
+          }
+        },
+        "aboutTitle": { "type": "string", "description": "Title for the about section." },
+        "aboutSubTitle": { "type": "string", "description": "Subtitle for the about section." },
+        "aboutText": { "type": "string", "description": "Main text for the about section." },
+        "aboutImageUrl": { "type": "string", "description": "URL for the about section image." },
+        "credibilityTitle": { "type": "string", "description": "Title for the credibility/testimonials section." },
+        "testimonials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "text": { "type": "string" }
+            },
+            "required": ["name", "text"]
+          }
+        },
+        "faqTitle": { "type": "string", "description": "Title for the FAQ section." },
+        "faqs": {
+           "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "q": { "type": "string" },
+              "a": { "type": "string" }
+            },
+            "required": ["q", "a"]
+          }
+        },
+        "footerLinksTitle": { "type": "string", "description": "Title for footer links." },
+        "footerContactTitle": { "type": "string", "description": "Title for footer contact info." },
+        "footerContactEmail": { "type": "string", "description": "Contact email for the footer." },
+        "footerContactAddress": { "type": "string", "description": "Contact address for the footer." },
+        "footerRightsText": { "type": "string", "description": "Copyright text in the footer." },
+        "footerMadeByText": { "type": "string", "description": "'Made by' text in the footer." },
+        "footerMadeByLink": { "type": "string", "description": "Link for the 'Made by' text." }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password", "anonymous"]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/pageContent/{pageId}",
+        "definition": {
+          "entityName": "DonationPageContent",
+          "schema": {
+            "$ref": "#/entities/DonationPageContent"
+          },
+          "description": "Stores the dynamic content for the donation page.",
+          "params": [
+            {
+              "name": "pageId",
+              "description": "Unique identifier for the page content document."
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

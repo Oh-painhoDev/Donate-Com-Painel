@@ -1,6 +1,13 @@
 
 export const initialPageContent = {
-  pageTitle: "Doe | SAVE Brasil",
+  colors: {
+    primary: "150 50% 25%",
+    secondary: "150 45% 90%",
+    accent: "14 100% 55%",
+    background: "220 13% 98%",
+  },
+  pageTitle: "Doe | SOS Paraná",
+  logoImageUrl: "https://static.tildacdn.com/tild3363-3038-4833-b638-353032356634/noroot.png",
   headerText: "AJUDA HUMANITÁRIA URGENTE: PARANÁ PRECISA DE VOCÊ!",
   headerSubText: "Cidade 90% Destruída • 6 Vidas Perdidas • 750 Feridos • Famílias Desabrigadas",
   headerImageUrl: "https://static.tildacdn.com/tild3666-3234-4637-b530-333931383636/banner_principal.png",
@@ -68,5 +75,8 @@ export const initialPageContent = {
   footerLinksTitle: "CANAIS DE ATENDIMENTO 24h",
   footerContactTitle: "CONTATO",
   footerContactEmail: "emergencia@savebrasil.org.br",
-  footerContactAddress: "WhatsApp: (41) 99876-5432"
+  footerContactAddress: "WhatsApp: (41) 99876-5432",
+  footerRightsText: "Todos os direitos reservados 2023",
+  footerMadeByText: "Feito com ϟ por",
+  footerMadeByLink: "http://doare.org/"
 };
