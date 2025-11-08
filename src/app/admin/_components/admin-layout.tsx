@@ -90,15 +90,14 @@ export function AdminPageLayout({ children }: { children: React.ReactNode }) {
          <SidebarFooter>
             <SidebarMenu>
                  <SidebarMenuItem>
-                    <button onClick={handleSignOut} className='w-full'>
-                         <SidebarMenuButton
-                            tooltip={{children: 'Sair', side: 'right'}}
-                            className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:text-red-500 hover:bg-destructive/10 hover:text-destructive"
-                        >
-                            <LogOut className="h-5 w-5" />
-                            <span className="group-data-[collapsible=icon]:hidden">Sair</span>
-                        </SidebarMenuButton>
-                    </button>
+                    <SidebarMenuButton
+                        onClick={handleSignOut}
+                        tooltip={{children: 'Sair', side: 'right'}}
+                        className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:text-red-500 hover:bg-destructive/10 hover:text-destructive w-full"
+                    >
+                        <LogOut className="h-5 w-5" />
+                        <span className="group-data-[collapsible=icon]:hidden">Sair</span>
+                    </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarFooter>
