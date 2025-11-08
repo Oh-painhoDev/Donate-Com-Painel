@@ -1,0 +1,353 @@
+{
+  "entities": {
+    "DonationPageContent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DonationPageContent",
+      "type": "object",
+      "description": "Stores all the content and configuration for the donation page, allowing easy updates via an admin panel.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the donation page content. (PK)"
+        },
+        "emergencyBannerText": {
+          "type": "string",
+          "description": "Text displayed on the emergency banner."
+        },
+        "livesLost": {
+          "type": "number",
+          "description": "Number of lives lost in the tragedy."
+        },
+        "injured": {
+          "type": "number",
+          "description": "Number of people injured in the tragedy."
+        },
+        "cityDestructionPercentage": {
+          "type": "number",
+          "description": "Percentage of the city destroyed."
+        },
+        "displacedPeople": {
+          "type": "number",
+          "description": "Number of displaced people."
+        },
+        "pixKey": {
+          "type": "string",
+          "description": "The PIX key for donations."
+        },
+        "suggestedDonationAmounts": {
+          "type": "array",
+          "description": "Array of suggested donation amounts.",
+          "items": {
+            "type": "number"
+          }
+        },
+        "donationInstructions": {
+          "type": "string",
+          "description": "Step-by-step instructions on how to donate."
+        },
+        "goalAmount": {
+          "type": "number",
+          "description": "The overall fundraising goal."
+        },
+        "raisedAmount": {
+          "type": "number",
+          "description": "The amount of money raised so far.  Updated automatically."
+        },
+        "donorCount": {
+          "type": "number",
+          "description": "The number of individual donors."
+        },
+        "allocationShelterFoodPercentage": {
+          "type": "number",
+          "description": "Percentage of funds allocated to shelter and food."
+        },
+        "allocationMedicalPercentage": {
+          "type": "number",
+          "description": "Percentage of funds allocated to medical supplies and healthcare."
+        },
+        "allocationReconstructionPercentage": {
+          "type": "number",
+          "description": "Percentage of funds allocated to emergency reconstruction."
+        },
+        "allocationPsychologicalSupportPercentage": {
+          "type": "number",
+          "description": "Percentage of funds allocated to psychological support."
+        },
+        "impactBasketText": {
+          "type": "string",
+          "description": "Text describing the impact of a R$50 donation (food basket)."
+        },
+        "impactHygieneText": {
+          "type": "string",
+          "description": "Text describing the impact of a R$100 donation (hygiene kit)."
+        },
+        "impactConstructionText": {
+          "type": "string",
+          "description": "Text describing the impact of a R$200 donation (construction materials)."
+        },
+        "trustSealImageUrl": {
+          "type": "string",
+          "description": "URL for the trust seal image (e.g., Defesa Civil)."
+        },
+        "trustSealAuthority": {
+          "type": "string",
+          "description": "Name of the authority providing the trust seal."
+        },
+        "faq": {
+          "type": "array",
+          "description": "Frequently asked questions",
+          "items": {
+            "type": "string"
+          }
+        },
+        "finalCallToAction": {
+          "type": "string",
+          "description": "The final call to action text."
+        },
+        "backgroundColor": {
+          "type": "string",
+          "description": "The background color of the page, represented as a hex code."
+        },
+        "primaryColor": {
+          "type": "string",
+          "description": "The primary color of the page, represented as a hex code."
+        },
+        "accentColor": {
+          "type": "string",
+          "description": "The accent color of the page, represented as a hex code."
+        },
+        "bodyFont": {
+          "type": "string",
+          "description": "The font used for the body text."
+        },
+        "headlineFont": {
+          "type": "string",
+          "description": "The font used for headlines."
+        }
+      },
+      "required": [
+        "id",
+        "emergencyBannerText",
+        "livesLost",
+        "injured",
+        "cityDestructionPercentage",
+        "displacedPeople",
+        "pixKey",
+        "suggestedDonationAmounts",
+        "donationInstructions",
+        "goalAmount",
+        "raisedAmount",
+        "donorCount",
+        "allocationShelterFoodPercentage",
+        "allocationMedicalPercentage",
+        "allocationReconstructionPercentage",
+        "allocationPsychologicalSupportPercentage",
+        "impactBasketText",
+        "impactHygieneText",
+        "impactConstructionText",
+        "trustSealImageUrl",
+        "trustSealAuthority",
+        "faq",
+        "finalCallToAction",
+        "backgroundColor",
+        "primaryColor",
+        "accentColor",
+        "bodyFont",
+        "headlineFont"
+      ]
+    },
+    "NewsArticle": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "NewsArticle",
+      "type": "object",
+      "description": "Stores individual news articles.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the news article. (PK)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the news article."
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the news article."
+        },
+        "source": {
+          "type": "string",
+          "description": "Source of the news article (e.g., Civil Defense, Local News)."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the article was published.",
+          "format": "date-time"
+        },
+        "donationPageContentId": {
+          "type": "string",
+          "description": "Reference to DonationPageContent. (Relationship: DonationPageContent 1:N NewsArticle)"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "content",
+        "source",
+        "timestamp",
+        "donationPageContentId"
+      ]
+    },
+    "PartnerLogo": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PartnerLogo",
+      "type": "object",
+      "description": "Stores information about partner logos to display on the page.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the partner logo. (PK)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the partner organization."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the partner logo image."
+        },
+        "donationPageContentId": {
+          "type": "string",
+          "description": "Reference to DonationPageContent. (Relationship: DonationPageContent 1:N PartnerLogo)"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "imageUrl",
+        "donationPageContentId"
+      ]
+    },
+    "VideoTestimonial": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "VideoTestimonial",
+      "type": "object",
+      "description": "Stores video testimonials from victims.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the video testimonial. (PK)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the video testimonial."
+        },
+        "url": {
+          "type": "string",
+          "description": "URL of the video."
+        },
+        "victimName": {
+          "type": "string",
+          "description": "Name of the victim providing the testimonial."
+        },
+        "donationPageContentId": {
+          "type": "string",
+          "description": "Reference to DonationPageContent. (Relationship: DonationPageContent 1:N VideoTestimonial)"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "url",
+        "victimName",
+        "donationPageContentId"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/donationPageContent/{donationPageContentId}",
+        "definition": {
+          "entityName": "DonationPageContent",
+          "schema": {
+            "$ref": "#/backend/entities/DonationPageContent"
+          },
+          "description": "Stores the main content and configuration for the donation page. It holds key information like emergency banner text, donation amounts, allocation percentages, and UI color settings.",
+          "params": [
+            {
+              "name": "donationPageContentId",
+              "description": "Unique identifier for the donation page content."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/donationPageContent/{donationPageContentId}/newsArticles/{newsArticleId}",
+        "definition": {
+          "entityName": "NewsArticle",
+          "schema": {
+            "$ref": "#/backend/entities/NewsArticle"
+          },
+          "description": "Stores news articles related to the donation page. Each article includes a title, content, source, timestamp, and a reference to the DonationPageContent document.",
+          "params": [
+            {
+              "name": "donationPageContentId",
+              "description": "Unique identifier for the donation page content."
+            },
+            {
+              "name": "newsArticleId",
+              "description": "Unique identifier for the news article."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/donationPageContent/{donationPageContentId}/partnerLogos/{partnerLogoId}",
+        "definition": {
+          "entityName": "PartnerLogo",
+          "schema": {
+            "$ref": "#/backend/entities/PartnerLogo"
+          },
+          "description": "Stores partner logos to be displayed on the donation page. Each logo includes a name, image URL, and a reference to the DonationPageContent document.",
+          "params": [
+            {
+              "name": "donationPageContentId",
+              "description": "Unique identifier for the donation page content."
+            },
+            {
+              "name": "partnerLogoId",
+              "description": "Unique identifier for the partner logo."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/donationPageContent/{donationPageContentId}/videoTestimonials/{videoTestimonialId}",
+        "definition": {
+          "entityName": "VideoTestimonial",
+          "schema": {
+            "$ref": "#/backend/entities/VideoTestimonial"
+          },
+          "description": "Stores video testimonials to be displayed on the donation page. Each testimonial includes a title, URL, victim's name, and a reference to the DonationPageContent document.",
+          "params": [
+            {
+              "name": "donationPageContentId",
+              "description": "Unique identifier for the donation page content."
+            },
+            {
+              "name": "videoTestimonialId",
+              "description": "Unique identifier for the video testimonial."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "To support the Rio Bonito Relief donation page, the Firestore structure prioritizes ease of content management via an admin panel and real-time updates. A single `DonationPageContent` document holds the core content, while related data like news articles, partner logos, and video testimonials are stored in subcollections to allow for flexible updates and scaling. Authorization Independence is ensured as there are no specific authorization requirements outlined, but it's designed for easy integration of admin roles in the future, where the admin role can be checked for specific updates on the collections. This structure is designed to provide data clarity and quick access to all content required for the donation page.\n\nQAPs are addressed by storing different types of content (page configuration, news, logos, videos) in separate subcollections. The segregation allows independent management and querying of each content type. The single `DonationPageContent` document approach is optimized to read all configurable content on the page with a single read operation. The subcollections can be queried separately when building the individual parts of the UI."
+  }
+}
