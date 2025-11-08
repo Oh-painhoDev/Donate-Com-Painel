@@ -18,7 +18,7 @@
  */
 'use server';
 
-import { firestore } from '@/firebase/admin';
+import { getAdminFirestore } from '@/firebase/admin';
 
 // Tipagem para os dados recebidos do frontend
 type PixRequestData = {
@@ -54,8 +54,11 @@ function findFieldInResponse(data: any, possibleNames: string[]): string | null 
 }
 
 export async function createPix(data: PixRequestData) {
-  if (!firestore) {
-    console.error("PIX Generation Error: Firestore service is not initialized on the server. Check Firebase Admin credentials.");
+  let firestore;
+  try {
+    firestore = getAdminFirestore();
+  } catch (error: any) {
+    console.error("PIX Generation Error:", error.message);
     return { success: false, error: 'O serviço de banco de dados não está inicializado no servidor.' };
   }
   

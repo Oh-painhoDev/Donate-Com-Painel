@@ -18,7 +18,7 @@
  */
 'use server';
 
-import { firestore } from '@/firebase/admin';
+import { getAdminFirestore } from '@/firebase/admin';
 
 // Helper to get a value from a URL query string
 const getQueryParam = (url: string, param: string): string | null => {
@@ -33,10 +33,14 @@ const getQueryParam = (url: string, param: string): string | null => {
 
 // Main function to track a sale/donation
 export async function trackSale(saleData: { amountInCents: number; productName: string; checkoutUrl: string; }) {
-  if (!firestore) {
-    console.warn("Firestore not initialized on the server. Skipping Utmify tracking.");
-    return;
+  let firestore;
+  try {
+    firestore = getAdminFirestore();
+  } catch (error: any) {
+     console.warn("Firestore not initialized on the server. Skipping Utmify tracking.", error.message);
+     return; // Gracefully exit if DB is not available
   }
+  
   const contentRef = firestore.collection('pageContent').doc('landingPage');
   
   try {
