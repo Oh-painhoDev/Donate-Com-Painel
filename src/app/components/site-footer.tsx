@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-export function SiteFooter() {
+export function SiteFooter({ content }: { content: any }) {
   const logoImage = PlaceHolderImages.find(p => p.id === 'logo');
+  if (!content) return null;
+
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-12">
@@ -23,12 +25,12 @@ export function SiteFooter() {
             </p>
           </div>
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold text-lg text-accent mb-2">Fale conosco</h3>
-            <a href="mailto:aves@savebrasil.org.br" className="hover:underline text-primary-foreground/90">aves@savebrasil.org.br</a>
-            <p className="text-primary-foreground/70">Rua Fernão Dias, 219 cj 2 | Pinheiros / SP - 05427-010</p>
+            <h3 className="font-bold text-lg text-accent mb-2">{content.footerContactTitle}</h3>
+            <a href={`mailto:${content.footerContactEmail}`} className="hover:underline text-primary-foreground/90">{content.footerContactEmail}</a>
+            <p className="text-primary-foreground/70">{content.footerContactAddress}</p>
           </div>
            <div className="flex flex-col gap-2">
-             <h3 className="font-bold text-lg text-accent mb-2">Links Úteis</h3>
+             <h3 className="font-bold text-lg text-accent mb-2">{content.footerLinksTitle}</h3>
             <a href="#inicio" className="hover:underline text-primary-foreground/90">Início</a>
             <a href="#doar" className="hover:underline text-primary-foreground/90">Doar</a>
             <a href="#faq" className="hover:underline text-primary-foreground/90">FAQ</a>

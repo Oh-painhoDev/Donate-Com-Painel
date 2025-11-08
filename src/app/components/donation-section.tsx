@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
-export function DonationSection() {
+export function DonationSection({ content }: { content: any }) {
   const [customAmount, setCustomAmount] = useState('');
+
+  if (!content) return null;
 
   const DonationCircle = ({ amount, description, isCustom = false }: { amount?: number; description: string; isCustom?: boolean }) => (
     <div className="flex flex-col items-center gap-6 text-center">
@@ -40,10 +42,10 @@ export function DonationSection() {
     <section id="doar" className="py-16 md:py-24 bg-primary">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 justify-items-center">
-          <DonationCircle amount={120} description="Seu engajamento fomenta a produção científica." />
-          <DonationCircle amount={240} description="Você se torna um Amigo da SAVE!" />
-          <DonationCircle amount={500} description="Sua colaboração fortalece nossos projetos." />
-          <DonationCircle isCustom description="Participe com o valor que puder!" />
+          {content.donationOptions.map((option: any, index: number) => (
+            <DonationCircle key={index} amount={option.amount} description={option.description} />
+          ))}
+          <DonationCircle isCustom description={content.customDonationText} />
         </div>
       </div>
     </section>

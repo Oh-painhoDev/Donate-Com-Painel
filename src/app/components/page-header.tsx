@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-export function PageHeader() {
+export function PageHeader({ content }: { content: any }) {
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero-banner');
+
+  if (!content) return null;
 
   return (
     <header
@@ -11,7 +13,7 @@ export function PageHeader() {
     >
       {heroImage && (
         <Image
-          src={heroImage.imageUrl}
+          src={content.headerImageUrl || heroImage.imageUrl}
           alt={heroImage.description}
           fill
           className="object-cover"
@@ -22,10 +24,10 @@ export function PageHeader() {
       <div className="absolute inset-0 bg-black/50" />
       <div className="container relative z-10 mx-auto px-4">
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-shadow-lg leading-tight font-headline">
-          Preservar é preciso.
+          {content.headerText}
         </h1>
         <p className="mt-6 max-w-3xl mx-auto text-lg md:text-2xl text-shadow font-light">
-          Faça parte do nosso movimento em defesa da conservação das aves e da biodiversidade brasileira.
+          {content.headerSubText}
         </p>
       </div>
     </header>
