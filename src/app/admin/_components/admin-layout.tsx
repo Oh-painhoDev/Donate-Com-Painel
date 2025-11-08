@@ -45,7 +45,7 @@ import {
   LogOut,
   Link as LinkIcon,
 } from 'lucide-react';
-import { useAuth } from '@/firebase';
+import { useAuth } from '@/firebase/hooks';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 

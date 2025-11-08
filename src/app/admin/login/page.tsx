@@ -19,7 +19,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuth } from '@/firebase';
+import { useAuth } from '@/firebase/hooks';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,

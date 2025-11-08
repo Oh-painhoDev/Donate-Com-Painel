@@ -17,7 +17,7 @@
  * 
  */
 'use client';
-import { useUser } from '@/firebase';
+import { useUser } from '@/firebase/hooks';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { AdminPageLayout } from './_components/admin-layout';

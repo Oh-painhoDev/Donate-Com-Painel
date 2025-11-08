@@ -26,7 +26,7 @@ import { SiteFooter } from '@/app/components/site-footer';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useDoc, useMemoFirebase, useFirestore } from '@/firebase';
+import { useDoc, useMemoFirebase, useFirestore } from '@/firebase/hooks';
 import { doc } from 'firebase/firestore';
 import { initialPageContent } from '@/lib/initial-data';
 import { ThemeInjector } from '@/app/components/theme-injector';

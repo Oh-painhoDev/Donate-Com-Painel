@@ -17,7 +17,7 @@
  * 
  */
 'use client';
-import { useAuth, useDoc, useMemoFirebase, setDocumentNonBlocking, useFirestore } from '@/firebase';
+import { useDoc, useMemoFirebase, setDocumentNonBlocking, useFirestore } from '@/firebase/hooks';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
