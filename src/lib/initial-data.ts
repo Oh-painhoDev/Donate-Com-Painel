@@ -42,6 +42,11 @@ export const initialPageContent = {
         title: "Governo do Estado envia reforços para a região de Rio Bonito do Iguaçu",
         source: "AEN",
         url: "https://www.aen.pr.gov.br/Noticia/Governo-do-Estado-envia-reforcos-para-a-regiao-de-Rio-Bonito-do-Iguacu"
+      },
+      {
+        title: "Comoção e solidariedade marcam os esforços de reconstrução em Rio Bonito",
+        source: "Gazeta do Povo",
+        url: "https://www.gazetadopovo.com.br/parana/comocao-e-solidariedade-marcam-os-esforcos-de-reconstrucao-em-rio-bonito/"
       }
   ],
   impactVisualizerTitle: "SITUAÇÃO CRÍTICA (Dados Oficiais)",
