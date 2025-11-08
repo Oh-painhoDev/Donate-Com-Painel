@@ -26,10 +26,10 @@ export const initialPageContent = {
     accent: "30 100% 50%",
     background: "0 0% 100%",
   },
-  pageTitle: "SOS Paraná | Ajude Rio Bonito do Iguaçu",
+  pageTitle: "Salve o Paraná | Ajude a Reconstruir",
   logoImageUrl: "https://static.tildacdn.com/tild3363-3038-4833-b638-353032356634/noroot.png",
-  headerText: "SOS PARANÁ: AJUDE A RECONSTRUIR RIO BONITO DO IGUAÇU",
-  headerSubText: "Um tornado devastou 90% da cidade, deixando um rastro de destruição. Vidas foram perdidas, centenas de famílias estão desabrigadas e precisam da sua ajuda urgente.",
+  headerText: "HÁ FAMÍLIAS QUE PERDERAM TUDO NESTE CICLONE — MAS NÃO PERDERAM A ESPERANÇA.",
+  headerSubText: "SUA DOAÇÃO É O PRIMEIRO PASSO PARA UM NOVO COMEÇO NO PARANÁ.",
   headerImageUrl: "https://images.unsplash.com/photo-1620776230043-c7943c72ef63?q=80&w=2070&auto=format&fit=crop",
   donationOptions: [
     {
@@ -69,41 +69,57 @@ export const initialPageContent = {
         url: "https://www.gazetadopovo.com.br/parana/comocao-e-solidariedade-marcam-os-esforcos-de-reconstrucao-em-rio-bonito/"
       }
   ],
-  impactVisualizerTitle: "O Impacto do Tornado em Rio Bonito do Iguaçu",
+  impactVisualizerTitle: "O Impacto do Ciclone no Paraná",
   impactVisualizerSubText: "Dados oficiais da Defesa Civil do Paraná. Nossa resposta no local: distribuição de água, alimentos, abrigos emergenciais e suporte médico.",
   impacts: [
     {
-      amount: "90%",
-      description: "da cidade destruída"
+      amount: "278",
+      description: "corações recebidos"
     },
     {
-      amount: "6",
-      description: "mortes confirmadas"
+      amount: "289",
+      description: "apoiadores"
     },
     {
-      amount: "750+",
-      description: "feridos e desabrigados"
+      amount: "R$ 25k+",
+      description: "arrecadado"
     }
   ],
-  aboutTitle: "Nossa Resposta à Emergência no Paraná",
-  aboutSubTitle: "Ações imediatas para salvar vidas em Rio Bonito do Iguaçu",
-  aboutText: "Com a sua ajuda, estamos na linha de frente em Rio Bonito do Iguaçu, distribuindo imediatamente água, alimentos, e kits de higiene. Estamos montando abrigos emergenciais, fornecendo atendimento médico móvel e dando suporte psicológico para as vítimas do trauma. Cada doação é crucial para a reconstrução da cidade.",
+  aboutTitle: "HÁ FAMÍLIAS QUE PERDERAM TUDO — MAS NÃO PERDERAM A ESPERANÇA.",
+  aboutSubTitle: "💚 A solidariedade é o que reconstrói o que o mundo destrói.",
+  aboutText: "Em momentos de dificuldade, cada gesto de solidariedade se transforma em força, alimento e esperança. Existem pessoas agora mesmo tentando recomeçar do zero — sem casa, sem recursos, mas com o coração cheio de vontade de seguir em frente. E é a sua ajuda que pode mudar essa realidade. Com uma simples doação, você leva abrigo, comida e conforto para quem mais precisa. Não se trata apenas de dinheiro — é sobre empatia, compaixão e a vontade de fazer o bem. Imagine saber que, graças a você, uma família voltou a sorrir. Que uma criança dormiu aquecida. Que alguém recuperou a esperança porque uma mão se estendeu no momento certo.",
   aboutImageUrl: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop",
-  credibilityTitle: "Vozes da Tragédia no Paraná",
+  credibilityTitle: "Quem Ajudou",
   testimonials: [
     {
-      name: "Maria Santos, moradora de Rio Bonito",
-      text: "Perdi minha casa em minutos. A ajuda que chegou me deu esperança para recomeçar."
+      name: "Pedro Henrique",
+      text: "Eu ajudei com 150 reais, estamos juntos nessa!."
     },
     {
-      name: "João Silva, voluntário local",
-      text: "Ver a união das pessoas e as doações chegando faz toda a diferença. Estamos reconstruindo tijolo por tijolo."
+      name: "Ana Clara",
+      text: "Fiquei emocionada em ver como pequenas doações realmente fazem diferença. Saber que minha ajuda chegou a quem precisava me trouxe uma sensação incrível de fazer parte de algo maior!"
+    },
+    {
+      name: "Cicera Rodrigues",
+      text: "queria poder doar um pouco mais 😓, mas o pouco que dei já ajuda, boa sorte pessoal"
+    },
+    {
+      name: "Paulo Rocha",
+      text: "Cada doação importa. se eu pudesse estaria junto com vocês"
+    },
+    {
+      name: "José Siqueira",
+      text: "Vamos apoiar esse movimento pessoal! minha contribuição já foi feita!"
+    },
+    {
+      name: "Joaquim Martins",
+      text: "Às vezes a gente acha que não vai fazer diferença, mas faz! Saber que minha doação virou alimento e apoio para famílias me encheu de orgulho."
     }
   ],
   faqTitle: "Dúvidas Sobre a Ajuda ao Paraná",
   faqs: [
     {
-      q: "Como minha doação chega às vítimas de Rio Bonito do Iguaçu?",
+      q: "Como minha doação chega às vítimas?",
       a: "Trabalhamos em parceria com a Defesa Civil do Paraná e equipes locais para entregar a ajuda diretamente às famílias afetadas, garantindo que o recurso chegue a quem mais precisa."
     },
     {
@@ -115,11 +131,11 @@ export const initialPageContent = {
       a: "Temos um compromisso com a transparência total. Publicamos relatórios diários de nossas operações e despesas em nosso site e redes sociais."
     }
   ],
-  footerLinksTitle: "CANAIS DE ATENDIMENTO 24h",
-  footerContactTitle: "CONTATO DE EMERGÊNCIA (PARANÁ)",
-  footerContactEmail: "emergencia.pr@doare.org",
-  footerContactAddress: "WhatsApp (Emergência): (41) 99876-5432",
-  footerRightsText: "SOS Paraná | Todos os direitos reservados 2024",
+  footerLinksTitle: "Links rápidos",
+  footerContactTitle: "Fale conosco",
+  footerContactEmail: "Clique aqui para falar conosco",
+  footerContactAddress: "De Segunda à Sexta, Das 9:30 às 17:00",
+  footerRightsText: "Salve o Paraná | © 2025 - Todos direitos reservados",
   footerMadeByText: "Tecnologia para o bem, por",
   footerMadeByLink: "http://doare.org/"
 };
