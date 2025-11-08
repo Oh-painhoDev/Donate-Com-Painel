@@ -19,7 +19,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 // Componente movido para fora para evitar recriação em cada render
@@ -41,7 +41,7 @@ const DonationCircle = ({
   return (
     <div className="flex flex-col items-center gap-6 text-center">
       <div className="relative w-48 h-48 md:w-56 md:h-56 transform hover:scale-105 transition-transform duration-300">
-        <div className="absolute inset-0 rounded-full bg-white shadow-2xl"></div>
+        <div className="absolute inset-0 rounded-full bg-card shadow-2xl"></div>
         <div className="absolute inset-2 rounded-full border-2 border-dashed border-accent"></div>
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
           {isCustom ? (
@@ -71,6 +71,11 @@ const DonationCircle = ({
 
 export function DonationSection({ content }: { content: any }) {
   const [customAmount, setCustomAmount] = useState('');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   if (!content) return null;
 
@@ -81,12 +86,14 @@ export function DonationSection({ content }: { content: any }) {
           {content.donationOptions.map((option: any, index: number) => (
             <DonationCircle key={index} amount={option.amount} description={option.description} />
           ))}
-          <DonationCircle 
-            isCustom 
-            description={content.customDonationText}
-            customAmount={customAmount}
-            setCustomAmount={setCustomAmount}
-          />
+          {isClient && (
+            <DonationCircle 
+              isCustom 
+              description={content.customDonationText}
+              customAmount={customAmount}
+              setCustomAmount={setCustomAmount}
+            />
+          )}
         </div>
       </div>
     </section>
