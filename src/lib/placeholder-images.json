@@ -1,40 +1,22 @@
 {
   "placeholderImages": [
     {
-      "id": "qr-code",
-      "description": "QR Code for PIX donation",
-      "imageUrl": "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxxciUyMGNvZGV8ZW58MHx8fHwxNzYyNTgzODY5fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "qr code"
-    },
-    {
-      "id": "testimonial-1",
-      "description": "Video testimonial from a victim",
-      "imageUrl": "https://images.unsplash.com/photo-1643932919088-53349a7c3385?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwb3J0cmFpdCUyMHBlcnNvbnxlbnwwfHx8fDE3NjI1NTAyNzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "portrait person"
-    },
-    {
-      "id": "testimonial-2",
-      "description": "Video testimonial from a volunteer",
-      "imageUrl": "https://images.unsplash.com/photo-1754507128300-5d2023d3958c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwb3J0cmFpdCUyMHZvbHVudGVlcnxlbnwwfHx8fDE3NjI2MjI1OTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "portrait volunteer"
-    },
-    {
       "id": "hero-banner",
-      "description": "Main banner image for SAVE Brasil",
-      "imageUrl": "https://static.tildacdn.com/tild3666-3234-4637-b530-333931383636/banner_principal.png",
-      "imageHint": "bird nature"
+      "description": "Imagem aérea de uma área inundada no Paraná, mostrando a extensão dos danos.",
+      "imageUrl": "https://images.unsplash.com/photo-1620494239335-cea65883a487?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhZXJpYWwlMjB2aWV3JTIwZmxvb2R8ZW58MHx8fHwxNzE1NzE4MjIyfDA&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageHint": "flood aerial"
     },
     {
-      "id": "atuacao-save-brasil",
-      "description": "Image for the 'Atuação SAVE Brasil' section",
-      "imageUrl": "https://static.tildacdn.com/tild3639-3363-4530-a235-316634316237/ATUAO__SAVE_Brasil.png",
-      "imageHint": "bird watching"
+      "id": "about-parana",
+      "description": "Foto de voluntários distribuindo doações para famílias afetadas pelas enchentes.",
+      "imageUrl": "https://images.unsplash.com/photo-1618210369818-a01b7a2e7379?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx2b2x1bnRlZXJzJTIwZ2l2aW5nJTIwZm9vZHxlbnwwfHx8fDE3MTU3MTgzMDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "volunteers donations"
     },
     {
       "id": "logo",
-      "description": "SAVE Brasil logo",
-      "imageUrl": "https://static.tildacdn.com/tild3363-3038-4833-b638-353032356634/noroot.png",
-      "imageHint": "logo bird"
+      "description": "Logo da campanha SOS Paraná",
+      "imageUrl": "https://images.unsplash.com/photo-1616943229189-bc60570b4364?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsb2dvJTIwdGV4dHxlbnwwfHx8fDE3NjI1MzkzODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "logo text"
     }
   ]
 }

@@ -1,50 +1,46 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Feather,
-  Globe,
-  Bird,
-} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Home, Droplets, Users } from 'lucide-react';
 
 const impacts = [
   {
-    amount: '208.823',
-    description: 'Quantidade de hectares protegidos pelas ações da SAVE Brasil.',
-    icon: Globe,
+    amount: '+5.000',
+    description: 'Famílias que receberão kits de emergência e alimentos.',
+    icon: Home,
   },
   {
-    amount: '9.273',
-    description: 'Visitantes que vieram conhecer nossas reservas, nos últimos anos',
-    icon: Feather,
+    amount: '+10.000L',
+    description: 'De água potável distribuída para as comunidades afetadas.',
+    icon: Droplets,
   },
   {
-    amount: '64',
-    description: 'Espécies de aves ameaçadas que foram beneficiadas pela SAVE Brasil',
-    icon: Bird,
+    amount: '+500',
+    description: 'Voluntários mobilizados para ajudar na linha de frente.',
+    icon: Users,
   },
 ];
 
 export function ImpactVisualizer() {
   return (
-    <section id="impacto" className="py-12 md:py-20 bg-primary text-primary-foreground">
+    <section id="impacto" className="py-16 md:py-24 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold font-headline text-accent">
-            Impacto na prática
+          <h2 className="text-4xl md:text-5xl font-bold font-headline text-accent">
+            O Impacto da Sua Ajuda
           </h2>
-          <p className="mt-2 max-w-2xl mx-auto text-blue-200">
-            Com quase 20 anos de atuação no Brasil, estes são alguns dos números que traduzem o nosso trabalho:
+          <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-blue-200">
+            Cada doação se transforma em ajuda real e imediata. Veja como sua contribuição faz a diferença:
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {impacts.map((impact) => (
             <Card
               key={impact.amount}
-              className="text-center bg-transparent border-0 shadow-none"
+              className="text-center bg-primary/50 border-accent/30 rounded-2xl p-6 shadow-lg"
             >
-              <CardContent>
-                <p className="text-6xl font-bold text-white">{impact.amount}</p>
-                <hr className="my-4 border-accent" />
-                <p className="mt-2 text-lg">
+              <CardContent className="flex flex-col items-center gap-4">
+                <impact.icon className="w-16 h-16 text-accent" />
+                <p className="text-5xl font-bold text-white">{impact.amount}</p>
+                <p className="mt-2 text-lg text-blue-200">
                   {impact.description}
                 </p>
               </CardContent>

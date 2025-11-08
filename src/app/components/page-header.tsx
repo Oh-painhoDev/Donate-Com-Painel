@@ -7,7 +7,7 @@ export function PageHeader() {
   return (
     <header
       id="inicio"
-      className="relative h-[600px] md:h-[800px] w-full text-center"
+      className="relative h-[70vh] md:h-[80vh] w-full flex items-center justify-center text-center text-white"
     >
       {heroImage && (
         <Image
@@ -19,13 +19,13 @@ export function PageHeader() {
           priority
         />
       )}
-      <div className="absolute inset-0 bg-black/30" />
-      <div className="container relative mx-auto px-4 h-full flex flex-col items-center justify-center text-white">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-shadow-lg">
-          Preservar é preciso.
+      <div className="absolute inset-0 bg-black/50" />
+      <div className="container relative mx-auto px-4">
+        <h1 className="text-4xl md:text-7xl font-bold tracking-tighter text-shadow-lg leading-tight">
+          SOS Paraná: <br />Sua ajuda é a esperança deles.
         </h1>
-        <p className="mt-4 max-w-2xl text-lg md:text-xl text-shadow">
-          Faça parte do nosso movimento em defesa da conservação das aves e da biodiversidade brasileira.
+        <p className="mt-6 max-w-3xl mx-auto text-lg md:text-2xl text-shadow">
+          Milhares de famílias foram afetadas pelas enchentes. Sua doação leva alimento, abrigo e esperança.
         </p>
       </div>
     </header>

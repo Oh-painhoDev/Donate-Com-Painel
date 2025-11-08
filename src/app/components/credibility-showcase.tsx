@@ -2,31 +2,39 @@ import {
   Card,
   CardContent,
 } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 
 const testimonials = [
   {
-    name: 'Silvia Linhares',
-    text: 'Ser amiga da SAVE significa ter encontrado um caminho para ajudar a nossa natureza a sobreviver. Acredito nas pessoas que estão na direção. Elas estão dando o seu melhor e eu me orgulho de contribuir. A SAVE me representa e sinto feliz de fazer parte de qualquer forma. Parabéns a todos que fazem a SAVE.'
+    name: 'Juliana Silva',
+    location: 'Curitiba, PR',
+    text: 'Fiquei desabrigada com meus dois filhos e não sabia o que fazer. A ajuda chegou rápido com comida e um lugar seguro para ficarmos. Sou muito grata a todos que doaram.'
   },
   {
-    name: 'Nailson Junior',
-    text: 'Ser amigo da SAVE é saber que você está contribuindo de forma direta para a conversação de uma natureza muito destruída pelo ser humano. Você ajuda na conservação de espécies extremamente ameaçadas e que correm um risco alto de deixarem de existir. Você consegue fazer algo para que seus filhos e netos possam ver o que você viu.'
+    name: 'Marcos Oliveira',
+    location: 'Voluntário',
+    text: 'Ver a união das pessoas para ajudar é emocionante. Cada cesta básica que entregamos, cada cobertor, é um sopro de esperança. Fazer parte disso não tem preço.'
   },
   {
-    name: 'Gersony Jovchelevich',
-    text: 'Se a observação de aves foi uma janela que se abriu na minha vida, para uma vista linda, fazer parte do Grupo de amigos da SAVE foi multiplicar essas janelas e conviver com gente que ama olhar através delas, se encanta e compartilha a sua visão. É oportunidade de aprendizado com os melhores, é crescimento, é troca. E sobretudo é um alento nesse momento atual tão difícil. Ver gente tão comprometida e trabalhando com afinco para a proteção das aves e da natureza me alegra o coração e estimula na mesma direção.'
+    name: 'Carla Martins',
+    location: 'Londrina, PR',
+    text: 'Nossa casa foi invadida pela água, perdemos quase tudo. O apoio que recebemos foi fundamental para recomeçar. Obrigada por não nos abandonarem neste momento tão difícil.'
   }
 ];
 
 export function CredibilityShowcase() {
 
   return (
-    <section id="depoimentos" className="py-12 md:py-20 bg-gray-50">
+    <section id="depoimentos" className="py-16 md:py-24 bg-secondary">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold font-headline text-primary">
-            Depoimentos
+          <h2 className="text-4xl md:text-5xl font-bold font-headline text-primary">
+            Vozes da Esperança
           </h2>
+          <p className="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground">
+            Histórias reais de quem foi ajudado pela sua doação e de quem está na linha de frente.
+          </p>
         </div>
 
         <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
@@ -35,6 +43,7 @@ export function CredibilityShowcase() {
               key={index}
               name={testimonial.name}
               text={testimonial.text}
+              location={testimonial.location}
             />
           ))}
         </div>
@@ -43,12 +52,20 @@ export function CredibilityShowcase() {
   );
 }
 
-function TestimonialCard({ name, text }: { name: string; text: string }) {
+function TestimonialCard({ name, text, location }: { name: string; text: string; location: string }) {
   return (
-    <Card className="overflow-hidden group shadow-lg bg-accent text-accent-foreground rounded-3xl">
-      <CardContent className="p-6">
-        <p className="font-bold text-xl mb-4">{name}</p>
-        <p className="text-sm">{text}</p>
+    <Card className="bg-background overflow-hidden group shadow-lg rounded-2xl">
+      <CardContent className="p-8">
+        <div className="flex items-center mb-4">
+          <Avatar className="h-14 w-14 mr-4">
+            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="font-bold text-xl text-primary">{name}</p>
+            <p className="text-sm text-muted-foreground">{location}</p>
+          </div>
+        </div>
+        <p className="text-base text-foreground/80">{`"${text}"`}</p>
       </CardContent>
     </Card>
   );

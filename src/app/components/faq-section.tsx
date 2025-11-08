@@ -7,55 +7,43 @@ import {
 
 const faqs = [
   {
-    q: 'Como se tornar um Amigo SAVE?',
-    a: 'Para se tornar um Amigo SAVE, você deve clicar em “doar” para efetuar sua contribuição. Através da sua participação, poderemos desenvolver nossos projetos e continuar ajudando na preservação de diversas espécies de aves, seus habitats e biomas brasileiros.',
+    q: 'Como posso ter certeza de que minha doação chegará às vítimas?',
+    a: 'Trabalhamos em parceria com defesas civis e organizações locais de confiança no Paraná para garantir que todas as doações sejam distribuídas de forma transparente e eficiente para as famílias mais necessitadas.',
   },
   {
-    q: 'A partir de quantos reais mensais viro um Amigo SAVE?',
-    a: 'A partir de R$240,00 ao ano e o mesmo que R$20,00 ao mês.',
+    q: 'Quais itens são mais necessários neste momento?',
+    a: 'As maiores necessidades são alimentos não perecíveis, água potável, produtos de higiene pessoal, roupas, cobertores e materiais de limpeza. Sua doação em dinheiro nos permite comprar esses itens em grande quantidade e de acordo com a demanda.',
   },
   {
-    q: 'Qual o valor mínimo de doação?',
-    a: 'A partir de R$80,00 você já estará auxiliando em nossa missão de preservação ambiental.',
+    q: 'Posso doar itens físicos em vez de dinheiro?',
+    a: 'No momento, estamos focados na arrecadação financeira para otimizar a logística e comprar os itens mais urgentes diretamente nas regiões afetadas. Para doações de itens, por favor, procure os pontos de coleta oficiais da Defesa Civil em sua cidade.',
   },
   {
-    q: 'Sou ex-doador ou ex-Amigo SAVE, posso voltar a doar?',
-    a: 'Sim! Nós, da SAVE Brasil ficamos contentes com seu retorno, mas para isso, é importante que você refaça o seu cadastro de doação, escolhendo se será um doador pontual ou um Amigo Save, para usufruir de todos os benefícios.',
+    q: 'Como posso me voluntariar para ajudar?',
+    a: 'Agradecemos imensamente seu interesse! O trabalho voluntário está sendo coordenado pelas autoridades locais. Por favor, entre em contato com a Defesa Civil do seu município para se cadastrar e saber como ajudar presencialmente.',
   },
   {
-    q: 'Como saber se minha doação está ativa?',
-    a: 'Entre em contato conosco através do e-mail amigos@savebrasil.org.br, que verificaremos em nosso sistema o status da sua doação.',
+    q: 'Minha empresa gostaria de fazer uma grande doação. Como proceder?',
+    a: 'Para doações corporativas ou parcerias, por favor, entre em contato através do e-mail sosparana@email.com para que nossa equipe possa dar o suporte necessário e alinhar os detalhes da colaboração.',
   },
-  {
-    q: 'Sou empresa e quero contribuir, posso ser um parceiro?',
-    a: 'Para que você e sua empresa possam apoiar nossos projetos, envie um e-mail para comunicacao@savebrasil.org.br, informando seu interesse e descrevendo brevemente sobre os serviços prestados pelo seu negócio e sua ideia de projeto e ou parceria.'
-  },
-  {
-    q: 'Sou Amigo SAVE e gostaria de atualizar meus dados, como posso fazer?',
-    a: 'Você precisa entrar em contato com a nossa equipe através do e-mail amigos@savebrasil.org.br para que possamos atualizar seus dados (endereço, e-mail, telefone, etc) em nosso sistema.'
-  },
-  {
-    q: 'Não posso doar agora, a SAVE Brasil possui programa de voluntariado?',
-    a: 'Sim! A SAVE divulga durante todo o ano a abertura para os programas de voluntariado em nossos projetos, mas caso queira entrar em contato direto conosco é só encaminhar um e-mail para aves@savebrasil.org.br.'
-  }
 ];
 
 export function FaqSection() {
   return (
-    <section id="faq" className="py-12 md:py-20 bg-gray-50">
-      <div className="container mx-auto px-4 max-w-3xl">
+    <section id="faq" className="py-16 md:py-24 bg-background">
+      <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold font-headline text-primary">
+          <h2 className="text-4xl md:text-5xl font-bold font-headline text-primary">
             Perguntas Frequentes
           </h2>
         </div>
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="single" collapsible className="w-full space-y-4">
           {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`item-${index}`} className="mb-2">
-              <AccordionTrigger className="text-left font-semibold text-lg p-4 bg-accent text-accent-foreground rounded-lg hover:no-underline">
+            <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
+              <AccordionTrigger className="text-left text-lg md:text-xl font-semibold p-6 bg-secondary text-primary rounded-lg hover:no-underline">
                 {faq.q}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground p-4 bg-white rounded-b-lg">
+              <AccordionContent className="text-muted-foreground p-6 text-base bg-secondary/50 rounded-b-lg">
                 {faq.a}
               </AccordionContent>
             </AccordionItem>

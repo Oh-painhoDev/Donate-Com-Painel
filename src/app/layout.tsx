@@ -3,9 +3,9 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Doe | SAVE Brasil',
+  title: 'SOS Paraná | Ajude as vítimas das enchentes',
   description:
-    'Página de doações para ajudar a SAVE Brasil na conservação das aves e da biodiversidade brasileira.',
+    'Página de doações para ajudar as vítimas das enchentes no Paraná.',
 };
 
 export default function RootLayout({
