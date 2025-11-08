@@ -21,6 +21,8 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
 import { useEffect } from 'react';
+import { ThemeProvider } from '@/app/components/theme-provider';
+
 
 // Metadata has been removed from this client component to fix the build error.
 // Page titles and descriptions are now fully managed dynamically based on Firestore data in page.tsx.
@@ -80,7 +82,7 @@ export default function RootLayout({
     return () => clearInterval(intervalId);
   }, []);
   return (
-    <html lang="pt-BR" className="scroll-smooth">
+    <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -94,10 +96,17 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <FirebaseClientProvider>
-          {children}
-        </FirebaseClientProvider>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <FirebaseClientProvider>
+            {children}
+          </FirebaseClientProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

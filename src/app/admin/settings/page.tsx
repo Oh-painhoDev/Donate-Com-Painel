@@ -216,7 +216,7 @@ export default function AdminSettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-4">
               {donationOptionFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-background">
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-card">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
                     <div><Label>Valor (número)</Label><Input type="number" {...register(`donationOptions.${index}.amount`, { valueAsNumber: true })} /><p className="text-destructive text-sm mt-1">{errors.donationOptions?.[index]?.amount?.message}</p></div>
                     <div><Label>Descrição</Label><Input {...register(`donationOptions.${index}.description`)} /><p className="text-destructive text-sm mt-1">{errors.donationOptions?.[index]?.description?.message}</p></div>
@@ -245,7 +245,7 @@ export default function AdminSettingsPage() {
             <Label>Itens de Notícia</Label>
             <div className="space-y-4">
               {newsItemFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-background">
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-card">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-grow">
                     <div><Label>Título da Notícia</Label><Input {...register(`newsItems.${index}.title`)} /><p className="text-destructive text-sm mt-1">{errors.newsItems?.[index]?.title?.message}</p></div>
                     <div><Label>Fonte (ex: G1)</Label><Input {...register(`newsItems.${index}.source`)} /><p className="text-destructive text-sm mt-1">{errors.newsItems?.[index]?.source?.message}</p></div>
@@ -267,7 +267,7 @@ export default function AdminSettingsPage() {
              <Label>Itens de Impacto</Label>
              <div className="space-y-4">
                {impactFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-background">
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-card">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
                     <div><Label>Número/Quantidade</Label><Input {...register(`impacts.${index}.amount`)} /><p className="text-destructive text-sm mt-1">{errors.impacts?.[index]?.amount?.message}</p></div>
                     <div><Label>Descrição</Label><Input {...register(`impacts.${index}.description`)} /><p className="text-destructive text-sm mt-1">{errors.impacts?.[index]?.description?.message}</p></div>
@@ -297,7 +297,7 @@ export default function AdminSettingsPage() {
             <Label>Depoimentos</Label>
             <div className="space-y-4">
                {testimonialFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-background">
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-card">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
                     <div><Label>Nome</Label><Input {...register(`testimonials.${index}.name`)} /><p className="text-destructive text-sm mt-1">{errors.testimonials?.[index]?.name?.message}</p></div>
                     <div><Label>Texto do Depoimento</Label><Textarea {...register(`testimonials.${index}.text`)} /><p className="text-destructive text-sm mt-1">{errors.testimonials?.[index]?.text?.message}</p></div>
@@ -317,7 +317,7 @@ export default function AdminSettingsPage() {
             <Label>Perguntas e Respostas</Label>
              <div className="space-y-4">
                {faqFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-background">
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-card">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
                     <div><Label>Pergunta</Label><Input {...register(`faqs.${index}.q`)} /><p className="text-destructive text-sm mt-1">{errors.faqs?.[index]?.q?.message}</p></div>
                     <div><Label>Resposta</Label><Textarea {...register(`faqs.${index}.a`)} /><p className="text-destructive text-sm mt-1">{errors.faqs?.[index]?.a?.message}</p></div>
