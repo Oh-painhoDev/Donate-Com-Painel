@@ -12,6 +12,7 @@ import { useDoc, useMemoFirebase, useFirestore } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { initialPageContent } from '@/lib/initial-data';
 import { ThemeInjector } from '@/app/components/theme-injector';
+import { NewsSection } from '@/app/components/news-section';
 
 function AboutSection({ content }: { content: any }) {
   if (!content) return null;
@@ -80,6 +81,7 @@ export default function Home() {
       <PageHeader content={content} />
       <main>
         <DonationSection content={content} />
+        <NewsSection content={content} />
         <ImpactVisualizer content={content} />
         <AboutSection content={content} />
         <CredibilityShowcase content={content} />

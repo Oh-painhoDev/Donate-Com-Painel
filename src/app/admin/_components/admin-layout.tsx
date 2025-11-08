@@ -22,6 +22,7 @@ import {
   MessageSquareQuote,
   HelpCircle,
   Footprints,
+  Newspaper,
 } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
@@ -32,6 +33,7 @@ const menuItems = [
   { href: '/admin/settings#colors', icon: Palette, label: 'Aparência e Cores' },
   { href: '/admin/settings#header', icon: LayoutTemplate, label: 'Cabeçalho' },
   { href: '/admin/settings#donation', icon: Heart, label: 'Doações' },
+  { href: '/admin/settings#news', icon: Newspaper, label: 'Notícias' },
   { href: '/admin/settings#impact', icon: Sparkles, label: 'Visualizador de Impacto' },
   { href: '/admin/settings#about', icon: ImageIcon, label: 'Seção Sobre' },
   { href: '/admin/settings#credibility', icon: MessageSquareQuote, label: 'Depoimentos' },

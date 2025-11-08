@@ -26,6 +26,14 @@ export const initialPageContent = {
     }
   ],
   customDonationText: "OUTRO VALOR",
+  newsTitle: "Notícias em Tempo Real",
+  newsItems: [
+      {
+        title: "Cidade do PR amanhece destruída após passagem de tornado; VEJA IMAGENS",
+        source: "G1 Paraná",
+        url: "https://g1.globo.com/pr/parana/noticia/2024/10/01/cidade-do-pr-amanhece-destruida-apos-passagem-de-tornado-veja-imagens.ghtml"
+      }
+  ],
   impactVisualizerTitle: "SITUAÇÃO CRÍTICA (Dados Oficiais)",
   impactVisualizerSubText: "Nossa resposta no local: distribuição de água, alimentos, abrigos emergenciais e suporte médico.",
   impacts: [

@@ -32,6 +32,19 @@
           }
         },
         "customDonationText": { "type": "string", "description": "Text for the custom donation option." },
+        "newsTitle": { "type": "string", "description": "Title for the News section." },
+        "newsItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "source": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            },
+            "required": ["title", "source", "url"]
+          }
+        },
         "impactVisualizerTitle": { "type": "string", "description": "Title for the impact visualizer section." },
         "impactVisualizerSubText": { "type": "string", "description": "Sub-text for the impact visualizer section." },
         "impacts": {

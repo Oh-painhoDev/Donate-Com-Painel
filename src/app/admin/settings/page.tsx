@@ -12,13 +12,19 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints } from 'lucide-react';
+import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper } from 'lucide-react';
 import { initialPageContent } from '@/lib/initial-data';
 
 
 const donationOptionSchema = z.object({
   amount: z.number(),
   description: z.string(),
+});
+
+const newsItemSchema = z.object({
+  title: z.string(),
+  source: z.string(),
+  url: z.string().url(),
 });
 
 const impactSchema = z.object({
@@ -53,6 +59,8 @@ const pageContentSchema = z.object({
   headerImageUrl: z.string().url(),
   donationOptions: z.array(donationOptionSchema),
   customDonationText: z.string(),
+  newsTitle: z.string(),
+  newsItems: z.array(newsItemSchema),
   impactVisualizerTitle: z.string(),
   impactVisualizerSubText: z.string(),
   impacts: z.array(impactSchema),
@@ -94,6 +102,7 @@ export default function AdminSettingsPage() {
   });
 
   const { fields: donationOptionFields, append: appendDonationOption, remove: removeDonationOption } = useFieldArray({ control, name: "donationOptions" });
+  const { fields: newsItemFields, append: appendNewsItem, remove: removeNewsItem } = useFieldArray({ control, name: "newsItems" });
   const { fields: impactFields, append: appendImpact, remove: removeImpact } = useFieldArray({ control, name: "impacts" });
   const { fields: testimonialFields, append: appendTestimonial, remove: removeTestimonial } = useFieldArray({ control, name: "testimonials" });
   const { fields: faqFields, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
@@ -159,6 +168,27 @@ export default function AdminSettingsPage() {
             </div>
             <Button type="button" variant="outline" onClick={() => appendDonationOption({ amount: 0, description: '' })}>Adicionar Opção</Button>
             <div><Label>Texto para Doação Customizada</Label><Input {...register('customDonationText')} /></div>
+          </CardContent>
+        </Card>
+
+        <Card id="news" className="scroll-mt-20">
+          <CardHeader><CardTitle className="flex items-center gap-3"><Newspaper className="text-primary"/> Seção de Notícias</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div><Label>Título da Seção</Label><Input {...register('newsTitle')} /></div>
+            <Label>Itens de Notícia</Label>
+            <div className="space-y-4">
+              {newsItemFields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-background">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-grow">
+                    <div><Label>Título da Notícia</Label><Input {...register(`newsItems.${index}.title`)} /></div>
+                    <div><Label>Fonte (ex: G1)</Label><Input {...register(`newsItems.${index}.source`)} /></div>
+                    <div><Label>URL do Link</Label><Input type="url" {...register(`newsItems.${index}.url`)} /></div>
+                  </div>
+                  <Button type="button" variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => removeNewsItem(index)}><Trash className="h-4 w-4"/></Button>
+                </div>
+              ))}
+            </div>
+            <Button type="button" variant="outline" onClick={() => appendNewsItem({ title: '', source: '', url: '' })}>Adicionar Notícia</Button>
           </CardContent>
         </Card>
 
