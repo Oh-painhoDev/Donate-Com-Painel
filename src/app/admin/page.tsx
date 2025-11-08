@@ -13,6 +13,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash } from 'lucide-react';
+import { initialPageContent } from '@/lib/initial-data';
+
 
 const donationOptionSchema = z.object({
   amount: z.number(),
@@ -72,10 +74,12 @@ export default function AdminPage() {
   }, [firestore]);
 
   const { data: pageContent, isLoading } = useDoc<PageContentForm>(contentRef);
+  
+  const defaultValues = pageContent ?? initialPageContent;
 
   const { control, register, handleSubmit, reset, formState: { isDirty } } = useForm<PageContentForm>({
     resolver: zodResolver(pageContentSchema),
-    defaultValues: pageContent ?? undefined,
+    defaultValues: defaultValues,
   });
 
   const { fields: donationOptionFields, append: appendDonationOption, remove: removeDonationOption } = useFieldArray({ control, name: "donationOptions" });
@@ -86,6 +90,8 @@ export default function AdminPage() {
   useEffect(() => {
     if (pageContent) {
       reset(pageContent);
+    } else {
+      reset(initialPageContent);
     }
   }, [pageContent, reset]);
 

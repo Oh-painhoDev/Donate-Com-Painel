@@ -9,9 +9,10 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-
 import { useDoc, useMemoFirebase, useFirestore } from '@/firebase';
 import { doc } from 'firebase/firestore';
+import { initialPageContent } from '@/lib/initial-data';
+
 
 function AboutSection({ content }: { content: any }) {
   const aboutImage = PlaceHolderImages.find(p => p.id === 'about-parana');
@@ -52,7 +53,9 @@ export default function Home() {
   const logoImage = PlaceHolderImages.find(p => p.id === 'logo');
   const firestore = useFirestore();
   const contentRef = useMemoFirebase(() => firestore ? doc(firestore, 'pageContent', 'landingPage') : null, [firestore]);
-  const { data: content, isLoading } = useDoc(contentRef);
+  const { data, isLoading } = useDoc(contentRef);
+
+  const content = data ?? initialPageContent;
   
   if (isLoading) {
     return (
