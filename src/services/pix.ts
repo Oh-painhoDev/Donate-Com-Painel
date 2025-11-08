@@ -18,7 +18,6 @@
  */
 'use server';
 
-import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '@/firebase/admin';
 
 type PixRequestData = {
@@ -55,11 +54,11 @@ function findFieldInResponse(data: any, possibleNames: string[]): string | null 
 
 
 export async function createPix(data: PixRequestData) {
-  const contentRef = doc(firestore, 'pageContent', 'landingPage');
+  const contentRef = firestore.collection('pageContent').doc('landingPage');
   
   try {
-    const contentSnap = await getDoc(contentRef);
-    if (!contentSnap.exists()) {
+    const contentSnap = await contentRef.get();
+    if (!contentSnap.exists) {
       return { success: false, error: 'Configuração da página não encontrada.' };
     }
     const pageContent = contentSnap.data();

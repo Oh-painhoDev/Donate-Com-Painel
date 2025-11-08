@@ -18,7 +18,6 @@
  */
 'use server';
 
-import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '@/firebase/admin';
 
 // Helper to get a value from a URL query string
@@ -30,15 +29,15 @@ const getQueryParam = (url: string, param: string): string | null => {
 
 // Main function to track a sale/donation
 export async function trackSale(saleData: { amountInCents: number; productName: string }) {
-  const contentRef = doc(firestore, 'pageContent', 'landingPage');
-  const contentSnap = await getDoc(contentRef);
+  const contentRef = firestore.collection('pageContent').doc('landingPage');
+  const contentSnap = await contentRef.get();
 
-  if (!contentSnap.exists()) {
+  if (!contentSnap.exists) {
     throw new Error('Page content not found.');
   }
 
   const pageContent = contentSnap.data();
-  const apiToken = pageContent.utmifyApiToken;
+  const apiToken = pageContent?.utmifyApiToken;
 
   if (!apiToken) {
     console.warn('Utmify API token is not set. Skipping sale tracking.');
