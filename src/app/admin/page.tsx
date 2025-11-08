@@ -124,152 +124,161 @@ export default function AdminPage() {
   }
   
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50/50">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">Painel de Administração</h1>
-        <Button onClick={handleSignOut} variant="outline">Sair</Button>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit, (formErrors) => console.log(formErrors))} className="space-y-8">
-        
-        {/* Colors Section */}
-        <Card className="overflow-hidden">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Palette/> Aparência e Cores</CardTitle>
-            <CardDescription>Edite as cores principais do site. Use o formato HSL (ex: "150 50% 25%").</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div><Label>Primária</Label><Input {...register('colors.primary')} /><p className="text-destructive text-sm mt-1">{errors.colors?.primary?.message}</p></div>
-              <div><Label>Secundária</Label><Input {...register('colors.secondary')} /><p className="text-destructive text-sm mt-1">{errors.colors?.secondary?.message}</p></div>
-              <div><Label>Destaque (Accent)</Label><Input {...register('colors.accent')} /><p className="text-destructive text-sm mt-1">{errors.colors?.accent?.message}</p></div>
-              <div><Label>Fundo (Background)</Label><Input {...register('colors.background')} /><p className="text-destructive text-sm mt-1">{errors.colors?.background?.message}</p></div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Header Section */}
-        <Card className="overflow-hidden">
-          <CardHeader><CardTitle>Seção do Cabeçalho</CardTitle></CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div><Label>Título da Página (Aba do Navegador)</Label><Input {...register('pageTitle')} /></div>
-            <div><Label>URL da Imagem do Logo</Label><Input type="url" {...register('logoImageUrl')} /></div>
-            <div><Label>Texto Principal</Label><Input {...register('headerText')} /></div>
-            <div><Label>Subtexto</Label><Textarea {...register('headerSubText')} /></div>
-            <div><Label>URL da Imagem de Fundo</Label><Input type="url" {...register('headerImageUrl')} /></div>
-          </CardContent>
-        </Card>
-
-        {/* Donation Section */}
-        <Card className="overflow-hidden">
-          <CardHeader><CardTitle>Opções de Doação</CardTitle></CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div className="space-y-4">
-              {donationOptionFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
-                  <div className="grid-cols-2 gap-4 grid flex-grow">
-                    <div><Label>Valor (número)</Label><Input type="number" {...register(`donationOptions.${index}.amount`, { valueAsNumber: true })} /></div>
-                    <div><Label>Descrição</Label><Input {...register(`donationOptions.${index}.description`)} /></div>
-                  </div>
-                  <Button type="button" variant="destructive" size="icon" onClick={() => removeDonationOption(index)}><Trash className="h-4 w-4"/></Button>
-                </div>
-              ))}
-            </div>
-            <Button type="button" variant="outline" onClick={() => appendDonationOption({ amount: 0, description: '' })}>Adicionar Opção</Button>
-            <div><Label>Texto para Doação Customizada</Label><Input {...register('customDonationText')} /></div>
-          </CardContent>
-        </Card>
-
-        {/* Impact Section */}
-        <Card className="overflow-hidden">
-          <CardHeader><CardTitle>Visualizador de Impacto</CardTitle></CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div><Label>Título</Label><Input {...register('impactVisualizerTitle')} /></div>
-            <div><Label>Subtexto</Label><Textarea {...register('impactVisualizerSubText')} /></div>
-             <div className="space-y-4">
-               {impactFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
-                  <div className="grid-cols-2 gap-4 grid flex-grow">
-                    <div><Label>Número/Quantidade</Label><Input {...register(`impacts.${index}.amount`)} /></div>
-                    <div><Label>Descrição</Label><Input {...register(`impacts.${index}.description`)} /></div>
-                  </div>
-                  <Button type="button" variant="destructive" size="icon" onClick={() => removeImpact(index)}><Trash className="h-4 w-4"/></Button>
-                </div>
-              ))}
-            </div>
-            <Button type="button" variant="outline" onClick={() => appendImpact({ amount: '', description: '' })}>Adicionar Impacto</Button>
-          </CardContent>
-        </Card>
-
-        {/* About Section */}
-        <Card className="overflow-hidden">
-          <CardHeader><CardTitle>Seção "Sobre"</CardTitle></CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div><Label>Título</Label><Input {...register('aboutTitle')} /></div>
-            <div><Label>Subtítulo</Label><Input {...register('aboutSubTitle')} /></div>
-            <div><Label>Texto</Label><Textarea {...register('aboutText')} /></div>
-            <div><Label>URL da Imagem</Label><Input type="url" {...register('aboutImageUrl')} /></div>
-          </CardContent>
-        </Card>
-
-         {/* Credibility Section */}
-        <Card className="overflow-hidden">
-          <CardHeader><CardTitle>Seção de Depoimentos</CardTitle></CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div><Label>Título</Label><Input {...register('credibilityTitle')} /></div>
-            <div className="space-y-4">
-               {testimonialFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
-                  <div className="grid-cols-2 gap-4 grid flex-grow">
-                    <div><Label>Nome</Label><Input {...register(`testimonials.${index}.name`)} /></div>
-                    <div><Label>Texto do Depoimento</Label><Textarea {...register(`testimonials.${index}.text`)} /></div>
-                  </div>
-                  <Button type="button" variant="destructive" size="icon" onClick={() => removeTestimonial(index)}><Trash className="h-4 w-4"/></Button>
-                </div>
-              ))}
-            </div>
-            <Button type="button" variant="outline" onClick={() => appendTestimonial({ name: '', text: '' })}>Adicionar Depoimento</Button>
-          </CardContent>
-        </Card>
-
-        {/* FAQ Section */}
-        <Card className="overflow-hidden">
-          <CardHeader><CardTitle>Seção de Perguntas Frequentes (FAQ)</CardTitle></CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div><Label>Título</Label><Input {...register('faqTitle')} /></div>
-             <div className="space-y-4">
-               {faqFields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
-                   <div className="grid-cols-2 gap-4 grid flex-grow">
-                    <div><Label>Pergunta</Label><Input {...register(`faqs.${index}.q`)} /></div>
-                    <div><Label>Resposta</Label><Textarea {...register(`faqs.${index}.a`)} /></div>
-                  </div>
-                  <Button type="button" variant="destructive" size="icon" onClick={() => removeFaq(index)}><Trash className="h-4 w-4"/></Button>
-                </div>
-              ))}
-            </div>
-            <Button type="button" variant="outline" onClick={() => appendFaq({ q: '', a: '' })}>Adicionar Pergunta</Button>
-          </CardContent>
-        </Card>
-
-        {/* Footer Section */}
-        <Card className="overflow-hidden">
-          <CardHeader><CardTitle>Rodapé</CardTitle></CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div><Label>Título Links</Label><Input {...register('footerLinksTitle')} /></div>
-            <div><Label>Título Contato</Label><Input {...register('footerContactTitle')} /></div>
-            <div><Label>Email de Contato</Label><Input type="email" {...register('footerContactEmail')} /></div>
-            <div><Label>Endereço / Contato Secundário</Label><Input {...register('footerContactAddress')} /></div>
-            <div><Label>Texto de Direitos Autorais</Label><Input {...register('footerRightsText')} /></div>
-            <div><Label>Texto "Feito por"</Label><Input {...register('footerMadeByText')} /></div>
-            <div><Label>Link "Feito por"</Label><Input type="url" {...register('footerMadeByLink')} /></div>
-          </CardContent>
-        </Card>
-
-        <div className="flex justify-end sticky bottom-4">
-          <Button type="submit" size="lg" disabled={!isDirty}>Salvar Alterações</Button>
+    <div className="bg-gray-50/50 min-h-screen">
+      <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Painel de Administração</h1>
+          <Button onClick={handleSignOut} variant="outline">Sair</Button>
         </div>
-      </form>
+
+        <form onSubmit={handleSubmit(onSubmit, (formErrors) => console.log(formErrors))} className="space-y-8">
+          
+          {/* Colors Section */}
+          <Card className="overflow-hidden shadow-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-xl"><Palette className="text-gray-500"/> Aparência e Cores</CardTitle>
+              <CardDescription>Edite as cores principais do site. Use o formato HSL (ex: "150 50% 25%").</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div><Label>Primária</Label><Input {...register('colors.primary')} /><p className="text-destructive text-sm mt-1">{errors.colors?.primary?.message}</p></div>
+                <div><Label>Secundária</Label><Input {...register('colors.secondary')} /><p className="text-destructive text-sm mt-1">{errors.colors?.secondary?.message}</p></div>
+                <div><Label>Destaque (Accent)</Label><Input {...register('colors.accent')} /><p className="text-destructive text-sm mt-1">{errors.colors?.accent?.message}</p></div>
+                <div><Label>Fundo (Background)</Label><Input {...register('colors.background')} /><p className="text-destructive text-sm mt-1">{errors.colors?.background?.message}</p></div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Header Section */}
+          <Card className="overflow-hidden shadow-sm">
+            <CardHeader><CardTitle className="text-xl">Seção do Cabeçalho</CardTitle></CardHeader>
+            <CardContent className="space-y-4 pt-2">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div><Label>Título da Página (Aba do Navegador)</Label><Input {...register('pageTitle')} /></div>
+                <div><Label>URL da Imagem do Logo</Label><Input type="url" {...register('logoImageUrl')} /></div>
+              </div>
+              <div><Label>Texto Principal</Label><Input {...register('headerText')} /></div>
+              <div><Label>Subtexto</Label><Textarea {...register('headerSubText')} /></div>
+              <div><Label>URL da Imagem de Fundo</Label><Input type="url" {...register('headerImageUrl')} /></div>
+            </CardContent>
+          </Card>
+
+          {/* Donation Section */}
+          <Card className="overflow-hidden shadow-sm">
+            <CardHeader><CardTitle className="text-xl">Opções de Doação</CardTitle></CardHeader>
+            <CardContent className="space-y-4 pt-2">
+              <div className="space-y-4">
+                {donationOptionFields.map((field, index) => (
+                  <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
+                    <div className="grid-cols-2 gap-4 grid flex-grow">
+                      <div><Label>Valor (número)</Label><Input type="number" {...register(`donationOptions.${index}.amount`, { valueAsNumber: true })} /></div>
+                      <div><Label>Descrição</Label><Input {...register(`donationOptions.${index}.description`)} /></div>
+                    </div>
+                    <Button type="button" variant="ghost" size="icon" className="text-gray-500 hover:text-destructive hover:bg-destructive/10" onClick={() => removeDonationOption(index)}><Trash className="h-4 w-4"/></Button>
+                  </div>
+                ))}
+              </div>
+              <Button type="button" variant="outline" onClick={() => appendDonationOption({ amount: 0, description: '' })}>Adicionar Opção</Button>
+              <div><Label>Texto para Doação Customizada</Label><Input {...register('customDonationText')} /></div>
+            </CardContent>
+          </Card>
+
+          {/* Impact Section */}
+          <Card className="overflow-hidden shadow-sm">
+            <CardHeader><CardTitle className="text-xl">Visualizador de Impacto</CardTitle></CardHeader>
+            <CardContent className="space-y-4 pt-2">
+              <div><Label>Título</Label><Input {...register('impactVisualizerTitle')} /></div>
+              <div><Label>Subtexto</Label><Textarea {...register('impactVisualizerSubText')} /></div>
+               <Label>Itens de Impacto</Label>
+               <div className="space-y-4">
+                 {impactFields.map((field, index) => (
+                  <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
+                    <div className="grid-cols-2 gap-4 grid flex-grow">
+                      <div><Label>Número/Quantidade</Label><Input {...register(`impacts.${index}.amount`)} /></div>
+                      <div><Label>Descrição</Label><Input {...register(`impacts.${index}.description`)} /></div>
+                    </div>
+                    <Button type="button" variant="ghost" size="icon" className="text-gray-500 hover:text-destructive hover:bg-destructive/10" onClick={() => removeImpact(index)}><Trash className="h-4 w-4"/></Button>
+                  </div>
+                ))}
+              </div>
+              <Button type="button" variant="outline" onClick={() => appendImpact({ amount: '', description: '' })}>Adicionar Impacto</Button>
+            </CardContent>
+          </Card>
+
+          {/* About Section */}
+          <Card className="overflow-hidden shadow-sm">
+            <CardHeader><CardTitle className="text-xl">Seção "Sobre"</CardTitle></CardHeader>
+            <CardContent className="space-y-4 pt-2">
+              <div><Label>Título</Label><Input {...register('aboutTitle')} /></div>
+              <div><Label>Subtítulo</Label><Input {...register('aboutSubTitle')} /></div>
+              <div><Label>Texto</Label><Textarea {...register('aboutText')} /></div>
+              <div><Label>URL da Imagem</Label><Input type="url" {...register('aboutImageUrl')} /></div>
+            </CardContent>
+          </Card>
+
+           {/* Credibility Section */}
+          <Card className="overflow-hidden shadow-sm">
+            <CardHeader><CardTitle className="text-xl">Seção de Depoimentos</CardTitle></CardHeader>
+            <CardContent className="space-y-4 pt-2">
+              <div><Label>Título</Label><Input {...register('credibilityTitle')} /></div>
+              <Label>Depoimentos</Label>
+              <div className="space-y-4">
+                 {testimonialFields.map((field, index) => (
+                  <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
+                    <div className="grid-cols-2 gap-4 grid flex-grow">
+                      <div><Label>Nome</Label><Input {...register(`testimonials.${index}.name`)} /></div>
+                      <div><Label>Texto do Depoimento</Label><Textarea {...register(`testimonials.${index}.text`)} /></div>
+                    </div>
+                    <Button type="button" variant="ghost" size="icon" className="text-gray-500 hover:text-destructive hover:bg-destructive/10" onClick={() => removeTestimonial(index)}><Trash className="h-4 w-4"/></Button>
+                  </div>
+                ))}
+              </div>
+              <Button type="button" variant="outline" onClick={() => appendTestimonial({ name: '', text: '' })}>Adicionar Depoimento</Button>
+            </CardContent>
+          </Card>
+
+          {/* FAQ Section */}
+          <Card className="overflow-hidden shadow-sm">
+            <CardHeader><CardTitle className="text-xl">Perguntas Frequentes (FAQ)</CardTitle></CardHeader>
+            <CardContent className="space-y-4 pt-2">
+              <div><Label>Título</Label><Input {...register('faqTitle')} /></div>
+              <Label>Perguntas e Respostas</Label>
+               <div className="space-y-4">
+                 {faqFields.map((field, index) => (
+                  <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg bg-white">
+                     <div className="grid-cols-2 gap-4 grid flex-grow">
+                      <div><Label>Pergunta</Label><Input {...register(`faqs.${index}.q`)} /></div>
+                      <div><Label>Resposta</Label><Textarea {...register(`faqs.${index}.a`)} /></div>
+                    </div>
+                    <Button type="button" variant="ghost" size="icon" className="text-gray-500 hover:text-destructive hover:bg-destructive/10" onClick={() => removeFaq(index)}><Trash className="h-4 w-4"/></Button>
+                  </div>
+                ))}
+              </div>
+              <Button type="button" variant="outline" onClick={() => appendFaq({ q: '', a: '' })}>Adicionar Pergunta</Button>
+            </CardContent>
+          </Card>
+
+          {/* Footer Section */}
+          <Card className="overflow-hidden shadow-sm">
+            <CardHeader><CardTitle className="text-xl">Rodapé</CardTitle></CardHeader>
+            <CardContent className="space-y-4 pt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div><Label>Título Links</Label><Input {...register('footerLinksTitle')} /></div>
+              <div><Label>Título Contato</Label><Input {...register('footerContactTitle')} /></div>
+              <div><Label>Email de Contato</Label><Input type="email" {...register('footerContactEmail')} /></div>
+              <div><Label>Endereço / Contato Secundário</Label><Input {...register('footerContactAddress')} /></div>
+              <div><Label>Texto de Direitos Autorais</Label><Input {...register('footerRightsText')} /></div>
+              <div><Label>Texto "Feito por"</Label><Input {...register('footerMadeByText')} /></div>
+              <div><Label>Link "Feito por"</Label><Input type="url" {...register('footerMadeByLink')} /></div>
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-end sticky bottom-0 -mx-8 -mb-8 p-4 bg-white/80 backdrop-blur-sm border-t border-gray-200">
+            <Button type="submit" size="lg" disabled={!isDirty}>Salvar Alterações</Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
+
+    
