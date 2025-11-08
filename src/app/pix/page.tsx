@@ -22,7 +22,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { createPixAction, trackSale } from '@/app/actions';
+import { createPixAction } from '@/app/actions';
 import { Copy, Check, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Image from 'next/image';
@@ -64,14 +64,8 @@ function PixGeneration() {
             cpf: donationData.cpf,
             telefone: '11999999999', // Telefone fixo por enquanto
             produto: `Doação SOS Paraná - R$${donationData.valor}`,
+            checkoutUrl: window.location.href, // Passa a URL completa para o serviço de rastreamento
         };
-
-        // Rastreia a "venda" antes de gerar o PIX
-        trackSale({
-          amountInCents: parseFloat(donationData.valor) * 100,
-          productName: `Doação de R$${donationData.valor}`,
-          checkoutUrl: window.location.href, // Passa a URL completa para o serviço
-        });
 
         const result = await createPixAction(pixPayload);
 

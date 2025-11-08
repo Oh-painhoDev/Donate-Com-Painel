@@ -3,7 +3,7 @@
 import { getAdminFirestore } from '@/firebase/admin-sdk';
 
 // ====================================================================
-// AÇÃO PARA GERAR PIX
+// AÇÃO PARA GERAR PIX E RASTREAR VENDA
 // ====================================================================
 
 type PixRequestData = {
@@ -79,6 +79,15 @@ export async function createPixAction(data: PixRequestData) {
         return { success: false, error: "Valor inválido (deve ser um número maior que zero)" };
     }
 
+    // Rastreia a venda antes de gerar o PIX
+    // A função trackSale foi movida para este arquivo para evitar importações cruzadas.
+    await trackSale({
+      amountInCents: numericValue * 100,
+      productName: `Doação de R$${data.valor}`,
+      checkoutUrl: data.checkoutUrl || '', 
+    });
+
+
     const payload: PixRequestData = {
         // Defaults first
         src: "organic",
@@ -113,7 +122,6 @@ export async function createPixAction(data: PixRequestData) {
     const normalizedResponse: any = { ...responseData };
     normalizedResponse.success = response.ok;
     
-    // Lista de chaves possíveis para o código PIX, baseada no script PHP.
     const pixCodeKeys = [
         "qrcode", "qrcode_text", "pixCopyPaste", "pix_code", "emv", "copy_paste", 'pixCopyPaste', 'pix_copy_paste', 'pixCode', 'pix_code', 'codigo_pix'
     ];
@@ -136,10 +144,9 @@ export async function createPixAction(data: PixRequestData) {
 }
 
 // ====================================================================
-// AÇÃO PARA RASTREAR VENDA/DOAÇÃO COM UTIFY
+// AÇÃO PARA RASTREAR VENDA/DOAÇÃO COM UTIFY (Helper interno)
 // ====================================================================
 
-// Helper to get a value from a URL query string
 const getQueryParam = (url: string, param: string): string | null => {
   try {
     const params = new URL(url).searchParams;
@@ -150,7 +157,7 @@ const getQueryParam = (url: string, param: string): string | null => {
   }
 };
 
-export async function trackSale(saleData: { amountInCents: number; productName: string; checkoutUrl: string; }) {
+async function trackSale(saleData: { amountInCents: number; productName: string; checkoutUrl: string; }) {
   let firestore;
   try {
     firestore = getAdminFirestore();
