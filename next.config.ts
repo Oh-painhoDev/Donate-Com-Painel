@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https://',
+        protocol: 'https',
         hostname: 'static.tildacdn.com',
         port: '',
         pathname: '/**',
