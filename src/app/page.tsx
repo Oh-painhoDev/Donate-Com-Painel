@@ -31,6 +31,7 @@ import { doc } from 'firebase/firestore';
 import { initialPageContent } from '@/lib/initial-data';
 import { ThemeInjector } from '@/app/components/theme-injector';
 import { NewsSection } from '@/app/components/news-section';
+import { DonationNotifier } from './components/donation-notifier';
 
 function AboutSection({ content }: { content: any }) {
   if (!content) return null;
@@ -106,6 +107,7 @@ export default function Home() {
         <FaqSection content={content} />
       </main>
       <SiteFooter content={content} />
+      <DonationNotifier />
     </div>
   );
 }
