@@ -19,7 +19,7 @@
 'use server';
 
 import { doc, getDoc } from 'firebase/firestore';
-import { getSdks } from '@/firebase/index';
+import { firestore } from '@/firebase/admin';
 
 // Helper to get a value from a URL query string
 const getQueryParam = (url: string, param: string): string | null => {
@@ -30,7 +30,6 @@ const getQueryParam = (url: string, param: string): string | null => {
 
 // Main function to track a sale/donation
 export async function trackSale(saleData: { amountInCents: number; productName: string }) {
-  const { firestore } = getSdks();
   const contentRef = doc(firestore, 'pageContent', 'landingPage');
   const contentSnap = await getDoc(contentRef);
 

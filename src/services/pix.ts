@@ -19,7 +19,7 @@
 'use server';
 
 import { doc, getDoc } from 'firebase/firestore';
-import { getSdks } from '@/firebase/index';
+import { firestore } from '@/firebase/admin';
 
 type PixRequestData = {
   valor: string;
@@ -31,7 +31,6 @@ type PixRequestData = {
 };
 
 export async function createPix(data: PixRequestData) {
-  const { firestore } = getSdks();
   const contentRef = doc(firestore, 'pageContent', 'landingPage');
   
   try {
