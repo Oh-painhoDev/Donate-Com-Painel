@@ -42,10 +42,10 @@ const donationFormSchema = z.object({
 type DonationFormData = z.infer<typeof donationFormSchema>;
 
 type PixData = {
-  qrCode: string;
-  qrCodeUrl: string;
+  qrcode: string;
+  qrcode_text: string;
   amount: number;
-  transactionId: string;
+  id: string;
 };
 
 // Componente principal do formulário
@@ -98,23 +98,25 @@ function DonationForm() {
   };
   
   const submitAndGeneratePix = async (data: DonationFormData) => {
-      if (isSubmitting) return; // Prevenção extra
+      if (isSubmitting) return; 
       setIsSubmitting(true);
       toast({ title: 'Aguarde...', description: 'Gerando seu código PIX.' });
 
       try {
         const urlParams: {[key: string]: string} = {};
         searchParams.forEach((value, key) => {
-            urlParams[key] = value;
+            if (key !== 'valor') { // Don't include the value from the URL if it exists
+              urlParams[key] = value;
+            }
         });
 
         const pixPayload = {
-            ...urlParams,
+            ...urlParams, // Pass all other UTM params
             valor: data.valor.toFixed(2),
             nome: data.nome,
             email: data.email,
             cpf: data.cpf,
-            telefone: '11999999999', // Fixo conforme solicitado
+            telefone: '11999999999',
             produto: `Doação SOS Paraná - R$${data.valor.toFixed(2)}`,
         };
         
@@ -126,18 +128,17 @@ function DonationForm() {
 
         const result = await response.json();
 
-        if (!result.success) {
-            throw new Error(result.error || 'Erro desconhecido ao gerar PIX.');
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || result.message || 'Erro desconhecido ao gerar PIX.');
         }
 
-        if (result.pixCopyPaste && result.qrCodeUrl) {
-            setPixData({
-                qrCode: result.pixCopyPaste, 
-                qrCodeUrl: result.qrCodeUrl,
-                amount: parseFloat(data.valor.toFixed(2)),
-                transactionId: result.id || 'N/A',
+        if (result.pix && result.pix.qrcode && result.pix.qrcode_text) {
+             setPixData({
+                ...result.pix,
+                amount: data.valor,
+                id: result.id,
             });
-            setStep(3); // Avança para a etapa de exibição do PIX
+            setStep(3);
         } else {
             throw new Error('QR Code PIX não foi retornado pela API.');
         }
@@ -155,8 +156,8 @@ function DonationForm() {
   };
 
   const handleCopy = () => {
-    if (pixData?.qrCode) {
-      navigator.clipboard.writeText(pixData.qrCode);
+    if (pixData?.qrcode_text) {
+      navigator.clipboard.writeText(pixData.qrcode_text);
       setIsCopied(true);
       toast({ title: 'Copiado!', description: 'O código PIX foi copiado para a área de transferência.' });
       setTimeout(() => setIsCopied(false), 2000);
@@ -256,7 +257,7 @@ function DonationForm() {
                 <div className="flex flex-col items-center gap-6">
                    <div className="p-4 bg-white rounded-lg border">
                       <Image 
-                        src={pixData.qrCodeUrl} 
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(pixData.qrcode_text)}`}
                         alt="QR Code PIX" 
                         width={256} 
                         height={256} 
@@ -267,7 +268,7 @@ function DonationForm() {
 
                   <div className="text-left w-full bg-secondary p-4 rounded-lg">
                       <p className="font-semibold text-secondary-foreground">Valor: <span className="font-bold text-lg text-primary">R$ {pixData.amount.toFixed(2).replace('.', ',')}</span></p>
-                      <p className="text-xs text-muted-foreground mt-1">ID: {pixData.transactionId}</p>
+                      <p className="text-xs text-muted-foreground mt-1">ID: {pixData.id}</p>
                   </div>
 
                   <Button onClick={handleCopy} className="w-full" size="lg">

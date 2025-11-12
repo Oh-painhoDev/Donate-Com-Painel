@@ -5,7 +5,6 @@
       "type": "object",
       "description": "Stores all content for the donation landing page.",
       "properties": {
-        "utmifyApiToken": { "type": "string", "description": "API Token for Utmify integration." },
         "pixApiEndpoint": { "type": "string", "description": "API endpoint for PIX generation." },
         "colors": {
           "type": "object",
