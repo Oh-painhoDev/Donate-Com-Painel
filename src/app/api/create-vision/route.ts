@@ -68,9 +68,10 @@ export async function POST(req: Request) {
         let errorMessage = 'O serviço de pagamento retornou um erro.';
         try {
             const errorJson = JSON.parse(errorText);
+            // Prioritize a mensagem de erro mais específica
             if (errorJson.error && typeof errorJson.error === 'string') {
                 errorMessage = errorJson.error;
-            } else if (errorJson.message) {
+            } else if (errorJson.message && typeof errorJson.message === 'string') {
                  errorMessage = errorJson.message;
             }
         } catch (e) {
@@ -80,11 +81,11 @@ export async function POST(req: Request) {
             }
         }
 
+        // Retorna SEMPRE uma string simples no campo 'error'
         return NextResponse.json(
             { 
               success: false, 
-              error: errorMessage, // Retorna a mensagem de erro principal
-              details: errorText, // Retorna o texto completo para depuração no frontend
+              error: errorMessage, 
             }, 
             { status: pixApiResponse.status }
         );
@@ -95,20 +96,26 @@ export async function POST(req: Request) {
     
     // Procura pelo código PIX em diferentes locais da resposta da API
     const pixQrCode = responseJson.pix?.pix_qr_code || responseJson.pix?.qrcode;
-    if (!pixQrCode) {
-        console.error('Resposta da API PIX não continha um QR Code válido:', responseJson);
+    const pixQrText = responseJson.pix?.pix_url || responseJson.pix?.qrcode_text;
+
+    if (!pixQrCode || !pixQrText) {
+        console.error('Resposta da API PIX não continha um QR Code ou texto válido:', responseJson);
         return NextResponse.json(
             { 
               success: false, 
-              error: 'A resposta do serviço de pagamento não continha um QR Code válido.',
-              details: responseJson
+              error: 'A resposta do serviço de pagamento não continha um código PIX válido.',
             }, 
             { status: 500 }
         );
     }
+    
+    // Garante que o qrcode_text está presente para a funcionalidade de copiar e colar.
+    if (!responseJson.pix.qrcode_text) {
+      responseJson.pix.qrcode_text = pixQrText;
+    }
 
 
-    return NextResponse.json(responseJson, { status: pixApiResponse.status });
+    return NextResponse.json({ ...responseJson, success: true }, { status: pixApiResponse.status });
 
   } catch (err: any) {
     console.error('[API Create-Vision Error]', err);
