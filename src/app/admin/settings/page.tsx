@@ -30,7 +30,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper, Bot, Link } from 'lucide-react';
+import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper, Bot } from 'lucide-react';
 import { initialPageContent } from '@/lib/initial-data';
 import { updateNews } from '@/ai/flows/update-news-flow';
 
@@ -70,7 +70,6 @@ const colorSchema = z.object({
 
 
 const pageContentSchema = z.object({
-  pixApiEndpoint: z.string().url({ message: "URL do endpoint PIX inválida." }).optional().or(z.literal('')),
   colors: colorSchema,
   pageTitle: z.string().min(1, { message: "O título da página é obrigatório." }),
   logoImageUrl: z.string().url({ message: "URL do logo inválida." }),
@@ -170,16 +169,6 @@ export default function AdminSettingsPage() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-
-        <Card id="integrations" className="scroll-mt-24 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3"><Link className="text-primary"/> Integrações</CardTitle>
-            <CardDescription>Configure endpoints para serviços de terceiros.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-             <div><Label>Endpoint da API PIX</Label><Input {...register('pixApiEndpoint')} placeholder="https://sua-api.com/gerar-pix" /><p className="text-sm text-muted-foreground mt-1">URL para onde os dados do formulário de doação serão enviados.</p><p className="text-destructive text-sm mt-1">{errors.pixApiEndpoint?.message}</p></div>
-          </CardContent>
-        </Card>
         
         <Card id="colors" className="scroll-mt-24 shadow-sm">
           <CardHeader>

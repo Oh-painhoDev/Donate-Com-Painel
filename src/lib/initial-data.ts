@@ -18,8 +18,6 @@
  */
 
 export const initialPageContent = {
-  utmifyApiToken: "",
-  pixApiEndpoint: "",
   colors: {
     primary: "205 90% 27%",
     secondary: "210 40% 96%",

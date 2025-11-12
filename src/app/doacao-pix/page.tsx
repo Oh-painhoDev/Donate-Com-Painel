@@ -22,15 +22,19 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, AlertCircle, Copy, Check, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 
 interface PixData {
-  qrCode: string;
-  pixCopiaECola: string;
+  pix: {
+    pix_qr_code: string;
+    pix_url: string;
+    qrcode?: string; // fallback
+    qrcode_text?: string; // fallback
+  };
 }
 
 function DoacaoPixForm() {
@@ -63,6 +67,13 @@ function DoacaoPixForm() {
     setError(null);
     setPixData(null);
 
+    const trackingParams: { [key: string]: string | null } = {};
+    searchParams.forEach((value, key) => {
+        if (key.startsWith('utm_') || key === 'src' || key === 'sck') {
+            trackingParams[key] = value;
+        }
+    });
+
     const finalData = {
       valor: valor,
       nome: nome,
@@ -70,18 +81,10 @@ function DoacaoPixForm() {
       email: email,
       telefone: telefone,
       produto: "Doação SOS Paraná", // Valor fixo para o produto
-      // Adiciona os parâmetros de rastreamento se existirem
-      src: searchParams.get('src'),
-      sck: searchParams.get('sck'),
-      utm_source: searchParams.get('utm_source'),
-      utm_campaign: searchParams.get('utm_campaign'),
-      utm_medium: searchParams.get('utm_medium'),
-      utm_content: searchParams.get('utm_content'),
-      utm_term: searchParams.get('utm_term'),
+      ...trackingParams
     };
 
     try {
-      // Usando o endpoint externo diretamente como solicitado para o teste
       const response = await fetch('/api/create-vision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -91,13 +94,10 @@ function DoacaoPixForm() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(result.error || result.message || 'Erro desconhecido ao gerar PIX.');
+        throw new Error(result.error || result.details || 'Erro desconhecido ao gerar PIX.');
       }
 
-      setPixData({
-        qrCode: result.pix.pix_qr_code || result.pix.qrcode,
-        pixCopiaECola: result.pix.pix_url || result.pix.qrcode_text,
-      });
+      setPixData(result);
 
     } catch (err: any) {
       setError(err.message);
@@ -122,6 +122,9 @@ function DoacaoPixForm() {
   };
   
   if (pixData) {
+    const qrCode = pixData.pix.pix_qr_code || pixData.pix.qrcode;
+    const copiaECola = pixData.pix.pix_url || pixData.pix.qrcode_text;
+
     return (
       <div className="text-center space-y-6">
         <Alert variant="default" className='bg-green-50 border-green-500 text-green-800'>
@@ -132,13 +135,13 @@ function DoacaoPixForm() {
             </AlertDescription>
         </Alert>
 
-        {pixData.qrCode && (
+        {qrCode && (
           <div className="flex flex-col items-center">
             <h3 className="font-semibold mb-2 text-lg">1. Escaneie o QR Code abaixo</h3>
             <p className="text-sm text-muted-foreground mb-3">Abra o app do seu banco e aponte a câmera.</p>
             <div className="p-2 border bg-white rounded-lg shadow-md">
               <Image
-                src={pixData.qrCode} 
+                src={qrCode} 
                 alt="QR Code PIX"
                 width={250}
                 height={250}
@@ -148,16 +151,16 @@ function DoacaoPixForm() {
           </div>
         )}
 
-        {pixData.pixCopiaECola && (
+        {copiaECola && (
           <div className='w-full'>
             <h3 className="font-semibold mb-2 text-lg">2. Ou use o PIX Copia e Cola</h3>
             <p className="text-sm text-muted-foreground mb-3">Copie o código e cole na área PIX do seu banco.</p>
             <div className="relative p-4 pr-24 bg-gray-100 border rounded-lg break-all text-left text-sm text-gray-700">
-              {pixData.pixCopiaECola}
+              {copiaECola}
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => copyToClipboard(pixData.pixCopiaECola)}
+                onClick={() => copyToClipboard(copiaECola)}
                 className="absolute top-1/2 right-2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300"
               >
                 {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}

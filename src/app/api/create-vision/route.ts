@@ -8,12 +8,10 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { pixApiEndpoint, valor, nome, cpf, email, telefone, produto, ...trackingParams } = data;
+    const { valor, nome, cpf, email, telefone, produto, ...trackingParams } = data;
     
-    // 1. Validação do Endpoint
-    if (!pixApiEndpoint || typeof pixApiEndpoint !== 'string' || !pixApiEndpoint.startsWith('http')) {
-        return NextResponse.json({ success: false, error: 'Endpoint da API PIX inválido ou não fornecido.' }, { status: 400 });
-    }
+    // 1. O Endpoint agora é fixo e definido no backend para maior segurança.
+    const pixApiEndpoint = "https://api-consulta.site/vision-pix-doacao/pix/create-vision";
 
     // 2. Validação de campos obrigatórios
     const requiredFields = ['valor', 'nome', 'produto', 'cpf', 'email', 'telefone'];
@@ -27,8 +25,8 @@ export async function POST(req: Request) {
     const cleanTel = String(telefone).replace(/\D/g, '');
     const numericValue = parseFloat(String(valor).replace(',', '.'));
 
-    if (isNaN(numericValue) || numericValue < 8) {
-        return NextResponse.json({ success: false, error: 'Valor mínimo da doação é R$ 8,00', details: `Valor enviado: ${valor}` }, { status: 400 });
+    if (isNaN(numericValue) || numericValue < 1) {
+        return NextResponse.json({ success: false, error: 'Valor da doação deve ser de no mínimo R$ 1,00', details: `Valor enviado: ${valor}` }, { status: 400 });
     }
      if (cleanCpf.length !== 11) {
         return NextResponse.json({ success: false, error: 'CPF inválido', details: 'CPF deve ter 11 dígitos.' }, { status: 400 });

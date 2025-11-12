@@ -5,7 +5,6 @@
       "type": "object",
       "description": "Stores all content for the donation landing page.",
       "properties": {
-        "pixApiEndpoint": { "type": "string", "description": "API endpoint for PIX generation." },
         "colors": {
           "type": "object",
           "description": "Theme colors in HSL format string 'H S% L%'.",
