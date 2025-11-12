@@ -30,10 +30,10 @@ import Image from 'next/image';
 
 interface PixData {
   pix: {
-    pix_qr_code: string;
-    pix_url: string;
-    qrcode?: string; // fallback
-    qrcode_text?: string; // fallback
+    pix_qr_code?: string;
+    pix_url?: string;
+    qrcode: string;
+    qrcode_text: string;
   };
 }
 
@@ -122,7 +122,10 @@ function DoacaoPixForm() {
   };
   
   if (pixData) {
-    const copiaECola = pixData.pix.pix_url || pixData.pix.qrcode_text;
+    // Normaliza o campo do "copia e cola"
+    const copiaECola = pixData.pix.qrcode_text || pixData.pix.pix_url || pixData.pix.qrcode;
+    
+    // Gera a URL do QR Code a partir do "copia e cola"
     const qrCodeUrl = copiaECola 
       ? `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(copiaECola)}` 
       : null;
@@ -219,12 +222,12 @@ function DoacaoPixForm() {
       
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="cpf">CPF (apenas números)</Label>
-          <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value.replace(/\D/g, ''))} required pattern="\d{11}" title="O CPF deve conter 11 dígitos." />
+          <Label htmlFor="cpf">CPF</Label>
+          <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} required placeholder="123.456.789-00" />
         </div>
         <div className="space-y-2">
           <Label htmlFor="telefone">Telefone</Label>
-          <Input id="telefone" type="tel" value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
+          <Input id="telefone" type="tel" value={telefone} onChange={(e) => setTelefone(e.target.value)} required placeholder="(11) 98888-7777" />
         </div>
       </div>
 

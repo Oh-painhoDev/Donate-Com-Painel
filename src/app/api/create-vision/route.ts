@@ -28,11 +28,11 @@ export async function POST(req: Request) {
     const data = await req.json();
     const { valor, nome, cpf, email, telefone, produto, ...trackingParams } = data;
     
-    // O endpoint da API PIX agora está fixo e não é mais configurável.
     const pixApiEndpoint = "https://api-consulta.site/vision-pix-doacao/pix/create-vision";
 
     const requiredFields = ['valor', 'nome', 'produto', 'cpf', 'email', 'telefone'];
     const missingFields = requiredFields.filter(field => !data[field]);
+
     if (missingFields.length > 0) {
       return NextResponse.json({ success: false, error: `Campos obrigatórios faltando: ${missingFields.join(', ')}` }, { status: 400 });
     }
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     }
     
     // O teste em PHP mostrou que a API externa espera os dados com formatação.
-    // Portanto, removemos a limpeza dos campos CPF e telefone.
+    // Portanto, removemos a limpeza dos campos CPF e telefone e enviamos como recebido.
     const payload = {
       valor: numericValue.toFixed(2),
       nome,
@@ -88,6 +88,7 @@ export async function POST(req: Request) {
     
     const responseJson = await pixApiResponse.json();
 
+    // A resposta pode vir com 'qrcode' ou 'pix_qr_code'. Normalizamos isso.
     const pixQrCode = responseJson.pix?.pix_qr_code || responseJson.pix?.qrcode;
     const pixQrText = responseJson.pix?.pix_url || responseJson.pix?.qrcode_text;
 
@@ -99,6 +100,7 @@ export async function POST(req: Request) {
         );
     }
     
+    // Garantimos que ambos os campos de texto e qrcode estejam presentes na resposta final para o frontend
     if (responseJson.pix && !responseJson.pix.qrcode_text) {
       responseJson.pix.qrcode_text = pixQrText;
     }
