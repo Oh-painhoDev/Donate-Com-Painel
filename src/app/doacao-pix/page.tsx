@@ -17,131 +17,95 @@
  * 
  */
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, AlertCircle, Copy, Check, RefreshCw } from 'lucide-react';
+import { Loader2, AlertCircle, Copy, Check, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 
-// Tipagem para os dados do PIX
 interface PixData {
   qrCode: string;
   pixCopiaECola: string;
 }
 
-// Tipagem para os dados automáticos
-interface AutoData {
-  valor: string;
-  nome: string;
-  produto: string;
-  cpf: string;
-  email: string;
-  telefone: string;
-  src: string;
-  sck: string;
-  utm_source: string;
-  utm_campaign: string;
-  utm_medium: string;
-  utm_content: string;
-  utm_term: string;
-}
-
-export default function DoacaoPixPage() {
+function DoacaoPixForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pixData, setPixData] = useState<PixData | null>(null);
-  const [valor, setValor] = useState('');
-  const { toast } = useToast();
-
-  const generateAutoData = (): AutoData => {
-    const nomes = ['Ana Silva', 'Carlos Santos', 'Marina Oliveira', 'João Pereira', 'Fernanda Costa'];
-    const produtos = ['Doação Premium Projeto Social', 'Apoio Comunitário', 'Doação Solidária'];
-    const emails = ['user', 'cliente', 'doador', 'apoiador', 'contribuinte'];
-    const domains = ['gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com'];
-    
-    const nomeAleatorio = nomes[Math.floor(Math.random() * nomes.length)];
-    const produtoAleatorio = produtos[Math.floor(Math.random() * produtos.length)];
-    const emailAleatorio = `${emails[Math.floor(Math.random() * emails.length)]}${Math.floor(Math.random() * 1000)}@${domains[Math.floor(Math.random() * domains.length)]}`;
-    
-    const cpfAleatorio = () => {
-      let cpf = '';
-      for (let i = 0; i < 11; i++) {
-        cpf += Math.floor(Math.random() * 10);
-      }
-      return `${cpf.slice(0,3)}.${cpf.slice(3,6)}.${cpf.slice(6,9)}-${cpf.slice(9)}`;
-    };
-
-    const telefoneAleatorio = () => {
-      const ddd = ['11', '21', '31', '41', '51', '61', '71', '81', '91'];
-      const numero = Math.floor(100000000 + Math.random() * 900000000);
-      return `(${ddd[Math.floor(Math.random() * ddd.length)]}) 9${numero.toString().slice(1,5)}-${numero.toString().slice(5)}`;
-    };
-
-    const valorAleatorio = (Math.floor(Math.random() * 451) + 50).toFixed(2);
-
-    return {
-      valor: valorAleatorio,
-      nome: nomeAleatorio,
-      produto: produtoAleatorio,
-      cpf: cpfAleatorio(),
-      email: emailAleatorio.toLowerCase(),
-      telefone: telefoneAleatorio(),
-      src: 'google_ads',
-      sck: 'campaign_summer_2024',
-      utm_source: 'google',
-      utm_campaign: 'summer_donation_2024',
-      utm_medium: 'cpc',
-      utm_content: 'text_ad_variant_b',
-      utm_term: 'doacao+social+premium'
-    };
-  };
-
-  const [autoData, setAutoData] = useState(generateAutoData());
   const [isCopied, setIsCopied] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAutoData(generateAutoData());
-    }, 30000);
+  // Estados para os campos do formulário
+  const [nome, setNome] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [valor, setValor] = useState('');
 
-    return () => clearInterval(interval);
-  }, []);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const valorParam = searchParams.get('valor');
+    if (valorParam) {
+      setValor(valorParam);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setPixData(null);
 
     const finalData = {
-      ...autoData,
-      valor: valor || autoData.valor
+      valor: valor,
+      nome: nome,
+      cpf: cpf,
+      email: email,
+      telefone: telefone,
+      produto: "Doação SOS Paraná", // Valor fixo para o produto
+      // Adiciona os parâmetros de rastreamento se existirem
+      src: searchParams.get('src'),
+      sck: searchParams.get('sck'),
+      utm_source: searchParams.get('utm_source'),
+      utm_campaign: searchParams.get('utm_campaign'),
+      utm_medium: searchParams.get('utm_medium'),
+      utm_content: searchParams.get('utm_content'),
+      utm_term: searchParams.get('utm_term'),
     };
 
     try {
-      const response = await fetch('https://api-consulta.site/vision-pix-doacao/pix/create-vision', {
+      // Usando o endpoint externo diretamente como solicitado para o teste
+      const response = await fetch('/api/create-vision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(finalData),
       });
+      
+      const result = await response.json();
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Erro na resposta do servidor' }));
-        throw new Error(errorData.message || 'Erro ao criar PIX');
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || result.message || 'Erro desconhecido ao gerar PIX.');
       }
 
-      const data = await response.json();
+      setPixData({
+        qrCode: result.pix.pix_qr_code || result.pix.qrcode,
+        pixCopiaECola: result.pix.pix_url || result.pix.qrcode_text,
+      });
 
-      if (!data.qrCode || !data.pixCopiaECola) {
-        throw new Error('Resposta da API inválida. Faltam dados do PIX.');
-      }
-
-      setPixData(data);
     } catch (err: any) {
       setError(err.message);
+      toast({
+        variant: 'destructive',
+        title: "Erro ao Gerar PIX",
+        description: err.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -156,129 +120,146 @@ export default function DoacaoPixPage() {
     });
     setTimeout(() => setIsCopied(false), 2000);
   };
+  
+  if (pixData) {
+    return (
+      <div className="text-center space-y-6">
+        <Alert variant="default" className='bg-green-50 border-green-500 text-green-800'>
+            <AlertTitle className='font-bold text-lg'>✅ PIX Gerado com Sucesso!</AlertTitle>
+            <AlertDescription className='text-green-700'>
+              <p>Obrigado, <strong>{nome}</strong>!</p>
+              <p><strong>Valor:</strong> R$ {parseFloat(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+            </AlertDescription>
+        </Alert>
 
-  const generateNewAutoData = () => {
-    setAutoData(generateAutoData());
-  };
+        {pixData.qrCode && (
+          <div className="flex flex-col items-center">
+            <h3 className="font-semibold mb-2 text-lg">1. Escaneie o QR Code abaixo</h3>
+            <p className="text-sm text-muted-foreground mb-3">Abra o app do seu banco e aponte a câmera.</p>
+            <div className="p-2 border bg-white rounded-lg shadow-md">
+              <Image
+                src={pixData.qrCode} 
+                alt="QR Code PIX"
+                width={250}
+                height={250}
+                unoptimized
+              />
+            </div>
+          </div>
+        )}
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Doação via PIX (Página de Teste)</CardTitle>
-          <CardDescription className="text-center">
-            Dados gerados automaticamente - atualizados a cada 30 segundos
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {!pixData ? (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <Card className="bg-blue-50 border-primary">
-                <CardHeader className='flex-row items-center justify-between pb-4'>
-                   <CardTitle className="text-lg text-primary">Dados Automáticos</CardTitle>
-                   <Button type="button" size="sm" onClick={generateNewAutoData}>
-                     <RefreshCw className="mr-2 h-4 w-4" />
-                     Gerar Novos
-                   </Button>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-                  <div><strong>Nome:</strong> {autoData.nome}</div>
-                  <div><strong>CPF:</strong> {autoData.cpf}</div>
-                  <div><strong>Email:</strong> {autoData.email}</div>
-                  <div><strong>Telefone:</strong> {autoData.telefone}</div>
-                  <div><strong>Produto:</strong> {autoData.produto}</div>
-                  <div><strong>Valor Sugerido:</strong> R$ {autoData.valor}</div>
-                </CardContent>
-              </Card>
-
-              <div className="space-y-2">
-                <Label htmlFor="valor-doacao" className="text-base font-semibold">
-                  Valor da Doação (ou use o sugerido acima):
-                </Label>
-                <Input
-                  id="valor-doacao"
-                  type="number"
-                  value={valor}
-                  onChange={(e) => setValor(e.target.value)}
-                  placeholder={`Ex: ${autoData.valor}`}
-                  step="0.01"
-                  min="1"
-                  className="text-base"
-                />
-              </div>
-
-              {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Erro</AlertTitle>
-                  <AlertDescription>
-                    {error}
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              <Button type="submit" disabled={loading} className="w-full text-lg h-12">
-                {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : '💰'}
-                {loading ? 'Gerando PIX...' : 'Gerar PIX para Doação'}
-              </Button>
-            </form>
-          ) : (
-            <div className="text-center space-y-6">
-              <Alert variant="default" className='bg-green-50 border-green-500 text-green-800'>
-                  <AlertTitle className='font-bold text-lg'>✅ PIX Gerado com Sucesso!</AlertTitle>
-                  <AlertDescription className='text-green-700'>
-                    <p><strong>Valor:</strong> R$ {valor || autoData.valor}</p>
-                    <p><strong>Beneficiário:</strong> {autoData.nome}</p>
-                  </AlertDescription>
-              </Alert>
-
-              {pixData.qrCode && (
-                <div className="flex flex-col items-center">
-                  <h3 className="font-semibold mb-2">Escaneie o QR Code:</h3>
-                  <div className="p-2 border bg-white rounded-lg">
-                    <Image
-                      src={pixData.qrCode} 
-                      alt="QR Code PIX"
-                      width={250}
-                      height={250}
-                      unoptimized
-                    />
-                  </div>
-                </div>
-              )}
-
-              {pixData.pixCopiaECola && (
-                <div>
-                  <h3 className="font-semibold mb-2">Ou use o PIX Copia e Cola:</h3>
-                  <div className="relative p-4 pr-24 bg-gray-100 border rounded-lg break-all text-left text-sm text-gray-700">
-                    {pixData.pixCopiaECola}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(pixData.pixCopiaECola)}
-                      className="absolute top-1/2 right-2 -translate-y-1/2"
-                    >
-                      {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                      <span className='ml-2'>{isCopied ? 'Copiado!' : 'Copiar'}</span>
-                    </Button>
-                  </div>
-                </div>
-              )}
-
+        {pixData.pixCopiaECola && (
+          <div className='w-full'>
+            <h3 className="font-semibold mb-2 text-lg">2. Ou use o PIX Copia e Cola</h3>
+            <p className="text-sm text-muted-foreground mb-3">Copie o código e cole na área PIX do seu banco.</p>
+            <div className="relative p-4 pr-24 bg-gray-100 border rounded-lg break-all text-left text-sm text-gray-700">
+              {pixData.pixCopiaECola}
               <Button
-                variant="secondary"
-                onClick={() => {
-                  setPixData(null);
-                  setValor('');
-                  setAutoData(generateAutoData());
-                }}
-                className="w-full"
+                variant="outline"
+                size="sm"
+                onClick={() => copyToClipboard(pixData.pixCopiaECola)}
+                className="absolute top-1/2 right-2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300"
               >
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Fazer Nova Doação
+                {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                <span className='ml-2'>{isCopied ? 'Copiado' : 'Copiar'}</span>
               </Button>
             </div>
-          )}
+          </div>
+        )}
+
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setPixData(null);
+            setError(null);
+          }}
+          className="w-full mt-4"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Corrigir dados ou doar outro valor
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="valor-doacao" className="text-base font-semibold">
+          Valor da Doação
+        </Label>
+        <Input
+          id="valor-doacao"
+          type="number"
+          value={valor}
+          onChange={(e) => setValor(e.target.value)}
+          placeholder="R$ 0,00"
+          step="0.01"
+          min="1"
+          required
+          className="text-lg h-12"
+        />
+      </div>
+
+       <div className="space-y-2">
+        <Label htmlFor="nome">Nome Completo</Label>
+        <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+      </div>
+
+       <div className="space-y-2">
+        <Label htmlFor="email">E-mail</Label>
+        <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="cpf">CPF</Label>
+          <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="telefone">Telefone</Label>
+          <Input id="telefone" type="tel" value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
+        </div>
+      </div>
+
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Erro</AlertTitle>
+          <AlertDescription>
+            {error}
+          </AlertDescription>
+        </Alert>
+      )}
+      
+      <p className="text-xs text-muted-foreground text-center">
+        Ao continuar, você concorda com nossos Termos de Uso e Política de Privacidade.
+      </p>
+
+      <Button type="submit" disabled={loading} className="w-full text-lg h-12">
+        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : '💰'}
+        {loading ? 'Gerando PIX...' : 'Finalizar e Gerar PIX'}
+      </Button>
+
+      <Button type="button" variant="link" className="w-full" onClick={() => router.push('/')}>
+        Voltar para o site
+      </Button>
+    </form>
+  );
+}
+
+export default function DoacaoPixPageContainer() {
+  return (
+    <div className="min-h-screen bg-muted flex items-center justify-center p-4">
+      <Card className="w-full max-w-lg">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">SOS Paraná</CardTitle>
+          <CardDescription className="text-center">Só mais um passo! Seus dados são protegidos e essenciais para o registro da doação.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Suspense fallback={<Loader2 className="mx-auto h-8 w-8 animate-spin" />}>
+            <DoacaoPixForm />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
