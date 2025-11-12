@@ -83,7 +83,6 @@ src
 ├── app
 │   ├── admin                 # Rotas e componentes do painel de administração
 │   ├── api                   # Rotas de API (ex: proxy para o PIX)
-│   ├── components            # Componentes React reutilizáveis da landing page
 │   ├── (public pages)        # Arquivos de rota para páginas públicas (home, contribuir, pix)
 │   ├── actions.ts            # Ações de servidor (Server Actions)
 │   ├── globals.css           # Estilos globais e variáveis de tema do Tailwind
