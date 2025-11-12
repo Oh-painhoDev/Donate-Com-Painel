@@ -5,4 +5,6 @@
 
 'use server';
 
-import { getAdminFirestore } from '@/firebase/admin-sdk';
+// The dependency on getAdminFirestore has been removed to prevent server crashes
+// when environment variables for the Admin SDK are not set.
+// Data persistence is handled on the client-side via Firestore hooks.

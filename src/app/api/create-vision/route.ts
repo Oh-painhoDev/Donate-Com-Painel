@@ -61,19 +61,23 @@ export async function POST(req: Request) {
       body: JSON.stringify(payload),
     });
 
-    // Important: Do not try to parse as JSON if the response might be empty or non-JSON
-    const responseText = await pixApiResponse.text();
-    let responseJson;
-
-    try {
-      responseJson = JSON.parse(responseText);
-    } catch (e) {
-      console.error("Failed to parse PIX API response as JSON:", responseText);
-      return NextResponse.json({ success: false, error: 'Resposta inválida do serviço de PIX', raw: responseText }, { status: 502 });
+    if (!pixApiResponse.ok) {
+      // If the external API returns an error, it might not be JSON.
+      // We capture the raw text and forward it for better debugging.
+      const errorText = await pixApiResponse.text();
+      console.error(`Error from PIX service: ${pixApiResponse.status}`, errorText);
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'O serviço de pagamento retornou um erro.',
+          details: errorText,
+        }, 
+        { status: pixApiResponse.status } // Forward the original error status
+      );
     }
 
-    // The payment gateway should return a JSON response. We forward it to the client.
-    // The client will handle the success/error state based on the response.
+    // If we get here, the response is likely valid JSON.
+    const responseJson = await pixApiResponse.json();
     return NextResponse.json(responseJson, { status: pixApiResponse.status });
 
   } catch (err: any) {
