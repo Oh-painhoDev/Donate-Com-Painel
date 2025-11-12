@@ -37,7 +37,7 @@ import { doc } from 'firebase/firestore';
 const donationFormSchema = z.object({
   nome: z.string().min(3, { message: 'Nome completo é obrigatório.' }),
   email: z.string().email({ message: 'E-mail inválido.' }),
-  cpf: z.string().min(11, { message: 'CPF deve conter 11 dígitos.' }).max(14, {message: 'CPF inválido.'}),
+  cpf: z.string().transform(val => val.replace(/\D/g, '')).pipe(z.string().length(11, { message: 'CPF deve conter 11 dígitos.' })),
   valor: z.number().min(8, { message: 'A doação mínima é de R$ 8,00.' }),
 });
 
@@ -80,7 +80,7 @@ export function DonationForm() {
     if (initialValue) {
         const parsedValue = parseFloat(initialValue);
         if (!isNaN(parsedValue)) {
-            setValue('valor', parsedValue > 8 ? parsedValue : 8);
+            setValue('valor', parsedValue >= 8 ? parsedValue : 8, { shouldValidate: true });
         }
     }
   }, [searchParams, setValue]);
@@ -129,7 +129,7 @@ export function DonationForm() {
             nome: data.nome,
             email: data.email,
             cpf: data.cpf,
-            telefone: '11999999999', 
+            telefone: '11999999999', // Telefone fixo, pois não é coletado no formulário
             produto: `Doação SOS Paraná - R$${data.valor.toFixed(2)}`,
         };
         
@@ -151,8 +151,7 @@ export function DonationForm() {
             });
             
             const errorMessage = result.error || 
-                                (result.details && typeof result.details === 'string' ? result.details : null) ||
-                                (result.details?.error) || 
+                                (result.details && typeof result.details === 'object' ? result.details.error : result.details) ||
                                 `Erro ao gerar PIX (Status: ${response.status})`;
             throw new Error(errorMessage);
         }
@@ -219,6 +218,7 @@ export function DonationForm() {
                     {[25, 50, 75, 100, 300, 500].map((value) => (
                     <Button
                         key={value}
+                        type="button"
                         variant={donationValue === value ? 'default' : 'outline'}
                         className="rounded-full h-12"
                         onClick={() => selectSuggestion(value)}
@@ -227,7 +227,7 @@ export function DonationForm() {
                     </Button>
                     ))}
                 </div>
-                <Button variant="default" size="lg" className="w-full h-14 text-lg" onClick={handleGoToStep2}>
+                <Button type="button" variant="default" size="lg" className="w-full h-14 text-lg" onClick={handleGoToStep2}>
                     CONTINUAR
                 </Button>
                 </div>
