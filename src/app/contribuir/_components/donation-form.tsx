@@ -129,7 +129,11 @@ export function DonationForm() {
         const result = await response.json();
 
         if (!response.ok || !result.success) {
-            throw new Error(result.error || result.message || 'Erro desconhecido ao gerar PIX.');
+            // Lança um erro com os detalhes da API para ser pego no `catch`.
+            // O `details` vem da nossa API route e contém a mensagem original.
+            const error = new Error(result.error || 'Erro ao gerar PIX.');
+            (error as any).details = result.details;
+            throw error;
         }
 
         if (result.pix && result.pix.qrcode && result.pix.qrcode_text) {
@@ -148,7 +152,8 @@ export function DonationForm() {
           toast({
               variant: 'destructive',
               title: 'Erro ao Gerar PIX',
-              description: error.message || 'Não foi possível processar sua doação. Tente novamente.',
+              // Mostra a mensagem de erro detalhada se ela existir, senão mostra uma genérica.
+              description: error.details || error.message || 'Não foi possível processar sua doação. Tente novamente.',
           });
       } finally {
         setIsSubmitting(false);
