@@ -131,8 +131,8 @@ export function DonationForm() {
         if (!response.ok || !result.success) {
             // Lança um erro com os detalhes da API para ser pego no `catch`.
             // O `details` vem da nossa API route e contém a mensagem original.
-            const error = new Error(result.error || 'Erro ao gerar PIX.');
-            (error as any).details = result.details;
+            const error = new Error(result.details || result.error || 'Erro ao gerar PIX.');
+            (error as any).details = result.details || result.error;
             throw error;
         }
 
