@@ -38,7 +38,7 @@ const DonationCircle = ({
 }) => {
   // A lógica para determinar o valor final e o link é agora interna ao componente
   const finalAmount = isCustom ? (customAmount ? parseFloat(customAmount) : 0) : amount;
-  const href = `/contribuir?valor=${finalAmount || ''}`;
+  const href = `/doacao-pix?valor=${finalAmount || ''}`;
 
   return (
     <div className="flex flex-col items-center gap-6 text-center">
