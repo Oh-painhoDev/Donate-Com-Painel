@@ -42,12 +42,15 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, error: 'Valor mínimo da doação é R$ 8,00', details: `Valor enviado: ${numericValue}` }, { status: 400 });
     }
 
+    // Prepare o payload para a API externa, incluindo todos os dados recebidos.
     const payload = {
-      ...data,
+      ...data, // Inclui todos os campos do formulário, incluindo os de rastreamento
       valor: numericValue.toFixed(2),
       cpf: cleanCpf,
       telefone: cleanTel,
     };
+    // Remove o pixApiEndpoint do payload a ser enviado para a API externa
+    delete payload.pixApiEndpoint;
     
     const pixApiResponse = await fetch(pixApiEndpoint, {
       method: 'POST',

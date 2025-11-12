@@ -18,7 +18,7 @@
  */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +30,10 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import Image from 'next/image';
+import { useDoc, useFirestore, useMemoFirebase } from '@/firebase/hooks';
+import { doc } from 'firebase/firestore';
+import { initialPageContent } from '@/lib/initial-data';
+
 
 const donationFormSchema = z.object({
   nome: z.string().min(3, { message: 'Nome completo é obrigatório.' }),
@@ -56,6 +60,12 @@ export function DonationForm() {
   
   const [pixData, setPixData] = useState<PixData | null>(null);
   const [isCopied, setIsCopied] = useState(false);
+
+  // Carrega o conteúdo da página, incluindo o endpoint da API PIX
+  const firestore = useFirestore();
+  const contentRef = useMemoFirebase(() => firestore ? doc(firestore, 'pageContent', 'landingPage') : null, [firestore]);
+  const { data: pageContent } = useDoc(contentRef);
+
 
   const { register, handleSubmit, formState: { errors }, setValue, trigger, watch } = useForm<DonationFormData>({
     resolver: zodResolver(donationFormSchema),
@@ -99,15 +109,16 @@ export function DonationForm() {
       toast({ title: 'Aguarde...', description: 'Gerando seu código PIX.' });
 
       try {
-        const urlParams: {[key: string]: string} = {};
+        const trackingParams: {[key: string]: string} = {};
         searchParams.forEach((value, key) => {
             if (key !== 'valor') { 
-              urlParams[key] = value;
+              trackingParams[key] = value;
             }
         });
 
         const pixPayload = {
-            ...urlParams,
+            ...trackingParams, // Adiciona todos os parâmetros de rastreamento da URL
+            pixApiEndpoint: pageContent?.pixApiEndpoint,
             valor: data.valor.toFixed(2),
             nome: data.nome,
             email: data.email,
@@ -126,7 +137,6 @@ export function DonationForm() {
 
         if (!response.ok || !result.success) {
             console.error("Erro ao gerar PIX (detalhes):", result.details || result);
-            // A API agora retorna um campo 'error' com uma string simples.
             const error = new Error(result.error || 'Erro desconhecido ao gerar PIX.');
             throw error;
         }
