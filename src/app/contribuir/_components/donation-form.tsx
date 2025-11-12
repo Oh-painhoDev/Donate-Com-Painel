@@ -32,13 +32,12 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/com
 import Image from 'next/image';
 import { useDoc, useFirestore, useMemoFirebase } from '@/firebase/hooks';
 import { doc } from 'firebase/firestore';
-import { initialPageContent } from '@/lib/initial-data';
 
 
 const donationFormSchema = z.object({
   nome: z.string().min(3, { message: 'Nome completo é obrigatório.' }),
   email: z.string().email({ message: 'E-mail inválido.' }),
-  cpf: z.string().length(11, { message: 'CPF deve conter 11 dígitos.' }),
+  cpf: z.string().min(11, { message: 'CPF deve conter 11 dígitos.' }).max(14, {message: 'CPF inválido.'}),
   valor: z.number().min(8, { message: 'A doação mínima é de R$ 8,00.' }),
 });
 
@@ -64,7 +63,7 @@ export function DonationForm() {
   // Carrega o conteúdo da página, incluindo o endpoint da API PIX
   const firestore = useFirestore();
   const contentRef = useMemoFirebase(() => firestore ? doc(firestore, 'pageContent', 'landingPage') : null, [firestore]);
-  const { data: pageContent } = useDoc(contentRef);
+  const { data: pageContent, isLoading: isContentLoading } = useDoc(contentRef);
 
 
   const { register, handleSubmit, formState: { errors }, setValue, trigger, watch } = useForm<DonationFormData>({
@@ -81,7 +80,7 @@ export function DonationForm() {
     if (initialValue) {
         const parsedValue = parseFloat(initialValue);
         if (!isNaN(parsedValue)) {
-            setValue('valor', parsedValue);
+            setValue('valor', parsedValue > 8 ? parsedValue : 8);
         }
     }
   }, [searchParams, setValue]);
@@ -95,18 +94,25 @@ export function DonationForm() {
   const handleGoToStep1 = () => setStep(1);
 
   const selectSuggestion = (value: number) => {
-    setValue('valor', value, { shouldValidate: true });
+    setValue('valor', value, { shouldValidate: true, shouldDirty: true });
   };
 
   const handleMainInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value.replace(',', '.')) || 0;
-    setValue('valor', value, { shouldValidate: true });
+    const rawValue = e.target.value;
+    const value = parseFloat(rawValue.replace(',', '.')) || 0;
+    setValue('valor', value, { shouldValidate: true, shouldDirty: true });
   };
   
   const submitAndGeneratePix = async (data: DonationFormData) => {
-      if (isSubmitting) return; 
+      if (isSubmitting || isContentLoading) return; 
       setIsSubmitting(true);
       toast({ title: 'Aguarde...', description: 'Gerando seu código PIX.' });
+
+      if (!pageContent?.pixApiEndpoint) {
+          toast({ variant: 'destructive', title: 'Erro de Configuração', description: 'O endpoint de pagamento não está configurado.' });
+          setIsSubmitting(false);
+          return;
+      }
 
       try {
         const trackingParams: {[key: string]: string} = {};
@@ -117,9 +123,9 @@ export function DonationForm() {
         });
 
         const pixPayload = {
-            ...trackingParams, // Adiciona todos os parâmetros de rastreamento da URL
-            pixApiEndpoint: pageContent?.pixApiEndpoint,
-            valor: data.valor.toFixed(2),
+            ...trackingParams,
+            pixApiEndpoint: pageContent.pixApiEndpoint,
+            valor: data.valor,
             nome: data.nome,
             email: data.email,
             cpf: data.cpf,
@@ -136,9 +142,19 @@ export function DonationForm() {
         const result = await response.json();
 
         if (!response.ok || !result.success) {
-            console.error("Erro ao gerar PIX (detalhes):", result.details || result);
-            const error = new Error(result.error || 'Erro desconhecido ao gerar PIX.');
-            throw error;
+            console.error("Erro ao gerar PIX:", {
+                status: response.status,
+                statusText: response.statusText,
+                error: result.error,
+                details: result.details,
+                fullResult: result
+            });
+            
+            const errorMessage = result.error || 
+                                (result.details && typeof result.details === 'string' ? result.details : null) ||
+                                (result.details?.error) || 
+                                `Erro ao gerar PIX (Status: ${response.status})`;
+            throw new Error(errorMessage);
         }
 
         if (result.pix && result.pix.qrcode && result.pix.qrcode_text) {
@@ -192,7 +208,7 @@ export function DonationForm() {
                         id="mainAmountInput"
                         type="text"
                         className="w-full pl-12 pr-4 py-6 text-2xl font-bold"
-                        value={donationValue.toFixed(2).replace('.', ',')}
+                        value={donationValue?.toFixed(2).replace('.', ',') ?? '0,00'}
                         onChange={handleMainInputChange}
                     />
                     </div>
@@ -242,26 +258,20 @@ export function DonationForm() {
                     </div>
                     <div className="space-y-1">
                         <Label htmlFor="cpf">CPF (somente números)</Label>
-                        <Input id="cpf" type="number" {...register('cpf')} placeholder="11122233344" maxLength={11}/>
+                        <Input id="cpf" type="text" {...register('cpf')} placeholder="111.222.333-44"/>
                         {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
                     </div>
                 </div>
                 
-                <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={isSubmitting}>
-                    {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    {isSubmitting ? 'PROCESSANDO...' : 'FINALIZAR E GERAR PIX'}
+                <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={isSubmitting || isContentLoading}>
+                    {isSubmitting || isContentLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    {isSubmitting ? 'PROCESSANDO...' : (isContentLoading ? 'CARREGANDO...' : 'FINALIZAR E GERAR PIX')}
                 </Button>
                 </form>
             </div>
 
             {/* ETAPA 3: EXIBIÇÃO DO PIX */}
             <div style={{ display: step === 3 ? 'block' : 'none' }}>
-              {isSubmitting && (
-                  <div className="flex flex-col items-center gap-6 p-10">
-                      <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                      <p className="text-muted-foreground">Conectando ao sistema de pagamento.</p>
-                  </div>
-              )}
               {pixData && (
                 <div className="flex flex-col items-center gap-6">
                    <div className="p-4 bg-white rounded-lg border">
