@@ -7,7 +7,12 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     // 1. Get the external API endpoint from environment variables for security.
-    const VISION_ENDPOINT = process.env.VISION_ENDPOINT || 'https://api-consulta.site/vision-pix-doacao/pix/create-vision';
+    const VISION_ENDPOINT = process.env.VISION_ENDPOINT;
+    
+    if (!VISION_ENDPOINT) {
+        console.error("VISION_ENDPOINT environment variable is not set.");
+        return NextResponse.json({ success: false, error: 'Serviço de pagamento não configurado.' }, { status: 500 });
+    }
 
     // 2. Parse the incoming request body.
     const data = await req.json();
