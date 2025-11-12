@@ -31,7 +31,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import Image from 'next/image';
 
-// Schema para validação do formulário
 const donationFormSchema = z.object({
   nome: z.string().min(3, { message: 'Nome completo é obrigatório.' }),
   email: z.string().email({ message: 'E-mail inválido.' }),
@@ -48,7 +47,6 @@ type PixData = {
   id: string;
 };
 
-// Componente principal do formulário
 export function DonationForm() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -74,8 +72,7 @@ export function DonationForm() {
       setBaseValue(parsedValue);
       setValue('valor', parsedValue);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, setValue]);
+  }, [searchParams, setValue, baseValue]);
 
   const handleGoToStep2 = async () => {
     const result = await trigger("valor");
@@ -105,18 +102,18 @@ export function DonationForm() {
       try {
         const urlParams: {[key: string]: string} = {};
         searchParams.forEach((value, key) => {
-            if (key !== 'valor') { // Don't include the value from the URL if it exists
+            if (key !== 'valor') { 
               urlParams[key] = value;
             }
         });
 
         const pixPayload = {
-            ...urlParams, // Pass all other UTM params
+            ...urlParams,
             valor: data.valor.toFixed(2),
             nome: data.nome,
             email: data.email,
             cpf: data.cpf,
-            telefone: '11999999999',
+            telefone: '11999999999', 
             produto: `Doação SOS Paraná - R$${data.valor.toFixed(2)}`,
         };
         
@@ -129,7 +126,7 @@ export function DonationForm() {
         const result = await response.json();
 
         if (!response.ok || !result.success) {
-            // A API agora retorna um campo 'error' com uma string simples.
+            console.error("Erro ao gerar PIX (detalhes):", result.details || result);
             const error = new Error(result.error || 'Erro desconhecido ao gerar PIX.');
             throw error;
         }
@@ -142,15 +139,15 @@ export function DonationForm() {
             });
             setStep(3);
         } else {
-            throw new Error('QR Code PIX não foi retornado pela API.');
+             console.error("API PIX não retornou QR Code:", result);
+             throw new Error('QR Code PIX não foi retornado pela API.');
         }
 
       } catch (error: any) {
-          console.error('Erro ao gerar PIX:', error);
+          console.error('Erro no fluxo de doação:', error);
           toast({
               variant: 'destructive',
               title: 'Erro ao Gerar PIX',
-              // Agora 'error.message' contém a string de erro limpa vinda da API.
               description: error.message || 'Não foi possível processar sua doação. Tente novamente.',
           });
       } finally {
