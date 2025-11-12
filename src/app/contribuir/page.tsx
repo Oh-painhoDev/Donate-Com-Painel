@@ -120,7 +120,7 @@ function DonationForm() {
 
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
+    <Card className="w-full max-w-lg mx-auto bg-card">
         <CardHeader className="text-center">
             <CardTitle className="text-xl sm:text-2xl">SOS PARANÁ</CardTitle>
             <CardDescription>Ajude as vítimas do tornado</CardDescription>
@@ -132,19 +132,19 @@ function DonationForm() {
                 <div>
                     <Label htmlFor="mainAmountInput" className="sr-only">Valor da Doação</Label>
                     <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-semibold text-gray-500">R$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-semibold text-muted-foreground">R$</span>
                     <Input
                         id="mainAmountInput"
                         type="text"
-                        className="w-full pl-12 pr-4 py-6 text-2xl font-bold border-2 border-gray-300 focus:border-primary"
+                        className="w-full pl-12 pr-4 py-6 text-2xl font-bold"
                         value={baseValue.toFixed(2).replace('.', ',')}
                         onChange={handleMainInputChange}
                         onBlur={() => trigger('valor')}
                     />
                     </div>
-                     {errors.valor && <p className="text-sm text-red-500 mt-1">{errors.valor.message}</p>}
+                     {errors.valor && <p className="text-sm text-destructive mt-1">{errors.valor.message}</p>}
                 </div>
-                <p className="text-sm text-gray-500">Sugestão: valores mais doados</p>
+                <p className="text-sm text-muted-foreground">Sugestão: valores mais doados</p>
                 <div className="grid grid-cols-3 gap-2">
                     {[25, 50, 75, 100, 300, 500].map((value) => (
                     <Button
@@ -172,24 +172,24 @@ function DonationForm() {
                 <form onSubmit={handleSubmit(submitFinalForm)} className="space-y-4">
                 <header className="mb-4">
                     <h4 className="text-lg font-bold">Só mais um passo!</h4>
-                    <p className="text-sm text-gray-500">Seus dados são protegidos e essenciais para o registro da doação.</p>
+                    <p className="text-sm text-muted-foreground">Seus dados são protegidos e essenciais para o registro da doação.</p>
                 </header>
 
                 <div className="space-y-3">
                     <div className="space-y-1">
                         <Label htmlFor="nome">Nome Completo</Label>
                         <Input id="nome" {...register('nome')} placeholder="Seu nome completo"/>
-                        {errors.nome && <p className="text-sm text-red-500">{errors.nome.message}</p>}
+                        {errors.nome && <p className="text-sm text-destructive">{errors.nome.message}</p>}
                     </div>
                     <div className="space-y-1">
                         <Label htmlFor="email">E-mail</Label>
                         <Input id="email" type="email" {...register('email')} placeholder="seu.email@exemplo.com"/>
-                        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+                        {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                     </div>
                     <div className="space-y-1">
                         <Label htmlFor="cpf">CPF (somente números)</Label>
                         <Input id="cpf" {...register('cpf')} placeholder="11122233344"/>
-                        {errors.cpf && <p className="text-sm text-red-500">{errors.cpf.message}</p>}
+                        {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
                     </div>
                 </div>
                 
@@ -206,8 +206,8 @@ function DonationForm() {
 
 export default function ContribuirPage() {
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            <Suspense fallback={<div>Carregando...</div>}>
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
+            <Suspense fallback={<div className='text-foreground'>Carregando...</div>}>
                 <DonationForm />
             </Suspense>
         </div>
