@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,6 +35,7 @@ const donationFormSchema = z.object({
   nome: z.string().min(3, { message: 'Nome completo é obrigatório.' }),
   email: z.string().email({ message: 'E-mail inválido.' }),
   cpf: z.string().length(11, { message: 'CPF deve conter 11 dígitos.' }),
+  valor: z.number().min(8, { message: 'A doação mínima é de R$ 8,00.' }),
 });
 
 type DonationFormData = z.infer<typeof donationFormSchema>;
@@ -47,38 +48,55 @@ function DonationForm() {
 
   const [step, setStep] = useState(1);
   const [baseValue, setBaseValue] = useState(75.00);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para controlar o envio
 
-  const { register, handleSubmit, formState: { errors } } = useForm<DonationFormData>({
+  const { register, handleSubmit, formState: { errors }, setValue, trigger } = useForm<DonationFormData>({
     resolver: zodResolver(donationFormSchema),
+    defaultValues: {
+      valor: baseValue
+    }
   });
 
   // Seta o valor inicial do input
   useEffect(() => {
     const initialValue = searchParams.get('valor');
     if (initialValue && !isNaN(parseFloat(initialValue))) {
-      setBaseValue(parseFloat(initialValue));
+      const parsedValue = parseFloat(initialValue);
+      setBaseValue(parsedValue);
+      setValue('valor', parsedValue);
     }
-  }, [searchParams]);
+  }, [searchParams, setValue]);
 
-  const handleGoToStep2 = () => setStep(2);
+  const handleGoToStep2 = async () => {
+    const result = await trigger("valor");
+    if (result) {
+        setStep(2);
+    }
+  };
   const handleGoToStep1 = () => setStep(1);
 
   const selectSuggestion = (value: number) => {
     setBaseValue(value);
+    setValue('valor', value);
+    trigger('valor');
   };
 
   const handleMainInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value.replace(',', '.')) || 0;
     setBaseValue(value);
+    setValue('valor', value);
   };
   
   // Função final que salva os dados e redireciona
   const submitFinalForm = (data: DonationFormData) => {
+      setIsSubmitting(true);
       toast({ title: 'Redirecionando...', description: 'Aguarde enquanto preparamos a sua doação.' });
 
       try {
           const donationData = {
-              ...data, // nome, email, cpf
+              nome: data.nome,
+              email: data.email,
+              cpf: data.cpf,
               valor: baseValue.toFixed(2),
           };
 
@@ -96,6 +114,7 @@ function DonationForm() {
               title: 'Erro Inesperado',
               description: 'Não foi possível processar sua doação. Tente novamente.',
           });
+          setIsSubmitting(false);
       }
   };
 
@@ -120,8 +139,10 @@ function DonationForm() {
                         className="w-full pl-12 pr-4 py-6 text-2xl font-bold border-2 border-gray-300 focus:border-primary"
                         value={baseValue.toFixed(2).replace('.', ',')}
                         onChange={handleMainInputChange}
+                        onBlur={() => trigger('valor')}
                     />
                     </div>
+                     {errors.valor && <p className="text-sm text-red-500 mt-1">{errors.valor.message}</p>}
                 </div>
                 <p className="text-sm text-gray-500">Sugestão: valores mais doados</p>
                 <div className="grid grid-cols-3 gap-2">
@@ -172,8 +193,9 @@ function DonationForm() {
                     </div>
                 </div>
                 
-                <Button type="submit" size="lg" className="w-full h-14 text-lg">
-                    FINALIZAR E GERAR PIX
+                <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={isSubmitting}>
+                    {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    {isSubmitting ? 'PROCESSANDO...' : 'FINALIZAR E GERAR PIX'}
                 </Button>
                 </form>
             </div>

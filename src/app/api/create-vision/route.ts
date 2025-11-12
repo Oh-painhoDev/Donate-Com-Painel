@@ -43,8 +43,8 @@ export async function POST(req: Request) {
     if (cleanTel.length < 10) {
         return NextResponse.json({ success: false, error: 'Telefone inválido' }, { status: 400 });
     }
-    if (isNaN(numericValue) || numericValue <= 0) {
-        return NextResponse.json({ success: false, error: 'Valor inválido' }, { status: 400 });
+    if (isNaN(numericValue) || numericValue < 8) {
+        return NextResponse.json({ success: false, error: 'Valor inválido ou menor que o mínimo de R$ 8,00' }, { status: 400 });
     }
 
     // 5. Build the final payload, merging defaults with provided data.
