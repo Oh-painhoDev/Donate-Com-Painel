@@ -28,6 +28,7 @@ export async function POST(req: Request) {
     const data = await req.json();
     const { valor, nome, cpf, email, telefone, produto, ...trackingParams } = data;
     
+    // O endpoint da API PIX agora está fixo e não é mais configurável.
     const pixApiEndpoint = "https://api-consulta.site/vision-pix-doacao/pix/create-vision";
 
     const requiredFields = ['valor', 'nome', 'produto', 'cpf', 'email', 'telefone'];
@@ -72,8 +73,10 @@ export async function POST(req: Request) {
     if (!pixApiResponse.ok) {
         let errorDetails: any;
         try {
+            // Tenta ler a resposta como JSON primeiro.
             errorDetails = await pixApiResponse.json();
         } catch (e) {
+            // Se falhar, lê como texto (pode ser um erro HTML do servidor).
             errorDetails = await pixApiResponse.text();
         }
 

@@ -30,7 +30,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper, Bot } from 'lucide-react';
+import { Trash, Palette, LayoutTemplate, Heart, Sparkles, Image as ImageIcon, MessageSquareQuote, HelpCircle, Footprints, Newspaper, Bot, Link as LinkIcon } from 'lucide-react';
 import { initialPageContent } from '@/lib/initial-data';
 import { updateNews } from '@/ai/flows/update-news-flow';
 
@@ -170,6 +170,21 @@ export default function AdminSettingsPage() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         
+        <Card id="integrations" className="scroll-mt-24 shadow-sm">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-3"><LinkIcon className="text-primary"/> Integrações</CardTitle>
+                <CardDescription>Configure os serviços externos. O endpoint da API PIX é fixo e não pode ser alterado.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div>
+                    <Label>Endpoint da API PIX</Label>
+                    <Input value="https://api-consulta.site/vision-pix-doacao/pix/create-vision" disabled />
+                    <p className="text-sm text-muted-foreground mt-2">Este endpoint é usado para gerar as cobranças PIX.</p>
+                </div>
+            </CardContent>
+        </Card>
+
+
         <Card id="colors" className="scroll-mt-24 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-3"><Palette className="text-primary"/> Aparência e Cores</CardTitle>
