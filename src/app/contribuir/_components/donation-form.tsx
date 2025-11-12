@@ -52,27 +52,29 @@ export function DonationForm() {
   const { toast } = useToast();
 
   const [step, setStep] = useState(1);
-  const [baseValue, setBaseValue] = useState(75.00);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [pixData, setPixData] = useState<PixData | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, setValue, trigger } = useForm<DonationFormData>({
+  const { register, handleSubmit, formState: { errors }, setValue, trigger, watch } = useForm<DonationFormData>({
     resolver: zodResolver(donationFormSchema),
     defaultValues: {
-      valor: baseValue
+      valor: 75
     }
   });
 
+  const donationValue = watch('valor');
+
   useEffect(() => {
     const initialValue = searchParams.get('valor');
-    const parsedValue = initialValue ? parseFloat(initialValue) : baseValue;
-    if (!isNaN(parsedValue)) {
-      setBaseValue(parsedValue);
-      setValue('valor', parsedValue);
+    if (initialValue) {
+        const parsedValue = parseFloat(initialValue);
+        if (!isNaN(parsedValue)) {
+            setValue('valor', parsedValue);
+        }
     }
-  }, [searchParams, setValue, baseValue]);
+  }, [searchParams, setValue]);
 
   const handleGoToStep2 = async () => {
     const result = await trigger("valor");
@@ -83,15 +85,12 @@ export function DonationForm() {
   const handleGoToStep1 = () => setStep(1);
 
   const selectSuggestion = (value: number) => {
-    setBaseValue(value);
-    setValue('valor', value);
-    trigger('valor');
+    setValue('valor', value, { shouldValidate: true });
   };
 
   const handleMainInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value.replace(',', '.')) || 0;
-    setBaseValue(value);
-    setValue('valor', value);
+    setValue('valor', value, { shouldValidate: true });
   };
   
   const submitAndGeneratePix = async (data: DonationFormData) => {
@@ -127,6 +126,7 @@ export function DonationForm() {
 
         if (!response.ok || !result.success) {
             console.error("Erro ao gerar PIX (detalhes):", result.details || result);
+            // A API agora retorna um campo 'error' com uma string simples.
             const error = new Error(result.error || 'Erro desconhecido ao gerar PIX.');
             throw error;
         }
@@ -182,9 +182,8 @@ export function DonationForm() {
                         id="mainAmountInput"
                         type="text"
                         className="w-full pl-12 pr-4 py-6 text-2xl font-bold"
-                        value={baseValue.toFixed(2).replace('.', ',')}
+                        value={donationValue.toFixed(2).replace('.', ',')}
                         onChange={handleMainInputChange}
-                        onBlur={() => trigger('valor')}
                     />
                     </div>
                      {errors.valor && <p className="text-sm text-destructive mt-1">{errors.valor.message}</p>}
@@ -194,7 +193,7 @@ export function DonationForm() {
                     {[25, 50, 75, 100, 300, 500].map((value) => (
                     <Button
                         key={value}
-                        variant={baseValue === value ? 'default' : 'outline'}
+                        variant={donationValue === value ? 'default' : 'outline'}
                         className="rounded-full h-12"
                         onClick={() => selectSuggestion(value)}
                     >
