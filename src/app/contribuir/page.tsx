@@ -188,7 +188,7 @@ function DonationForm() {
                     </div>
                     <div className="space-y-1">
                         <Label htmlFor="cpf">CPF (somente números)</Label>
-                        <Input id="cpf" {...register('cpf')} placeholder="11122233344"/>
+                        <Input id="cpf" type="number" {...register('cpf')} placeholder="11122233344" maxLength={11}/>
                         {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
                     </div>
                 </div>
