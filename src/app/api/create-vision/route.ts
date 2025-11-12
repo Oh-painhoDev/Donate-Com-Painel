@@ -37,29 +37,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: `Campos obrigatórios faltando: ${missingFields.join(', ')}` }, { status: 400 });
     }
 
-    const cleanCpf = String(cpf).replace(/\D/g, '');
-    const cleanTel = String(telefone).replace(/\D/g, '');
     const numericValue = parseFloat(String(valor).replace(',', '.'));
 
     if (isNaN(numericValue) || numericValue < 8) {
         return NextResponse.json({ success: false, error: 'Valor da doação deve ser de no mínimo R$ 8,00', details: `Valor enviado: ${valor}` }, { status: 400 });
     }
-     if (cleanCpf.length !== 11) {
-        return NextResponse.json({ success: false, error: 'CPF inválido', details: 'CPF deve ter 11 dígitos.' }, { status: 400 });
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return NextResponse.json({ success: false, error: 'Email inválido' }, { status: 400 });
     }
-    if (cleanTel.length < 10) {
-        return NextResponse.json({ success: false, error: 'Telefone inválido', details: 'O telefone deve ter pelo menos 10 dígitos.' }, { status: 400 });
-    }
-
+    
+    // O teste em PHP mostrou que a API externa espera os dados com formatação.
+    // Portanto, removemos a limpeza dos campos CPF e telefone.
     const payload = {
       valor: numericValue.toFixed(2),
       nome,
       email,
-      cpf: cleanCpf,
-      telefone: cleanTel,
+      cpf, // Enviando o CPF como recebido (com formatação)
+      telefone, // Enviando o telefone como recebido (com formatação)
       produto,
       ...trackingParams
     };
@@ -97,7 +91,7 @@ export async function POST(req: Request) {
     const pixQrCode = responseJson.pix?.pix_qr_code || responseJson.pix?.qrcode;
     const pixQrText = responseJson.pix?.pix_url || responseJson.pix?.qrcode_text;
 
-    if (!pixQrCode || !pixQrText) {
+    if (!pixQrCode && !pixQrText) {
         console.error('Resposta da API PIX bem-sucedida, mas sem QR Code ou texto válido:', responseJson);
         return NextResponse.json(
             { success: false, error: 'A resposta do serviço de pagamento não continha um código PIX válido.', details: responseJson }, 
@@ -108,6 +102,10 @@ export async function POST(req: Request) {
     if (responseJson.pix && !responseJson.pix.qrcode_text) {
       responseJson.pix.qrcode_text = pixQrText;
     }
+     if (responseJson.pix && !responseJson.pix.pix_qr_code) {
+      responseJson.pix.pix_qr_code = pixQrCode;
+    }
+
 
     return NextResponse.json({ ...responseJson, success: true }, { status: 200 });
 
