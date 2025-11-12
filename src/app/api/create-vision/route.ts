@@ -7,16 +7,11 @@ import { NextResponse } from 'next/server';
  */
 export async function POST(req: Request) {
   try {
-    const VISION_ENDPOINT = process.env.VISION_ENDPOINT;
-    
-    if (!VISION_ENDPOINT) {
-        console.error("VISION_ENDPOINT environment variable is not set.");
-        return NextResponse.json({ success: false, error: 'Serviço de pagamento não configurado.', details: 'A variável de ambiente VISION_ENDPOINT não foi definida.' }, { status: 500 });
-    }
-
     const data = await req.json();
-    if (!data) {
-      return NextResponse.json({ success: false, error: 'JSON inválido ou vazio' }, { status: 400 });
+    const pixApiEndpoint = data.pixApiEndpoint;
+    
+    if (!pixApiEndpoint) {
+        return NextResponse.json({ success: false, error: 'Endpoint da API PIX não fornecido.' }, { status: 400 });
     }
 
     const required = ['valor', 'nome', 'produto', 'cpf', 'email', 'telefone'];
@@ -54,29 +49,27 @@ export async function POST(req: Request) {
       telefone: cleanTel,
     };
     
-    const pixApiResponse = await fetch(VISION_ENDPOINT, {
+    const pixApiResponse = await fetch(pixApiEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(payload),
     });
 
-    const responseText = await pixApiResponse.text();
-
     if (!pixApiResponse.ok) {
-        console.error(`Error from PIX service: ${pixApiResponse.status}`, responseText);
-        let errorDetails = responseText;
-        let errorMessage = 'O serviço de pagamento retornou um erro.';
+        let errorDetails: any;
         try {
-            const errorJson = JSON.parse(responseText);
-            if (errorJson.error && typeof errorJson.error === 'string') {
-                errorMessage = errorJson.error;
-            } else if (errorJson.message && typeof errorJson.message === 'string') {
-                 errorMessage = errorJson.message;
-            }
-            errorDetails = errorJson;
+            // Tenta analisar a resposta de erro como JSON
+            errorDetails = await pixApiResponse.json();
         } catch (e) {
-            // Ignore if parsing fails, errorDetails is already the raw text
+            // Se falhar, a resposta não era JSON. Usa o texto bruto.
+            errorDetails = await pixApiResponse.text();
         }
+
+        const errorMessage = typeof errorDetails === 'object' && errorDetails?.error 
+            ? errorDetails.error 
+            : 'O serviço de pagamento retornou um erro.';
+        
+        console.error(`Error from PIX service: ${pixApiResponse.status}`, errorDetails);
 
         return NextResponse.json(
             { 
@@ -84,14 +77,15 @@ export async function POST(req: Request) {
               error: errorMessage,
               details: errorDetails,
             }, 
-            { status: 502 } // 502 Bad Gateway is more appropriate here
+            { status: pixApiResponse.status }
         );
     }
     
     let responseJson;
     try {
-        responseJson = JSON.parse(responseText);
+        responseJson = await pixApiResponse.json();
     } catch (e) {
+        const responseText = await pixApiResponse.text();
         console.error('Failed to parse successful PIX API response as JSON:', responseText);
         return NextResponse.json({ success: false, error: 'Resposta inválida do serviço de pagamento.', details: responseText }, { status: 500 });
     }
