@@ -122,8 +122,11 @@ function DoacaoPixForm() {
   };
   
   if (pixData) {
-    const qrCode = pixData.pix.pix_qr_code || pixData.pix.qrcode;
     const copiaECola = pixData.pix.pix_url || pixData.pix.qrcode_text;
+    const qrCodeUrl = copiaECola 
+      ? `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(copiaECola)}` 
+      : null;
+
 
     return (
       <div className="text-center space-y-6">
@@ -135,13 +138,13 @@ function DoacaoPixForm() {
             </AlertDescription>
         </Alert>
 
-        {qrCode && (
+        {qrCodeUrl && (
           <div className="flex flex-col items-center">
             <h3 className="font-semibold mb-2 text-lg">1. Escaneie o QR Code abaixo</h3>
             <p className="text-sm text-muted-foreground mb-3">Abra o app do seu banco e aponte a câmera.</p>
             <div className="p-2 border bg-white rounded-lg shadow-md">
               <Image
-                src={qrCode} 
+                src={qrCodeUrl} 
                 alt="QR Code PIX"
                 width={250}
                 height={250}
