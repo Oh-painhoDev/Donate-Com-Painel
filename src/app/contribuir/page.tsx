@@ -24,11 +24,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Copy, Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
+import Image from 'next/image';
 
 // Schema para validação do formulário
 const donationFormSchema = z.object({
@@ -40,6 +41,13 @@ const donationFormSchema = z.object({
 
 type DonationFormData = z.infer<typeof donationFormSchema>;
 
+type PixData = {
+  qrCode: string;
+  qrCodeUrl: string;
+  amount: number;
+  transactionId: string;
+};
+
 // Componente principal do formulário
 function DonationForm() {
   const router = useRouter();
@@ -48,16 +56,18 @@ function DonationForm() {
 
   const [step, setStep] = useState(1);
   const [baseValue, setBaseValue] = useState(75.00);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para controlar o envio
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [pixData, setPixData] = useState<PixData | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, setValue, trigger } = useForm<DonationFormData>({
+  const { register, handleSubmit, formState: { errors }, setValue, trigger, getValues } = useForm<DonationFormData>({
     resolver: zodResolver(donationFormSchema),
     defaultValues: {
       valor: baseValue
     }
   });
 
-  // Seta o valor inicial do input
   useEffect(() => {
     const initialValue = searchParams.get('valor');
     if (initialValue && !isNaN(parseFloat(initialValue))) {
@@ -87,37 +97,71 @@ function DonationForm() {
     setValue('valor', value);
   };
   
-  // Função final que salva os dados e redireciona
-  const submitFinalForm = (data: DonationFormData) => {
+  const submitAndGeneratePix = async (data: DonationFormData) => {
+      if (isSubmitting) return; // Prevenção extra
       setIsSubmitting(true);
-      toast({ title: 'Redirecionando...', description: 'Aguarde enquanto preparamos a sua doação.' });
+      toast({ title: 'Aguarde...', description: 'Gerando seu código PIX.' });
 
       try {
-          const donationData = {
-              nome: data.nome,
-              email: data.email,
-              cpf: data.cpf,
-              valor: baseValue.toFixed(2),
-          };
+        const urlParams: {[key: string]: string} = {};
+        searchParams.forEach((value, key) => {
+            urlParams[key] = value;
+        });
 
-          // Salva os dados no localStorage para serem lidos pela página /pix
-          localStorage.setItem('donationData', JSON.stringify(donationData));
+        const pixPayload = {
+            ...urlParams,
+            valor: data.valor.toFixed(2),
+            nome: data.nome,
+            email: data.email,
+            cpf: data.cpf,
+            telefone: '11999999999', // Fixo conforme solicitado
+            produto: `Doação SOS Paraná - R$${data.valor.toFixed(2)}`,
+        };
+        
+        const response = await fetch('/api/create-vision', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(pixPayload),
+        });
 
-          // Redireciona para a página /pix, mantendo os parâmetros UTM da URL original
-          const currentParams = new URLSearchParams(window.location.search);
-          router.push(`/pix?${currentParams.toString()}`);
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.error || 'Erro desconhecido ao gerar PIX.');
+        }
+
+        if (result.pixCopyPaste && result.qrCodeUrl) {
+            setPixData({
+                qrCode: result.pixCopyPaste, 
+                qrCodeUrl: result.qrCodeUrl,
+                amount: parseFloat(data.valor.toFixed(2)),
+                transactionId: result.id || 'N/A',
+            });
+            setStep(3); // Avança para a etapa de exibição do PIX
+        } else {
+            throw new Error('QR Code PIX não foi retornado pela API.');
+        }
 
       } catch (error: any) {
-          console.error('Erro ao salvar dados da doação:', error);
+          console.error('Erro ao gerar PIX:', error);
           toast({
               variant: 'destructive',
-              title: 'Erro Inesperado',
-              description: 'Não foi possível processar sua doação. Tente novamente.',
+              title: 'Erro ao Gerar PIX',
+              description: error.message || 'Não foi possível processar sua doação. Tente novamente.',
           });
-          setIsSubmitting(false);
+      } finally {
+        setIsSubmitting(false);
       }
   };
 
+  const handleCopy = () => {
+    if (pixData?.qrCode) {
+      navigator.clipboard.writeText(pixData.qrCode);
+      setIsCopied(true);
+      toast({ title: 'Copiado!', description: 'O código PIX foi copiado para a área de transferência.' });
+      setTimeout(() => setIsCopied(false), 2000);
+    }
+  };
 
   return (
     <Card className="w-full max-w-lg mx-auto bg-card">
@@ -169,7 +213,7 @@ function DonationForm() {
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Voltar para alterar o valor
                 </Button>
-                <form onSubmit={handleSubmit(submitFinalForm)} className="space-y-4">
+                <form onSubmit={handleSubmit(submitAndGeneratePix)} className="space-y-4">
                 <header className="mb-4">
                     <h4 className="text-lg font-bold">Só mais um passo!</h4>
                     <p className="text-sm text-muted-foreground">Seus dados são protegidos e essenciais para o registro da doação.</p>
@@ -198,6 +242,49 @@ function DonationForm() {
                     {isSubmitting ? 'PROCESSANDO...' : 'FINALIZAR E GERAR PIX'}
                 </Button>
                 </form>
+            </div>
+
+            {/* ETAPA 3: EXIBIÇÃO DO PIX */}
+            <div style={{ display: step === 3 ? 'block' : 'none' }}>
+              {isSubmitting && (
+                  <div className="flex flex-col items-center gap-6 p-10">
+                      <Loader2 className="h-16 w-16 animate-spin text-primary" />
+                      <p className="text-muted-foreground">Conectando ao sistema de pagamento.</p>
+                  </div>
+              )}
+              {pixData && (
+                <div className="flex flex-col items-center gap-6">
+                   <div className="p-4 bg-white rounded-lg border">
+                      <Image 
+                        src={pixData.qrCodeUrl} 
+                        alt="QR Code PIX" 
+                        width={256} 
+                        height={256} 
+                        className="rounded-lg" 
+                        unoptimized
+                      />
+                  </div>
+
+                  <div className="text-left w-full bg-secondary p-4 rounded-lg">
+                      <p className="font-semibold text-secondary-foreground">Valor: <span className="font-bold text-lg text-primary">R$ {pixData.amount.toFixed(2).replace('.', ',')}</span></p>
+                      <p className="text-xs text-muted-foreground mt-1">ID: {pixData.transactionId}</p>
+                  </div>
+
+                  <Button onClick={handleCopy} className="w-full" size="lg">
+                      {isCopied ? <Check className="mr-2 h-5 w-5" /> : <Copy className="mr-2 h-5 w-5" />}
+                      {isCopied ? 'Copiado!' : 'Copiar Código PIX'}
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                      Abra o app do seu banco e escolha a opção PIX Copia e Cola.
+                  </p>
+                </div>
+              )}
+              {!pixData && !isSubmitting && (
+                  <div className="flex flex-col items-center gap-6 p-10">
+                    <p className="text-destructive">Não foi possível gerar o código PIX. Por favor, tente fazer sua doação novamente.</p>
+                    <Button onClick={() => setStep(2)}>Tentar Novamente</Button>
+                  </div>
+              )}
             </div>
         </CardContent>
     </Card>
