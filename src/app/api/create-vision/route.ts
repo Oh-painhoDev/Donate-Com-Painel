@@ -1,3 +1,21 @@
+/*
+ * 
+ *  ═══════════════════════════════════════════════════
+ *   [USUÁRIO]: Painho_Dev
+ *   [DISCORD]: painhodev
+ *   [CARGO]: Criador Profissional de Bugs
+ *   [HABILIDADES]: Criar bugs novos, Consertar bugs antigos
+ *   [STATUS]: Funcionou na minha máquina! 🤷
+ *  ═══════════════════════════════════════════════════
+ *            \
+ *             \     ^__^
+ *              \   (oo)\_______
+ *                 (__)\       )\/\\
+ *                     ||----Ō |
+ *                     ||     ||
+ * 
+ * 
+ */
 import { NextResponse } from 'next/server';
 
 /**
@@ -10,17 +28,14 @@ export async function POST(req: Request) {
     const data = await req.json();
     const { valor, nome, cpf, email, telefone, produto, ...trackingParams } = data;
     
-    // 1. O Endpoint agora é fixo e definido no backend para maior segurança.
     const pixApiEndpoint = "https://api-consulta.site/vision-pix-doacao/pix/create-vision";
 
-    // 2. Validação de campos obrigatórios
     const requiredFields = ['valor', 'nome', 'produto', 'cpf', 'email', 'telefone'];
     const missingFields = requiredFields.filter(field => !data[field]);
     if (missingFields.length > 0) {
       return NextResponse.json({ success: false, error: `Campos obrigatórios faltando: ${missingFields.join(', ')}` }, { status: 400 });
     }
 
-    // 3. Limpeza e Validação dos Dados
     const cleanCpf = String(cpf).replace(/\D/g, '');
     const cleanTel = String(telefone).replace(/\D/g, '');
     const numericValue = parseFloat(String(valor).replace(',', '.'));
@@ -38,7 +53,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, error: 'Telefone inválido', details: 'O telefone deve ter pelo menos 10 dígitos.' }, { status: 400 });
     }
 
-    // 4. Payload para a API externa, incluindo dados de rastreamento
     const payload = {
       valor: numericValue.toFixed(2),
       nome,
@@ -49,21 +63,17 @@ export async function POST(req: Request) {
       ...trackingParams
     };
 
-    // 5. Chamada para a API Externa de PIX
     const pixApiResponse = await fetch(pixApiEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(payload),
     });
 
-    // 6. Tratamento de Erro Robusto
     if (!pixApiResponse.ok) {
         let errorDetails: any;
         try {
-            // Tenta analisar a resposta de erro como JSON
             errorDetails = await pixApiResponse.json();
         } catch (e) {
-            // Se falhar (não for JSON), usa o texto bruto da resposta
             errorDetails = await pixApiResponse.text();
         }
 
@@ -79,7 +89,6 @@ export async function POST(req: Request) {
         );
     }
     
-    // 7. Tratamento da Resposta de Sucesso
     const responseJson = await pixApiResponse.json();
 
     const pixQrCode = responseJson.pix?.pix_qr_code || responseJson.pix?.qrcode;
@@ -93,7 +102,6 @@ export async function POST(req: Request) {
         );
     }
     
-    // Garante que qrcode_text exista para compatibilidade
     if (responseJson.pix && !responseJson.pix.qrcode_text) {
       responseJson.pix.qrcode_text = pixQrText;
     }
