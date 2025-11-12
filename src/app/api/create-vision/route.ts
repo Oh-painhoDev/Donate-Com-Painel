@@ -25,8 +25,8 @@ export async function POST(req: Request) {
     const cleanTel = String(telefone).replace(/\D/g, '');
     const numericValue = parseFloat(String(valor).replace(',', '.'));
 
-    if (isNaN(numericValue) || numericValue < 1) {
-        return NextResponse.json({ success: false, error: 'Valor da doação deve ser de no mínimo R$ 1,00', details: `Valor enviado: ${valor}` }, { status: 400 });
+    if (isNaN(numericValue) || numericValue < 8) {
+        return NextResponse.json({ success: false, error: 'Valor da doação deve ser de no mínimo R$ 8,00', details: `Valor enviado: ${valor}` }, { status: 400 });
     }
      if (cleanCpf.length !== 11) {
         return NextResponse.json({ success: false, error: 'CPF inválido', details: 'CPF deve ter 11 dígitos.' }, { status: 400 });

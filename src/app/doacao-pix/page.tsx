@@ -201,7 +201,7 @@ function DoacaoPixForm() {
           onChange={(e) => setValor(e.target.value)}
           placeholder="R$ 0,00"
           step="0.01"
-          min="1"
+          min="8"
           required
           className="text-lg h-12"
         />
@@ -219,8 +219,8 @@ function DoacaoPixForm() {
       
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="cpf">CPF</Label>
-          <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} required />
+          <Label htmlFor="cpf">CPF (apenas números)</Label>
+          <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value.replace(/\D/g, ''))} required pattern="\d{11}" title="O CPF deve conter 11 dígitos." />
         </div>
         <div className="space-y-2">
           <Label htmlFor="telefone">Telefone</Label>
