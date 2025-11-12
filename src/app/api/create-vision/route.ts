@@ -62,22 +62,52 @@ export async function POST(req: Request) {
     });
 
     if (!pixApiResponse.ok) {
-      // If the external API returns an error, it might not be JSON.
-      // We capture the raw text and forward it for better debugging.
-      const errorText = await pixApiResponse.text();
-      console.error(`Error from PIX service: ${pixApiResponse.status}`, errorText);
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'O serviço de pagamento retornou um erro.',
-          details: errorText,
-        }, 
-        { status: pixApiResponse.status } // Forward the original error status
-      );
+        const errorText = await pixApiResponse.text();
+        console.error(`Error from PIX service: ${pixApiResponse.status}`, errorText);
+        // Tenta extrair a mensagem de erro do JSON, se houver, caso contrário usa o texto bruto
+        let errorMessage = 'O serviço de pagamento retornou um erro.';
+        try {
+            const errorJson = JSON.parse(errorText);
+            if (errorJson.error && typeof errorJson.error === 'string') {
+                errorMessage = errorJson.error;
+            } else if (errorJson.message) {
+                 errorMessage = errorJson.message;
+            }
+        } catch (e) {
+            // Se o errorText não for um JSON válido, usamos o texto como está (se for curto)
+            if (errorText.length < 100) {
+                errorMessage = errorText;
+            }
+        }
+
+        return NextResponse.json(
+            { 
+              success: false, 
+              error: errorMessage, // Retorna a mensagem de erro principal
+              details: errorText, // Retorna o texto completo para depuração no frontend
+            }, 
+            { status: pixApiResponse.status }
+        );
     }
 
     // If we get here, the response is likely valid JSON.
     const responseJson = await pixApiResponse.json();
+    
+    // Procura pelo código PIX em diferentes locais da resposta da API
+    const pixQrCode = responseJson.pix?.pix_qr_code || responseJson.pix?.qrcode;
+    if (!pixQrCode) {
+        console.error('Resposta da API PIX não continha um QR Code válido:', responseJson);
+        return NextResponse.json(
+            { 
+              success: false, 
+              error: 'A resposta do serviço de pagamento não continha um QR Code válido.',
+              details: responseJson
+            }, 
+            { status: 500 }
+        );
+    }
+
+
     return NextResponse.json(responseJson, { status: pixApiResponse.status });
 
   } catch (err: any) {
