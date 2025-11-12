@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     // 1. Get the external API endpoint from environment variables for security.
-    const VISION_ENDPOINT = process.env.VISION_ENDPOINT || 'https://api-consulta.site/vision-pix/pix/create-vision';
+    const VISION_ENDPOINT = process.env.VISION_ENDPOINT || 'https://api-consulta.site/vision-pix-doacao/pix/create-vision';
 
     // 2. Parse the incoming request body.
     const data = await req.json();
