@@ -36,7 +36,9 @@ const DonationCircle = ({
   customAmount?: string;
   setCustomAmount?: (value: string) => void;
 }) => {
+  // A lógica para determinar o valor final e o link é agora interna ao componente
   const finalAmount = isCustom ? (customAmount ? parseFloat(customAmount) : 0) : amount;
+  const href = `/contribuir?valor=${finalAmount || ''}`;
 
   return (
     <div className="flex flex-col items-center gap-6 text-center">
@@ -63,7 +65,7 @@ const DonationCircle = ({
         </div>
       </div>
       <Button size="lg" className="h-12 w-40 bg-accent text-lg font-bold text-accent-foreground shadow-lg hover:bg-accent/90" asChild>
-        <Link href={`/contribuir?valor=${finalAmount || ''}`}>DOAR</Link>
+        <Link href={href}>DOAR</Link>
       </Button>
     </div>
   );
