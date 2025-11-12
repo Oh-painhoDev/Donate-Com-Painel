@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    // Adicionado para resolver o aviso de 'Cross origin request detected' no ambiente de desenvolvimento.
+    allowedDevOrigins: ["*"],
+  },
   images: {
     remotePatterns: [
       {
